@@ -6,12 +6,29 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "mysql"
     url      = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 model Post {
     id      String @id @default(cuid())
     title   String
-    content String
+    content String @db.Text
+}
+
+model User{
+    clerkId     String @id
+    firstName   String?
+    lastName    String?
+    email String  @unique
+    role  Role    @default(STUDENT)
+    @@map("users")
+}
+
+enum Role {
+  DEVELOPER
+  ADMIN
+  PROMOTER
+  STUDENT
 }

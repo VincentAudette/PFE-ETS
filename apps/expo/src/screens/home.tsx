@@ -29,7 +29,7 @@ const PostCard: React.FC<{
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
       <Text className="text-xl font-semibold text-[#cc66ff]">{post.title}</Text>
-      <Text className="text-white">{post.content}</Text>
+      <Text className="">{post.content}</Text>
     </View>
   );
 };
@@ -48,12 +48,12 @@ const CreatePost: React.FC = () => {
   return (
     <View className="flex flex-col border-t-2 border-gray-500 p-4">
       <TextInput
-        className="mb-2 rounded border-2 border-gray-500 p-2 text-white"
+        className="mb-2 rounded border-2 border-gray-500 p-2 "
         onChangeText={onChangeTitle}
         placeholder="Title"
       />
       <TextInput
-        className="mb-2 rounded border-2 border-gray-500 p-2 text-white"
+        className="mb-2 rounded border-2 border-gray-500 p-2 "
         onChangeText={onChangeContent}
         placeholder="Content"
       />
@@ -66,7 +66,7 @@ const CreatePost: React.FC = () => {
           });
         }}
       >
-        <Text className="font-semibold text-white">Publish post</Text>
+        <Text className="font-semibold ">Publish post</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,20 +79,18 @@ export const HomeScreen = () => {
   return (
     <SafeAreaView className="bg-[#2e026d] bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <View className="h-full w-full p-4">
-        <Text className="mx-auto pb-2 text-5xl font-bold text-white">
+        <Text className="mx-auto pb-2 text-5xl font-bold ">
           Create <Text className="text-[#cc66ff]">T3</Text> Turbo
         </Text>
 
         <View className="py-2">
           {showPost ? (
-            <Text className="text-white">
+            <Text className="">
               <Text className="font-semibold">Selected post:</Text>
               {showPost}
             </Text>
           ) : (
-            <Text className="font-semibold italic text-white">
-              Press on a post
-            </Text>
+            <Text className="font-semibold italic ">Press on a post</Text>
           )}
         </View>
 
