@@ -2,6 +2,7 @@ import { UserButton, useAuth } from "@clerk/nextjs";
 import { trpc } from "../utils/trpc";
 import Link from "next/link";
 import MinimalMenu from "./MinimalMenu";
+import RoleBadge from "./RoleBadge";
 
 export default function AuthShowcase() {
   const { isSignedIn } = useAuth();
@@ -14,18 +15,13 @@ export default function AuthShowcase() {
       {isSignedIn && (
         <>
           <div className="flex items-center justify-center gap-3">
-            {role === "DEVELOPER" ? (
-              <div className="flex items-center gap-1">
-                <span className="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">
-                  {role}
-                </span>
-                <MinimalMenu />
-              </div>
-            ) : (
-              <span className="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">
-                {role}
-              </span>
-            )}
+            <div className="flex items-center gap-1">
+              <RoleBadge
+                role={role as "DEVELOPER" | "ADMIN" | "PROMOTER" | "STUDENT"}
+                darkMode={true}
+              />
+              {role === "DEVELOPER" && <MinimalMenu />}
+            </div>
             <UserButton
               appearance={{
                 elements: {

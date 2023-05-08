@@ -6,6 +6,7 @@ import SideBarLayout from "../components/SideBarLayout";
 import ProjectCard from "../components/ProjectCard";
 import { useAuth } from "@clerk/nextjs";
 import WelcomeSection from "../components/WelcomeSection";
+import FileUploadButton from "../components/FileUploadButton";
 
 const Home: NextPage = () => {
   const postQuery = trpc.post.all.useQuery();
@@ -25,7 +26,7 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex h-screen flex-col items-center bg-neutral-50">
+      <main className="flex min-h-screen flex-col items-center bg-neutral-50">
         <TopNav />
         <div className=" flex w-full max-w-5xl justify-between gap-10 px-4 py-10 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
           {isSignedIn ? (
@@ -39,6 +40,7 @@ const Home: NextPage = () => {
               ) : (
                 <p>Loading..</p>
               )}
+              <FileUploadButton />
             </SideBarLayout>
           ) : (
             <WelcomeSection />
