@@ -11,6 +11,7 @@ export const postRouter = router({
   create: protectedProcedure
     .input(z.object({ title: z.string(), content: z.string() }))
     .mutation(({ ctx, input }) => {
+      //TODO add verification that the role is PROMOTER
       return ctx.prisma.post.create({ data: input });
     }),
 });
