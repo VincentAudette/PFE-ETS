@@ -4,11 +4,14 @@ import type { AppType } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 import { trpc } from "../utils/trpc";
 import { frFR } from "@clerk/localizations";
+import { PFEAuthProvider } from "../context/PFEAuthContext";
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return (
     <ClerkProvider localization={frFR} {...pageProps}>
-      <Component {...pageProps} />
+      <PFEAuthProvider>
+        <Component {...pageProps} />
+      </PFEAuthProvider>
     </ClerkProvider>
   );
 };

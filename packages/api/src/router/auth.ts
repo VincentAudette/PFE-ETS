@@ -1,12 +1,17 @@
+import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
     return ctx.auth.session;
   }),
-  getRole: protectedProcedure.query(() => {
-    // TODO Check the user's role
+  getUser: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
+    const profile = ctx.prisma.user.findUnique({
+      where: { clerkId: input },
+    });
 
-    return "DEVELOPER";
+    if (profile !== null || profile !== undefined) {
+      return profile;
+    }
   }),
 });

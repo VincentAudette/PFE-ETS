@@ -1,8 +1,10 @@
+import { Role } from "@acme/db";
+
 export default function RoleBadge({
   role,
   darkMode = false,
 }: {
-  role: "DEVELOPER" | "ADMIN" | "PROMOTER" | "STUDENT";
+  role: Role;
   darkMode?: boolean;
 }) {
   let color = darkMode

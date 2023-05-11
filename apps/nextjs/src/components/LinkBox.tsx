@@ -6,6 +6,7 @@ const linkItems = [
     href: "https://pfe-etsmtl.notion.site",
     IconSvg: BookOpenIcon,
     text: "Documentation",
+    withTargetBlank: true,
   },
   {
     href: "https://github.com/VincentAudette/PFE-ETS",
@@ -20,6 +21,7 @@ const linkItems = [
       </svg>
     ),
     text: "Code source",
+    withTargetBlank: true,
   },
   {
     href: "https://discord.gg/3t7RcRak5Y",
@@ -39,9 +41,10 @@ const linkItems = [
       </svg>
     ),
     text: "Discord",
+    withTargetBlank: true,
   },
   {
-    href: "/logo",
+    href: "/logos",
     IconSvg: ({ className }: { className: string }) => (
       <svg
         className={className}
@@ -88,6 +91,7 @@ const linkItems = [
       </svg>
     ),
     text: "Marque Logo",
+    withTargetBlank: false,
   },
 ];
 
@@ -95,18 +99,17 @@ const ItemSquare = ({
   href,
   IconSvg,
   text,
-  key,
+  withTargetBlank,
 }: {
-  key: string;
   href: string;
-  IconSvg: any;
+  IconSvg: (props: { className: string }) => JSX.Element;
   text: string;
+  withTargetBlank: boolean;
 }) => {
   return (
     <Link
-      key={key}
       href={href}
-      target="_blank"
+      target={withTargetBlank ? "_blank" : undefined}
       className={
         "flex h-[3.5rem] w-[3.5rem] flex-col items-center justify-center bg-neutral-800/25 hover:bg-neutral-100/50 hover:text-red-600 "
       }
@@ -122,14 +125,15 @@ export default function LinkBox({ className }: { className?: string }) {
     <div className={className}>
       <div className="grid h-[3.5rem] grid-cols-2">
         {linkItems.map((item) => (
-          <>
-            <ItemSquare
-              href={item.href}
-              key={item.href}
-              IconSvg={item.IconSvg}
-              text={item.text}
-            />
-          </>
+          <ItemSquare
+            href={item.href}
+            key={item.href}
+            IconSvg={
+              item.IconSvg as (props: { className: string }) => JSX.Element
+            }
+            text={item.text}
+            withTargetBlank={item.withTargetBlank}
+          />
         ))}
       </div>
     </div>

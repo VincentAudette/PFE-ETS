@@ -1,5 +1,6 @@
 import { useId } from "react";
 import RoleBadge from "./RoleBadge";
+import { Role } from "@acme/db";
 
 const features = [
   {
@@ -211,10 +212,7 @@ export function Features() {
             <div className="h-3" />
             <div className="flex gap-2">
               {feature.roles?.map((role) => (
-                <RoleBadge
-                  key={role + feature.name}
-                  role={role as "DEVELOPER" | "ADMIN" | "PROMOTER" | "STUDENT"}
-                />
+                <RoleBadge key={role + feature.name} role={role as Role} />
               ))}
             </div>
           </li>

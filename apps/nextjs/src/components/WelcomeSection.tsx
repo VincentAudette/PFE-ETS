@@ -2,12 +2,16 @@ import { Features } from "./Features";
 
 export default function WelcomeSection() {
   return (
-    <div className="mx-auto mt-4 flex flex-col items-center justify-center gap-12 lg:mt-12">
+    <div className="mx-auto flex flex-col items-center justify-center gap-12">
       <div className="flex max-w-5xl flex-col gap-4">
         <h1 className="text-center text-4xl font-bold text-neutral-900">
           Plateforme PFE dédiée aux{" "}
           <span className="bg-gradient-to-tr from-pink-500 to-purple-500 bg-clip-text text-transparent">
             Promoteurs
+          </span>
+          {", "}
+          <span className="bg-gradient-to-tr from-red-500 to-red-700 bg-clip-text text-transparent">
+            Professeurs
           </span>{" "}
           et{" "}
           <span className="bg-gradient-to-tr from-blue-500 to-emerald-500 bg-clip-text text-transparent">

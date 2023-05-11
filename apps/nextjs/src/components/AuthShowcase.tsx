@@ -1,14 +1,13 @@
-import { UserButton, useAuth } from "@clerk/nextjs";
-import { trpc } from "../utils/trpc";
+import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import MinimalMenu from "./MinimalMenu";
 import RoleBadge from "./RoleBadge";
+import { Role } from "@acme/db";
+import { usePFEAuth } from "../context/PFEAuthContext";
 
-export default function AuthShowcase() {
-  const { isSignedIn } = useAuth();
-  const { data: role } = trpc.auth.getRole.useQuery(undefined, {
-    enabled: !!isSignedIn,
-  });
+export default function AuthShowcase({ isSignedIn }: any) {
+  const { authProfile, userData } = usePFEAuth();
+  const activeRole = authProfile !== null ? authProfile : userData?.role;
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
@@ -16,11 +15,10 @@ export default function AuthShowcase() {
         <>
           <div className="flex items-center justify-center gap-3">
             <div className="flex items-center gap-1">
-              <RoleBadge
-                role={role as "DEVELOPER" | "ADMIN" | "PROMOTER" | "STUDENT"}
-                darkMode={true}
-              />
-              {role === "DEVELOPER" && <MinimalMenu />}
+              <RoleBadge role={activeRole as Role} darkMode={true} />
+              {(activeRole === "DEVELOPER" || authProfile !== null) && (
+                <MinimalMenu />
+              )}
             </div>
             <UserButton
               appearance={{
