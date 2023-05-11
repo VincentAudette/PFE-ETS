@@ -59,10 +59,10 @@ export default function RecommandationsLogo() {
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-black sm:text-4xl">
             Guide d&apos;utilisation
           </h2>
-          <p className="mt-6 text-lg leading-7 text-gray-600">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
-            impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis
-            ratione.
+          <p className="mt-6 max-w-3xl text-center text-lg leading-7 text-gray-600">
+            Ceci peut s&apos;avérer pertinent lors de la présentation de
+            l&apos;engagement de votre entreprise dans le cadre du Projet de fin
+            d&apos;études de nos étudiants.
           </p>
         </div>
         <div className="h-20" />

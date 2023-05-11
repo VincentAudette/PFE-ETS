@@ -15,9 +15,9 @@ export default function TopNav({
 }) {
   const router = useRouter();
   return (
-    <nav className=" h-52 w-full ">
+    <nav className=" h-full w-full ">
       <div className="border-b bg-[#414042]  py-3">
-        <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-4 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
+        <div className="mx-auto flex h-full max-w-5xl flex-col items-center justify-between px-4 sm:px-12 lg:flex-row xl:max-w-[80rem] 2xl:max-w-[100rem]">
           <div className="flex items-center gap-3">
             <div className="group relative">
               <LinkBox className="absolute hidden flex-col group-hover:flex" />
@@ -27,7 +27,7 @@ export default function TopNav({
                 textColor="group-hover:text-neutral-300 text-white"
               />
             </div>
-            <h1 className="lead max-w-[11.5rem] text-lg font-bold leading-[1.6rem] tracking-tight text-white">
+            <h1 className="lead max-w-[11.5rem] text-xs font-bold tracking-tight text-white lg:text-lg lg:leading-[1.6rem]">
               App de gestion des projets de fin d&apos;études
             </h1>
           </div>

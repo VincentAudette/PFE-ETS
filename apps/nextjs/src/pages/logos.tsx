@@ -52,23 +52,21 @@ export default function Home() {
           ]}
         />
         <div className="flex flex-col gap-6 text-center">
-          <h1 className=" text-4xl font-black lg:text-5xl">
+          <h1 className=" text-3xl font-black lg:text-5xl">
             Projet de fin d&apos;études Logo et utilisations
           </h1>
-          <p className="mx-auto max-w-5xl text-center text-base text-neutral-600 lg:text-xl">
+          <p className="mx-auto max-w-5xl px-5 text-center text-base text-neutral-600 lg:text-xl">
             Nous avons formulé des recommandations pour les occasions où vous
             désirez utiliser nos logos pour illustrer le projet accompli en
             collaboration avec notre établissement, l&apos;École de technologie
-            supérieure. Ceci peut s&apos;avérer pertinent lors de la
-            présentation de l&apos;engagement de votre entreprise dans le cadre
-            du Projet de fin d&apos;études de nos étudiants.
+            supérieure.
           </p>
         </div>
         <h2 className="mt-12 text-center text-3xl font-black lg:text-4xl">
           Logos permis
         </h2>
         <div className="h-5 lg:h-12" />
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex flex-col gap-2 px-4 sm:flex-row">
           {[
             {
               src: "/pfe-etsmtl-marque/fond-rouge-avec-description/logo-pfe-fond-rouge-avec-description.svg",
