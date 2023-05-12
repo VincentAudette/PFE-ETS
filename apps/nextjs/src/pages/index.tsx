@@ -18,6 +18,8 @@ export default function Home() {
   });
 
   const { userData, setUserData, authProfile } = usePFEAuth();
+  console.log(userData);
+  console.log("GetUserData : " + getUserData);
 
   useEffect(() => {
     if (getUserData !== undefined) {
