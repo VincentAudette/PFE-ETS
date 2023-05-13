@@ -8,6 +8,9 @@ import {
 import RoleBadge from "./RoleBadge";
 import Link from "next/link";
 import InputWithIcon from "./Forms/atoms/InputWithIcon";
+import Image from "next/image";
+import Button from "./Forms/atoms/button";
+import { SingleReceipientEmail } from "../pages/api/admin/mail/send-single-recipient-email";
 
 const primaryFeatures = [
   {
@@ -41,51 +44,75 @@ export default function DevelopementPublicSection() {
     e.preventDefault();
     const target = e.target as InterestedContributorEmailFormElement;
 
+    const message: SingleReceipientEmail = {
+      to: "vincent.audette.1@ens.etsmtl.ca",
+      from: target.interestedContributorEmail.value,
+      subject: "PFE ETS - Intéressé à contribuer au projet",
+      text: `Une nouvelle personne est intéressée à contribuer au projet PFE ETS.\n\nCourriel: ${target.interestedContributorEmail.value}`,
+      html: `<p>Une nouvelle personne est intéressée à contribuer au projet PFE ETS.\n\nCourriel: ${target.interestedContributorEmail.value}</p>`,
+    };
+
+    fetch("/api/admin/mail/send-single-recipient-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
     console.log(target.interestedContributorEmail.value);
   };
 
   return (
     <div className="mx-auto  sm:px-6 lg:px-8">
-      <div className="relative isolate overflow-hidden bg-neutral-700 px-6 py-20 sm:rounded-3xl sm:px-10 sm:py-24 lg:py-24 xl:px-24">
+      <div className="relative isolate overflow-hidden bg-gray-900 px-6 py-20 sm:rounded-3xl sm:px-10 sm:py-24 lg:py-24 xl:px-24">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center lg:gap-y-0">
           <div className="lg:row-start-2 lg:max-w-md">
             <RoleBadge role="DEVELOPER" darkMode={true} />
             <div className="h-3" />
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Contribuer sur le projet
+              Participez au projet PFE,
               <br />
-              PFE est open source
+              C&apos;est open source !
             </h2>
             <p className="mt-6 text-lg leading-8 text-neutral-300">
               Pour faire partie de l&apos;équipe de développement, inscrivez
               votre courriel ci-bas et nous vous contacterons.
             </p>
-            <form onSubmit={handleInterestedContributor}>
-              <InputWithIcon
-                Icon={EnvelopeIcon}
-                name="interestedContributorEmail"
-                placeholder="prenom.nom@ens.etsmtl.ca"
-                type="email"
-                id="email"
-                label="Courriel"
-                darkMode={true}
-              />
+            <div className="h-9" />
+            <form
+              className="flex items-end gap-4"
+              onSubmit={handleInterestedContributor}
+            >
+              <div className="w-2/3">
+                <InputWithIcon
+                  Icon={EnvelopeIcon}
+                  name="interestedContributorEmail"
+                  placeholder="prenom.nom@ens.etsmtl.ca"
+                  type="email"
+                  id="email"
+                  label="Courriel"
+                  darkMode={true}
+                />
+              </div>
+              <div className="w-1/3">
+                <Button type="submit" text="Envoyer" />
+              </div>
             </form>
 
             <Link
               href=""
-              className="group mt-6 flex max-w-max items-center rounded-md bg-neutral-600 py-1 px-4 text-blue-400 hover:bg-blue-500 hover:text-white"
+              className="group mt-6 flex max-w-max items-center rounded-md py-1 px-4 text-blue-400 hover:bg-blue-500 hover:text-white"
             >
               <p className=" min-w-max">Découvrez notre Roadmap</p>
               <ArrowRightIcon className="group ml-1 h-5 w-5 skew-x-0  duration-150 group-hover:translate-x-2" />
             </Link>
           </div>
-          <img
-            src="https://tailwindui.com/img/component-images/dark-project-app-screenshot.png"
+          <Image
+            src="/contribution-bg.jpg"
             alt="Product screenshot"
             className="relative -z-20 min-w-full max-w-xl rounded-xl shadow-xl ring-1 ring-white/10 lg:row-span-4 lg:w-[64rem] lg:max-w-none"
-            width={2432}
-            height={1442}
+            width={3158}
+            height={1872}
           />
           <div className="max-w-xl lg:row-start-3 lg:mt-10 lg:max-w-md lg:border-t lg:border-white/10 lg:pt-10">
             <dl className="max-w-xl space-y-8 text-base leading-7 text-neutral-300 lg:max-w-none">

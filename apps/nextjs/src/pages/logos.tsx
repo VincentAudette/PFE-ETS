@@ -5,10 +5,7 @@ import { useAuth } from "@clerk/nextjs";
 import { usePFEAuth } from "../context/PFEAuthContext";
 import { useEffect } from "react";
 import Image from "next/image";
-import {
-  ArrowDownOnSquareIcon,
-  ArrowDownTrayIcon,
-} from "@heroicons/react/20/solid";
+import { ArrowDownTrayIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import RecommandationsLogo from "../components/RecommendationsLogo";
 
