@@ -38,28 +38,34 @@ interface InterestedContributorEmailFormElement extends HTMLFormElement {
 }
 
 export default function DevelopementPublicSection() {
-  const handleInterestedContributor = (
+  const handleInterestedContributor = async (
     e: React.MouseEvent<HTMLFormElement>,
   ) => {
     e.preventDefault();
     const target = e.target as InterestedContributorEmailFormElement;
 
     const message: SingleReceipientEmail = {
-      to: "vincent.audette.1@ens.etsmtl.ca",
-      from: target.interestedContributorEmail.value,
+      to: "va@bnel.ca",
+      from: "vincent.audette.1+pfe@etsmtl.net",
       subject: "PFE ETS - Intéressé à contribuer au projet",
       text: `Une nouvelle personne est intéressée à contribuer au projet PFE ETS.\n\nCourriel: ${target.interestedContributorEmail.value}`,
       html: `<p>Une nouvelle personne est intéressée à contribuer au projet PFE ETS.\n\nCourriel: ${target.interestedContributorEmail.value}</p>`,
     };
 
-    fetch("/api/admin/mail/send-single-recipient-email", {
+    const res = await fetch("/api/admin/mail/send-single-recipient-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(message),
     });
-    console.log(target.interestedContributorEmail.value);
+
+    if (res.status === 200) {
+      alert("Merci! Nous vous contacterons sous peu.");
+    } else {
+      console.error("Error sending email", res);
+    }
+    target.reset();
   };
 
   return (
