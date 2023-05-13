@@ -38,7 +38,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center bg-neutral-50 dark:bg-neutral-600">
+      <main className="flex min-h-screen flex-col items-center bg-neutral-50">
         <TopNav isSignedIn={isSignedIn} activeRole={activeRole} />
         <div className=" flex w-full max-w-5xl justify-between gap-10 px-4 py-10 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
           {activeRole === "STUDENT" && <StudentView />}

@@ -10,11 +10,7 @@ export default function WelcomeSection() {
           <span className="bg-gradient-to-tr from-pink-500 to-purple-500 bg-clip-text text-transparent">
             Promoteurs
           </span>
-          {", "}
-          <span className="bg-gradient-to-tr from-red-500 to-red-700 bg-clip-text text-transparent">
-            Professeurs
-          </span>{" "}
-          et{" "}
+          {" et "}¨
           <span className="bg-gradient-to-tr from-blue-500 to-emerald-500 bg-clip-text text-transparent">
             Étudiants
           </span>{" "}

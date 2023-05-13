@@ -36,7 +36,7 @@ export default function Home() {
         <meta name="description" content="Logo de Projets de fin d'études." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center bg-neutral-50 dark:bg-neutral-600">
+      <main className="flex min-h-screen flex-col items-center bg-neutral-50 ">
         <TopNav
           isSignedIn={isSignedIn}
           activeRole={activeRole}
