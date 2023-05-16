@@ -1,5 +1,5 @@
-import { UserGroupIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import Button from "../Forms/atoms/Button";
+import { UserPlusIcon } from "@heroicons/react/24/solid";
+import Button from "../Forms/atoms/button";
 import CheckBoxInput from "../Forms/atoms/CheckBoxInput";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 import InputWithIcon from "../Forms/atoms/InputWithIcon";

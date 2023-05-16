@@ -10,7 +10,7 @@ import Link from "next/link";
 import InputWithIcon from "./Forms/atoms/InputWithIcon";
 import Image from "next/image";
 import { SingleReceipientEmail } from "../pages/api/admin/mail/send-single-recipient-email";
-import Button from "./Forms/atoms/Button";
+import Button from "./Forms/atoms/button";
 
 const primaryFeatures = [
   {
