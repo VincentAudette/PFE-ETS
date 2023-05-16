@@ -9,8 +9,8 @@ import RoleBadge from "./RoleBadge";
 import Link from "next/link";
 import InputWithIcon from "./Forms/atoms/InputWithIcon";
 import Image from "next/image";
-import Button from "./Forms/atoms/Button";
 import { SingleReceipientEmail } from "../pages/api/admin/mail/send-single-recipient-email";
+import Button from "./Forms/atoms/Button";
 
 const primaryFeatures = [
   {
