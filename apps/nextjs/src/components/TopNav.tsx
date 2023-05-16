@@ -27,7 +27,7 @@ export default function TopNav({
                 textColor="group-hover:text-neutral-300 text-white"
               />
             </div>
-            <h1 className="lead max-w-[11.5rem] text-xs font-bold tracking-tight text-white lg:text-lg lg:leading-[1.6rem]">
+            <h1 className="lead max-w-[11.5rem] text-xs font-bold  text-white lg:text-lg lg:leading-[1.6rem]">
               App de gestion des projets de fin d&apos;études
             </h1>
           </div>

@@ -9,7 +9,7 @@ import RoleBadge from "./RoleBadge";
 import Link from "next/link";
 import InputWithIcon from "./Forms/atoms/InputWithIcon";
 import Image from "next/image";
-import Button from "./Forms/atoms/button";
+import Button from "./Forms/atoms/Button";
 import { SingleReceipientEmail } from "../pages/api/admin/mail/send-single-recipient-email";
 
 const primaryFeatures = [
@@ -69,10 +69,10 @@ export default function DevelopementPublicSection() {
   };
 
   return (
-    <div className="mx-auto  sm:px-6 lg:px-8">
-      <div className="relative isolate overflow-hidden bg-gray-900 px-6 py-20 sm:rounded-3xl sm:px-10 sm:py-24 lg:py-24 xl:px-24">
+    <div className="mx-auto  max-w-[90rem] sm:px-6 lg:px-8">
+      <div className="relative isolate overflow-hidden bg-gray-900 px-6 py-20 sm:rounded-3xl sm:px-10 sm:py-24 lg:py-24">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center lg:gap-y-0">
-          <div className="lg:row-start-2 lg:max-w-md">
+          <div className="lg:row-start-2 lg:max-w-lg">
             <RoleBadge role="DEVELOPER" darkMode={true} />
             <div className="h-3" />
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">

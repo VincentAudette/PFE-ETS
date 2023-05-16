@@ -1,57 +1,18 @@
-import {
-  CalendarIcon,
-  ChartPieIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
-  HomeIcon,
-  UsersIcon,
-} from "@heroicons/react/24/solid";
-
-const navigation = [
-  {
-    name: "Tableau de bord",
-    href: "#",
-    icon: HomeIcon,
-    count: "5",
-    current: true,
-  },
-  { name: "Équipes", href: "#", icon: UsersIcon, current: false },
-  {
-    name: "Projets",
-    href: "#",
-    icon: FolderIcon,
-    count: "12",
-    current: false,
-  },
-  {
-    name: "Calendar",
-    href: "#",
-    icon: CalendarIcon,
-    count: "20+",
-    current: false,
-  },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Rapports", href: "#", icon: ChartPieIcon, current: false },
-];
-const secondaryNavigation = [
-  { name: "Website redesign", href: "#", initial: "W", current: false },
-  { name: "GraphQL API", href: "#", initial: "G", current: false },
-  {
-    name: "Customer migration guides",
-    href: "#",
-    initial: "C",
-    current: false,
-  },
-  { name: "Profit sharing program", href: "#", initial: "P", current: false },
-];
+import { NavigationItem, SecondaryNavigationItem } from "./SideBarLayout";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function VerticalNav() {
+export default function VerticalNav({
+  navigation,
+  secondaryNavigation,
+}: {
+  navigation: NavigationItem[];
+  secondaryNavigation?: SecondaryNavigationItem[];
+}) {
   return (
-    <nav className="flex flex-1 flex-col" aria-label="Sidebar">
+    <nav className="flex min-w-[15rem] flex-1 flex-col" aria-label="Sidebar">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
           <ul role="list" className="-mx-2 space-y-1">
@@ -94,7 +55,7 @@ export default function VerticalNav() {
             Projets en cours
           </div>
           <ul role="list" className="-mx-2 mt-2 space-y-1">
-            {secondaryNavigation.map((item) => (
+            {secondaryNavigation?.map((item) => (
               <li key={item.name}>
                 <a
                   href={item.href}

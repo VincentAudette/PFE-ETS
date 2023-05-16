@@ -9,6 +9,7 @@ import PromoterView from "../components/RoleViews/PromoterView";
 import AdminView from "../components/RoleViews/AdminView";
 import { useEffect } from "react";
 import DeveloperView from "../components/RoleViews/DeveloperView";
+import DevelopementPublicSection from "../components/DevelopmentPublicSection";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
@@ -47,6 +48,7 @@ export default function Home() {
           {activeRole === "DEVELOPER" && <DeveloperView />}
           {userData === null && <WelcomeSection />}
         </div>
+        {userData === null && <DevelopementPublicSection />}
       </main>
     </>
   );

@@ -10,14 +10,15 @@ const features = [
     roles: ["PROMOTER"],
   },
   {
-    name: "Faire la sélection d'un PFE",
-    description: "Planifiez votre PFE selon vos intérêts et qualifications.",
+    name: "Envoyer des notifications automatiques",
+    description:
+      "L'application notifie les étudiants sélectionné à votre PFE après la création de groupes.",
     roles: ["STUDENT"],
   },
   {
-    name: "Planifier des jalons",
+    name: "Simplifier la gestion des projets",
     description:
-      "Une place pour planifier les jalons de votre projet et les dates limites.",
+      "Vous pouvez gérer vos projets de fin d'études dans tous ses phases en un seul endroit.",
     roles: ["PROMOTER"],
   },
   {
