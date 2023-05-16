@@ -7,8 +7,6 @@ assignees: ''
 
 ---
 
-## Titre de la demande de fonctionnalité
-
 **Votre demande de fonctionnalité est-elle liée à un problème? Veuillez le décrire.**
 Une description claire et concise du problème. Par exemple, "Je suis toujours frustré quand [...]"
 
