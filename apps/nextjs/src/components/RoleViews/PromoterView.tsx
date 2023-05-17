@@ -14,6 +14,7 @@ import {
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { NextRouter, Router, useRouter } from "next/router";
+import { usePFEAuth } from "../../context/PFEAuthContext";
 
 const navigation: NavigationItem[] = [
   {
@@ -46,6 +47,10 @@ export default function PromoterView({
 
   console.log("router.asPath", router.asPath);
 
+  const { userData } = usePFEAuth();
+
+  console.log("userData", userData);
+
   if (
     navigation[0] !== undefined &&
     navigation[1] !== undefined &&
@@ -66,6 +71,10 @@ export default function PromoterView({
       navigation[3].current = false;
     }
   }
+
+  // if (userData.role === "UNASSIGNED") {
+  //   return <div>TEST</div>;
+  // }
 
   return (
     <SideBarLayout
