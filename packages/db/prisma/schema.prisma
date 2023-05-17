@@ -22,7 +22,7 @@ model User{
     firstName   String?
     lastName    String?
     email String  @unique
-    role  Role    @default(STUDENT)
+    role  Role    @default(UNREGISTERED)
     @@map("users")
 }
 
@@ -30,6 +30,7 @@ enum Role {
   DEVELOPER
   ADMIN
   PROMOTER
+  TEACHER
   STUDENT
   UNREGISTERED
 }

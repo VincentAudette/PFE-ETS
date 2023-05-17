@@ -13,11 +13,12 @@ import {
 } from "@heroicons/react/24/solid";
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import { NextRouter, Router, useRouter } from "next/router";
 
 const navigation: NavigationItem[] = [
   {
     name: "Tableau de bord",
-    href: "#",
+    href: "/",
     icon: HomeIcon,
     count: "5",
     current: true,
@@ -25,7 +26,7 @@ const navigation: NavigationItem[] = [
   { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
   {
     name: "Nouveau PFE",
-    href: "#",
+    href: "/projets/new",
     icon: PlusCircleIcon,
     current: false,
   },
@@ -36,7 +37,36 @@ const secondaryNavigation: SecondaryNavigationItem[] = [
   { name: "GraphQL API", href: "#", initial: "G", current: false },
 ];
 
-export default function PromoterView() {
+export default function PromoterView({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
+  const router: NextRouter = useRouter();
+
+  console.log("router.asPath", router.asPath);
+
+  if (
+    navigation[0] !== undefined &&
+    navigation[1] !== undefined &&
+    navigation[2] !== undefined &&
+    navigation[3] !== undefined
+  ) {
+    if (router.asPath === "/") {
+      navigation[0].current = true;
+      navigation[1].current = false;
+      navigation[2].current = false;
+      navigation[3].current = false;
+    }
+
+    if (router.pathname.includes("projets/new")) {
+      navigation[0].current = false;
+      navigation[1].current = false;
+      navigation[2].current = true;
+      navigation[3].current = false;
+    }
+  }
+
   return (
     <SideBarLayout
       navigation={navigation}
@@ -44,15 +74,20 @@ export default function PromoterView() {
     >
       {/* <FileUploadButton /> */}
       <div>
-        Vous n&apos;avez pas de PFE en cours.{" "}
-        <span>
-          <Link
-            className=" rounded-lg px-3 py-2 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
-            href=""
-          >
-            Cliquer ici pour en débuter un
-          </Link>
-        </span>
+        {router.pathname === "" && (
+          <div>
+            Vous n&apos;avez pas de PFE en cours.{" "}
+            <span>
+              <Link
+                className=" rounded-lg px-3 py-2 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                href="/projets/new"
+              >
+                Débuter un nouveau PFE &rarr;
+              </Link>
+            </span>
+          </div>
+        )}
+        {children}
       </div>
     </SideBarLayout>
   );

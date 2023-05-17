@@ -20,7 +20,7 @@ export default function Home() {
   const { userData, setUserData, authProfile } = usePFEAuth();
 
   useEffect(() => {
-    if (getUserData !== undefined) {
+    if (getUserData !== undefined && authProfile === null) {
       setUserData(getUserData);
     }
   });
@@ -41,14 +41,17 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-neutral-50">
         <TopNav isSignedIn={isSignedIn} activeRole={activeRole} />
-        <div className=" flex w-full max-w-5xl justify-between gap-10 px-4 py-10 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
-          {activeRole === "STUDENT" && <StudentView />}
-          {activeRole === "PROMOTER" && <PromoterView />}
-          {activeRole === "ADMIN" && <AdminView />}
-          {activeRole === "DEVELOPER" && <DeveloperView />}
-          {userData === null && <WelcomeSection />}
-        </div>
-        {userData === null && <DevelopementPublicSection />}
+        <div className="h-10" />
+        {activeRole === "STUDENT" && <StudentView />}
+        {activeRole === "PROMOTER" && <PromoterView />}
+        {activeRole === "ADMIN" && <AdminView />}
+        {activeRole === "DEVELOPER" && <DeveloperView />}
+        {userData === null && (
+          <div>
+            <WelcomeSection />
+            <DevelopementPublicSection />
+          </div>
+        )}
       </main>
     </>
   );

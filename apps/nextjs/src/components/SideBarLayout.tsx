@@ -30,7 +30,7 @@ export default function SideBarLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className=" mx-auto flex w-full max-w-5xl justify-between gap-10 px-4 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
       <VerticalNav
         navigation={navigation}
         secondaryNavigation={secondaryNavigation}
@@ -41,6 +41,6 @@ export default function SideBarLayout({
           {children}
         </div>
       </div>
-    </>
+    </div>
   );
 }

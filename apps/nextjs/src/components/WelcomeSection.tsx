@@ -2,7 +2,7 @@ import { Features } from "./Features";
 
 export default function WelcomeSection() {
   return (
-    <div className="items-ce mx-auto mt-5 flex flex-col gap-10 ">
+    <div className="items-ce mx-auto mt-5 flex max-w-[89rem] flex-col gap-10 ">
       <div>
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-items-center gap-4">
           <h1 className="text-center text-4xl font-bold text-neutral-900">
