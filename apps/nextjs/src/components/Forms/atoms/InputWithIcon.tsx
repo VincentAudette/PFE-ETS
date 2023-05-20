@@ -10,9 +10,9 @@ export default function InputWithIcon({
   type: string;
   label: string;
   name: string;
-  id: string;
+  id?: string;
   placeholder: string;
-  Icon: React.ForwardRefExoticComponent<
+  Icon?: React.ForwardRefExoticComponent<
     React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
       title?: string;
       titleId?: string;
@@ -31,9 +31,11 @@ export default function InputWithIcon({
         {label}
       </label>
       <div className="relative mt-2 rounded-md shadow-sm">
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-        </div>
+        {Icon && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          </div>
+        )}
         <input
           type={type}
           name={name}
