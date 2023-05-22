@@ -1,40 +1,30 @@
-import { PrismaClient } from "@prisma/client";
 import {Helper} from "./algoHelpers"
-
-export const prisma =
-    global.prisma ||
-    new PrismaClient({
-        log:
-            process.env.NODE_ENV === "development"
-                ? ["query", "error", "warn"]
-                : ["error"],
-    });
+import {PrismaClient, Project, StudentOnProject, Trimester} from "@prisma/client";
+const prisma = new PrismaClient();
 
 //creation of teams for groups
 async function createGroups() {
 
-    const projects = Helper.getProjects();
+    const projects = await Helper.getProjects();
 
-    projects.forEach(x => {
-        const groupedStudents = x.firstChoices.findAll({
-            where: {
-                partner1: !null,
-            }
-        })
+    projects.forEach(x=> {
+        const groupedStudents = x.firstChoices.filter(
+
+                x=> (x.partner1 !== ""));
 
         //lower than max size we can have
-        if(groupedStudents.size <= x.numberOfStudents){
-            const studentIds = [];
+        if(groupedStudents.length <= x.numberOfStudents){
+            const studentIds:any[] = [];
             groupedStudents.forEach(z=>{
                 //student already in group formation skip
-                if(studentIds.includes(z.studentId))
+                if(studentIds.includes(z.studentEmail))
                     return;
                 //all possible ids for a single student
-                let partners = [z.studentId,z.partner1,z.partner2,z.partner3,z.partner4];
+                let partners = [z.studentEmail,z.partner1,z.partner2,z.partner3,z.partner4];
                 //remove nulls
                 partners =  partners.flatMap(f => f ? [f] : []);
                 //is currentGroup + OtherGroup < limit
-                if(studentIds.length+ partners.length < groupedStudents.size){
+                if(studentIds.length+ partners.length < groupedStudents.length){
                     partners.forEach(p=> {
                         //push all that's not already included
                         if(!studentIds.includes(p))
@@ -44,7 +34,7 @@ async function createGroups() {
             })
             //ready to create group
             studentIds.forEach(s=>{
-                Helper.createStudentProject(s,x.projectId);
+                Helper.createStudentProject(s,x.pfeId);
             })
 
         }else{
@@ -54,4 +44,9 @@ async function createGroups() {
     })
 
 }
+
+async function createGroupsForNoPartners(){
+    throw new Error("not Implemented")
+}
+
 

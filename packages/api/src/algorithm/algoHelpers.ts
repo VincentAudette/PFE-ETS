@@ -1,42 +1,33 @@
-import {prisma} from "./algo";
+import {PrismaClient, ProjectStatus, StudentOnProject, Trimester} from "@prisma/client";
 
+const prisma = new PrismaClient();
 
 export class Helper {
-    private static currentTrimester = 'SUMMER';
+    private static currentTrimester :Trimester = 'SUMMER';
+    private static state :ProjectStatus = 'GROUP_CREATION';
 
-    static createStudentProject(studentid :string, projectId : string){
-        const studentProject = {
-            studentId: studentid,
-            projectId: projectId.projectId ,
+    static createStudentProject(studentEmail :string, projectId : string){
+        const studentProject : StudentOnProject = {
+            studentEmail: studentEmail,
+            projectId: projectId ,
             hasBeenNotified : false
         }
-        prisma.StudentOnProject.create({
+        prisma.studentOnProject.create({
             data: studentProject
         })
     }
-    static getProjects(){
-
-        return prisma.Project.findMany({
+    static async  getProjects(){
+        return  prisma.project.findMany({
             where: {
                 trimester: this.currentTrimester,
-                ProjectStatus : {
-                    state: 'GROUP_CREATION',
-                }
             },
             include:{
-                trimester: true,
                 promoter: true,
                 organization: true,
-                encouragementType: true,
                 teachers: true,
-                departments: {
-                    type: true,
-                },
-                thematics: {
-                    projectRelations: true,
-                },
+                departments: true,
+                thematics: true,
                 students: true,
-                states:true ,
                 firstChoices: {
                     include: {
                         student: true,
@@ -52,6 +43,9 @@ export class Helper {
                         student: true,
                     }},
                 representativeRelations: true,
+                states : {
+                    where: {state: this.state,}
+                }
             }
         })
     }
