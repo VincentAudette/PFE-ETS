@@ -2,6 +2,8 @@ import {prisma} from "./algo";
 
 
 export class Helper {
+    private static currentTrimester = 'SUMMER';
+
     static createStudentProject(studentid :string, projectId : string){
         const studentProject = {
             studentId: studentid,
@@ -13,9 +15,10 @@ export class Helper {
         })
     }
     static getProjects(){
+
         return prisma.Project.findMany({
             where: {
-                trimester: currentTrimester,
+                trimester: this.currentTrimester,
                 ProjectStatus : {
                     state: 'GROUP_CREATION',
                 }

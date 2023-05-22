@@ -12,7 +12,7 @@ export const prisma =
 
 //creation of teams for groups
 async function createGroups() {
-    const currentTrimester = 'SUMMER';
+
     const projects = Helper.getProjects();
 
     projects.forEach(x => {
