@@ -79,8 +79,8 @@ model Organization {
 
 model StudentChoice {
   id                  Int       @id @default(autoincrement())
-  studentId           Int
-  student             Student   @relation(fields: [studentId], references: [id])
+  studentEmail           String
+  student             Student   @relation(fields: [studentEmail], references: [email])
   firstProjectId      String
   firstProject        Project   @relation("FirstProjectChoice", fields: [firstProjectId], references: [id])
   secondProjectId     String
@@ -89,7 +89,6 @@ model StudentChoice {
   thirdProject        Project  @relation("ThirdProjectChoice", fields: [thirdProjectId], references: [id])
   fourthProjectId     String
   fourthProject       Project  @relation("FourthProjectChoice", fields: [fourthProjectId], references: [id])
-  completedCourses    String
   partner1            String    @default("")
   partner2            String    @default("")
   partner3            String    @default("")
@@ -97,10 +96,11 @@ model StudentChoice {
   isPreApprovedInPfe  Boolean
   isEnergyProfile     Boolean
   isHealthProfile     Boolean
+  dateSubmitted       DateTime
   trimester           Trimester
   year                Int
 
-  @@unique([studentId, trimester, year])
+  @@unique([studentEmail, trimester, year])
 }
 
 
@@ -148,7 +148,7 @@ model Thematic {
 }
 
 model Student {
-  id               Int               @id @default(autoincrement())
+  email          String              @id @unique
   projectRelations StudentOnProject[]
   studentChoices   StudentChoice[]
 }
@@ -175,12 +175,12 @@ model AdminDepartment {
 }
 
 model StudentOnProject {
-  studentId Int
-  student   Student @relation(fields: [studentId], references: [id])
+  studentEmail String
+  student   Student @relation(fields: [studentEmail], references: [email])
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
   hasBeenNotified Boolean
-  @@id([studentId, projectId])
+  @@id([studentEmail, projectId])
 }
 
 model TeacherOnProject {
