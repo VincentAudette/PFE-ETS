@@ -89,7 +89,6 @@ model StudentChoice {
   thirdProject        Project  @relation("ThirdProjectChoice", fields: [thirdProjectId], references: [id])
   fourthProjectId     String
   fourthProject       Project  @relation("FourthProjectChoice", fields: [fourthProjectId], references: [id])
-  completedCourses    String
   partner1            String    @default("")
   partner2            String    @default("")
   partner3            String    @default("")
@@ -97,6 +96,7 @@ model StudentChoice {
   isPreApprovedInPfe  Boolean
   isEnergyProfile     Boolean
   isHealthProfile     Boolean
+  dateSubmitted       DateTime
   trimester           Trimester
   year                Int
 
