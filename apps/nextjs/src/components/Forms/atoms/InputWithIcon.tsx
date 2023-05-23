@@ -1,3 +1,15 @@
+import { InputWithLabelProps } from "./SimpleInput";
+
+export interface InputWithLabelAndIconProps extends InputWithLabelProps {
+  Icon: React.ForwardRefExoticComponent<
+    React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
+      title?: string;
+      titleId?: string;
+    } & React.RefAttributes<SVGSVGElement>
+  >;
+  darkMode?: boolean;
+}
+
 export default function InputWithIcon({
   type,
   label,
@@ -6,20 +18,7 @@ export default function InputWithIcon({
   placeholder,
   Icon,
   darkMode = false,
-}: {
-  type: string;
-  label: string;
-  name: string;
-  id: string;
-  placeholder: string;
-  Icon: React.ForwardRefExoticComponent<
-    React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
-      title?: string;
-      titleId?: string;
-    } & React.RefAttributes<SVGSVGElement>
-  >;
-  darkMode?: boolean;
-}) {
+}: InputWithLabelAndIconProps) {
   return (
     <div>
       <label

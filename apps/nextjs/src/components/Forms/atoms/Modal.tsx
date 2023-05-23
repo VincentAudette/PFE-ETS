@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/solid";
 import InputWithIcon from "./InputWithIcon";
 import { trpc } from "../../../utils/trpc";
+import SimpleTextArea from "./SimpleTextArea";
 
 export interface IFormValues {
   orgName: string;
@@ -92,12 +93,11 @@ export default function Modal({ open, setOpen }: any) {
                           placeholder="Compagnie XYZ Inc."
                         />
                         <div className="h-6" />
-                        <InputWithIcon
-                          type="text"
+
+                        <SimpleTextArea
+                          label="Courte description de votre organisation"
                           name="orgDescription"
                           id="orgDescription"
-                          label="Courte description de votre organisation"
-                          Icon={DocumentTextIcon}
                           placeholder=""
                         />
                         <div className="h-6" />
@@ -112,7 +112,7 @@ export default function Modal({ open, setOpen }: any) {
                         <div className="mt-5 sm:mt-6">
                           <button
                             type="submit"
-                            className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                           >
                             Ajouter
                           </button>
