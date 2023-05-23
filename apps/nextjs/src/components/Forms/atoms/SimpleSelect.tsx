@@ -6,13 +6,18 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
+export interface SelectOption {
+  id: string;
+  name: string;
+}
+
 export default function SimpleSelect({
   label,
   options,
   name,
 }: {
   label: string;
-  options: { id: string; name: string }[];
+  options: SelectOption[];
   name: string;
 }) {
   const [selected, setSelected] = useState(options[0]);
