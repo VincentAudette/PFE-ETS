@@ -5,8 +5,8 @@ import {
   DocumentTextIcon,
   CameraIcon,
 } from "@heroicons/react/24/solid";
-import InputWithIcon from "../Forms/atoms/InputWithIcon";
-import { trpc } from "../../utils/trpc";
+import InputWithIcon from "./InputWithIcon";
+import { trpc } from "../../../utils/trpc";
 
 export interface IFormValues {
   orgName: string;
@@ -20,8 +20,7 @@ interface StudentChoicesFormElement extends HTMLFormElement {
   orgLogo: { value: string };
 }
 
-export default function Example() {
-  const [open, setOpen] = useState(true);
+export default function Modal({ open, setOpen }: any) {
   const createOrganization = trpc.organization.create.useMutation();
 
   const handleSelectionSubmit = (e: React.FormEvent<HTMLFormElement>) => {

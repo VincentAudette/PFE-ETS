@@ -1,10 +1,11 @@
 import { usePFEAuth } from "../../context/PFEAuthContext";
-import { BuildingOfficeIcon } from "@heroicons/react/24/solid";
+import { BuildingOfficeIcon, PlusIcon } from "@heroicons/react/24/solid";
 import Button from "../Forms/atoms/button";
 import InputWithIcon from "../Forms/atoms/InputWithIcon";
 import { trpc } from "../../utils/trpc";
-import SimpleSelect from "../Forms/atoms/SimpleSelect";
-import Modal from "../Forms/Modal";
+import SimpleSelect, { SelectOption } from "../Forms/atoms/SimpleSelect";
+import Modal from "../Forms/atoms/Modal";
+import { useState } from "react";
 
 export interface IFormValues {
   orgName: string;
@@ -17,11 +18,13 @@ interface StudentChoicesFormElement extends HTMLFormElement {
 }
 
 export default function UnregisteredView() {
+  const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
+
   const { userData } = usePFEAuth();
   const organizations = trpc.organization.all.useQuery().data;
   const updateToPromoter = trpc.user.updateToPromoter.useMutation();
 
-  let orgOptions = null;
+  let orgOptions: SelectOption[] | null = null;
 
   if (organizations != undefined) {
     orgOptions = organizations?.map((x) => ({
@@ -32,7 +35,15 @@ export default function UnregisteredView() {
     orgOptions = [
       {
         id: "0",
-        name: "",
+        name: "Compagnie XYZ Inc.",
+      },
+      {
+        id: "1",
+        name: "Compagnie ABC Inc.",
+      },
+      {
+        id: "2",
+        name: "Compagnie 123 Inc.",
       },
     ];
   }
@@ -66,20 +77,36 @@ export default function UnregisteredView() {
       </h3>
       <div className="h-3" />
       <form className=" flex flex-col gap-4" onSubmit={handleSelectionSubmit}>
-        <InputWithIcon
+        <div className="flex items-end gap-3">
+          <SimpleSelect
+            name="orgChoice"
+            label="Choisissez votre organisation"
+            options={orgOptions}
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setOrganisationModalOpen(true);
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-md bg-neutral-300 text-neutral-500 hover:scale-105 hover:bg-blue-600 hover:text-white"
+          >
+            <PlusIcon className="h-5 w-5" />
+          </button>
+        </div>
+        {/* <InputWithIcon
           type="text"
           name="orgName"
           id="orgName"
           label="Nom de votre organisation"
           Icon={BuildingOfficeIcon}
           placeholder="Compagnie XYZ Inc."
-        />
+        /> */}
         <div className="h-3" />
         <div className=" self-center">
           <Button text="Confirmer mes informations" type="submit" />
         </div>
       </form>
-      <Modal />
+      <Modal open={organisationModalOpen} setOpen={setOrganisationModalOpen} />
     </div>
   );
 }
