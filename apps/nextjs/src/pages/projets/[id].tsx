@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import FileUploadButton from "../../components/FileUploadButton";
 import { trpc } from "../../utils/trpc";
 
 export default function ProjectPage() {
@@ -10,7 +9,6 @@ export default function ProjectPage() {
   return (
     <>
       <h1>Project Page</h1>
-      <FileUploadButton />
     </>
   );
 }

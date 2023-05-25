@@ -61,8 +61,6 @@ export default function AdminView() {
       navigation={navigation}
       secondaryNavigation={secondaryNavigation}
     >
-      {/* <FileUploadButton /> */}
-
       {postQuery.data ? (
         <div className="flex w-full flex-col gap-4">
           {postQuery.data?.map((p: Post) => {
