@@ -97,10 +97,20 @@ model StudentChoice {
   @@unique([studentEmail, trimester, year])
 }
 
+model File{
+    key         String @id
+    name        String?
+    type        FileType
+    url         String 
+    uploadedAt  DateTime @default(now())
+    organizationId Int? @unique
+    organization Organization? @relation(fields: [organizationId], references: [id])
+}
+
 model Organization {
   id          Int       @id @default(autoincrement())
   name        String
-  logo        String?
+  logo        File?
   description String?
   projects    Project[]
   promoters   PromoterOrganization[]
@@ -269,6 +279,14 @@ enum Trimester {
   WINTER
   AUTOMNE
   SUMMER
+}
+
+enum FileType {
+    PDF
+    IMAGE
+    VIDEO
+    AUDIO
+    ZIP
 }
 
 enum ProjectStatus {

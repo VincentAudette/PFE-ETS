@@ -2,12 +2,15 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   BuildingOfficeIcon,
-  DocumentTextIcon,
   CameraIcon,
+  PhotoIcon,
 } from "@heroicons/react/24/solid";
 import InputWithIcon from "./InputWithIcon";
 import { trpc } from "../../../utils/trpc";
 import SimpleTextArea from "./SimpleTextArea";
+import UploadThingButton from "./UploadThingButton";
+import { File, FileType } from "@acme/db";
+import Image from "next/image";
 
 export interface IFormValues {
   orgName: string;
@@ -22,7 +25,20 @@ interface StudentChoicesFormElement extends HTMLFormElement {
 }
 
 export default function Modal({ open, setOpen }: any) {
+  const [selectedFile, setSelectedFile] = useState<
+    { fileUrl: string; fileKey: string }[] | undefined
+  >(undefined);
+
   const createOrganization = trpc.organization.create.useMutation();
+  const uploadedFile = trpc.file.byKey.useQuery(
+    selectedFile?.[0]?.fileKey as string,
+    {
+      enabled: selectedFile != undefined && selectedFile[0] != undefined,
+    },
+  );
+
+  console.log("selectedFile IN UPLOADTHING is =>", selectedFile);
+  console.log("uploadedFile IN PRISMA is =>", uploadedFile);
 
   const handleSelectionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,6 +100,29 @@ export default function Modal({ open, setOpen }: any) {
                         className="mt-5 sm:mt-6"
                         onSubmit={handleSelectionSubmit}
                       >
+                        <div className="flex">
+                          {selectedFile && selectedFile[0]?.fileUrl ? (
+                            <Image
+                              src={selectedFile[0].fileUrl}
+                              alt="logo"
+                              className="h-32 w-32"
+                              width={128}
+                              height={128}
+                            />
+                          ) : (
+                            <div className="flex h-32 w-32 items-center justify-center border">
+                              <PhotoIcon className="h-12 w-12 text-gray-400" />
+                            </div>
+                          )}
+
+                          <UploadThingButton
+                            handleUploadComplete={(res) => {
+                              if (res !== undefined) {
+                                setSelectedFile(res);
+                              }
+                            }}
+                          />
+                        </div>
                         <InputWithIcon
                           type="text"
                           name="orgName"

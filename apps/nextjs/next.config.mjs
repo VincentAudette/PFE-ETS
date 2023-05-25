@@ -14,6 +14,17 @@ const config = {
   eslint: {
     ignoreDuringBuilds: !!process.env.CI,
   },
+  experimental: {
+    esmExternals: false, // THIS IS THE FLAG THAT MATTERS
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "uploadthing.com",
+      },
+    ],
+  },
 };
 
 export default config;
