@@ -28,6 +28,11 @@ export default function RoleBadge({
       ? "bg-emerald-400/10 text-emerald-400 ring-emerald/20"
       : "bg-gradient-to-tr from-blue-50 to-emerald-50 text-emerald-700 ring-emerald-700/10";
     roleDisplayName = "Étudiant";
+  } else if (role === "UNREGISTERED") {
+    color = darkMode
+      ? "bg-gray-400/10 text-gray-400 ring-gray-400/20"
+      : "bg-gray-50 text-gray-700 ring-gray-700/10";
+    roleDisplayName = "Non inscrit";
   }
 
   return (
