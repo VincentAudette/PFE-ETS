@@ -1,5 +1,5 @@
 import { useState } from "react";
-import InputWithIcon from "./Forms/atoms/InputWithIcon";
+import SimpleInput from "./Forms/atoms/SimpleInput";
 import SimpleSelect from "./Forms/atoms/SimpleSelect";
 import CheckBoxInput from "./Forms/atoms/CheckBoxInput";
 
@@ -65,7 +65,7 @@ export default function PromoterFormNewPFE() {
       <h1 className="text-center text-2xl font-bold">Projet de fin d'études</h1>
       <br />
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <InputWithIcon
+        <SimpleInput
           type="text"
           name="projectTitle"
           label="Titre du projet"
@@ -78,14 +78,14 @@ export default function PromoterFormNewPFE() {
 
         <hr className="my-4 h-px border-0 bg-gray-300"></hr>
 
-        <InputWithIcon
+        <SimpleInput
           type="text"
           name="promoterGroupName"
           label="Promoteur du projet"
           placeholder="ex: Departement de génie électrique"
         />
 
-        <InputWithIcon
+        <SimpleInput
           type="text"
           name="promoterContactName"
           label="Personne à contacter"
@@ -183,7 +183,7 @@ export default function PromoterFormNewPFE() {
 
         {form.isContactTeamEncadrementSameAsPromoterContact && (
           <div>
-            <InputWithIcon
+            <SimpleInput
               type="text"
               name="teamEnadrementContactName"
               label="Nom du contact"
@@ -250,18 +250,18 @@ export default function PromoterFormNewPFE() {
         <hr className="my-4 h-px border-0 bg-gray-300"></hr>
 
         <div className="columns-2">
-          <InputWithIcon
+          <SimpleInput
             type="number"
             name="numberOfTeams"
             label="Nombre d'équipes sur le projet"
             placeholder="2"
           />
 
-          <InputWithIcon
+          <SimpleInput
             type="text"
             name="numberOfStudentsPerTeam"
             label="Nombre d'étudiants requis par équipe"
-            placeholder="3 ou 4"
+            placeholder="minimum 3 étudiants"
           />
         </div>
 
@@ -363,19 +363,22 @@ export default function PromoterFormNewPFE() {
                 Étudiant {studentNumber}
               </label>
 
-              <InputWithIcon
+              <SimpleInput
                 type="text"
                 name={`specificStudentName${studentNumber}`}
                 label={`Nom de l'étudiant ${studentNumber}`}
-                placeholder="Khady Fara"
+                placeholder="Alice"
               />
-              <InputWithIcon
+              <SimpleInput
                 type="text"
                 name={`specificStudentPermanentCode${studentNumber}`}
-                label={`Code permanent de l'étudiant ${studentNumber}`}
+                label={
+                  `Code permanent de l'étudiant ${studentNumber}` +
+                  ` (facultatif)`
+                }
                 placeholder="KHAF12345"
               />
-              <InputWithIcon
+              <SimpleInput
                 type="text"
                 name={`specificStudentDepartement${studentNumber}`}
                 label={`Departement de l'étudiant ${studentNumber}`}
@@ -398,7 +401,7 @@ export default function PromoterFormNewPFE() {
         <CheckBoxInput
           id="isProjectMultiDepartement"
           name="isProjectMultiDepartement"
-          label="Le projet est réalisé par d'autres départements que celui de l'électrique"
+          label="Le projet est en collaboration avec d'autres départements autres que celui de l'électrique"
           checked={form.isProjectMultiDepartement}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setForm({ ...form, isProjectMultiDepartement: e.target?.checked })
@@ -472,7 +475,7 @@ export default function PromoterFormNewPFE() {
         </div>
 
         <button
-          type="button"
+          type="submit"
           className="mr-2 mb-2 rounded-full bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300"
         >
           Créer le projet
