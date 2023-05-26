@@ -81,7 +81,6 @@ export default function PromoterView({
       navigation={navigation}
       secondaryNavigation={secondaryNavigation}
     >
-      {/* <FileUploadButton /> */}
       <div>
         {router.pathname === "" && (
           <div>

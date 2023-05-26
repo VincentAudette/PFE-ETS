@@ -6,13 +6,18 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
+export interface SelectOption {
+  id: string;
+  name: string;
+}
+
 export default function SimpleSelect({
   label,
   options,
   name,
 }: {
   label: string;
-  options: { id: string; name: string }[];
+  options: SelectOption[];
   name: string;
 }) {
   const [selected, setSelected] = useState(options[0]);
@@ -20,7 +25,7 @@ export default function SimpleSelect({
   return (
     <Listbox value={selected} name={name} onChange={setSelected}>
       {({ open }) => (
-        <div>
+        <div className="w-full">
           <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
             {label}
           </Listbox.Label>

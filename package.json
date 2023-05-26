@@ -15,22 +15,19 @@
     "type-check": "turbo type-check"
   },
   "dependencies": {
-    "@clerk/localizations": "^1.12.0",
-    "@clerk/nextjs": "^4.11.0",
     "@manypkg/cli": "^0.19.2",
     "@trpc/client": "^10.1.0",
     "@trpc/server": "^10.1.0",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
-    "eslint": "^8.37.0",
+    "eslint": "^8.28.0",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "rimraf": "^5.0.0",
+    "tslib": "^2.5.2",
     "turbo": "^1.8.8",
+    "typescript": "^4.9.3",
     "zod": "^3.18.0"
   },
-  "pnpm": {},
-  "devDependencies": {
-    "typescript": "^5.0.4"
-  }
+  "pnpm": {}
 }

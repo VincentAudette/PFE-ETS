@@ -69,18 +69,12 @@ model Project {
   representativeRelations ProjectRepresentative[]
 }
 
-model Organization {
-  id          Int       @id @default(autoincrement())
-  name        String
-  logo        String?
-  description String?
-  projects    Project[]
-}
+
 
 model StudentChoice {
   id                  Int       @id @default(autoincrement())
-  studentId           Int
-  student             Student   @relation(fields: [studentId], references: [id])
+  studentEmail           String
+  student             Student   @relation(fields: [studentEmail], references: [email])
   firstProjectId      String
   firstProject        Project   @relation("FirstProjectChoice", fields: [firstProjectId], references: [id])
   secondProjectId     String
@@ -89,7 +83,6 @@ model StudentChoice {
   thirdProject        Project  @relation("ThirdProjectChoice", fields: [thirdProjectId], references: [id])
   fourthProjectId     String
   fourthProject       Project  @relation("FourthProjectChoice", fields: [fourthProjectId], references: [id])
-  completedCourses    String
   partner1            String    @default("")
   partner2            String    @default("")
   partner3            String    @default("")
@@ -97,21 +90,39 @@ model StudentChoice {
   isPreApprovedInPfe  Boolean
   isEnergyProfile     Boolean
   isHealthProfile     Boolean
+  dateSubmitted       DateTime
   trimester           Trimester
   year                Int
 
-  @@unique([studentId, trimester, year])
+  @@unique([studentEmail, trimester, year])
 }
 
+model File{
+    key         String @id
+    name        String?
+    type        FileType
+    url         String 
+    uploadedAt  DateTime @default(now())
+    organizationId Int? @unique
+    organization Organization? @relation(fields: [organizationId], references: [id])
+}
 
+model Organization {
+  id          Int       @id @default(autoincrement())
+  name        String
+  logo        File?
+  description String?
+  projects    Project[]
+  promoters   PromoterOrganization[]
+}
 
 model Promoter {
   id          Int       @id @default(autoincrement())
-  organization String
   projects    Project[]
   userId  String @unique
   user    User @relation(fields: [userId], references: [clerkId])
-  hasBeenNotified Boolean
+  hasBeenNotified Boolean?
+  organizations   PromoterOrganization[]
 }
 
 
@@ -148,7 +159,7 @@ model Thematic {
 }
 
 model Student {
-  id               Int               @id @default(autoincrement())
+  email          String              @id @unique
   projectRelations StudentOnProject[]
   studentChoices   StudentChoice[]
 }
@@ -175,12 +186,12 @@ model AdminDepartment {
 }
 
 model StudentOnProject {
-  studentId Int
-  student   Student @relation(fields: [studentId], references: [id])
+  studentEmail String
+  student   Student @relation(fields: [studentEmail], references: [email])
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
   hasBeenNotified Boolean
-  @@id([studentId, projectId])
+  @@id([studentEmail, projectId])
 }
 
 model TeacherOnProject {
@@ -207,6 +218,15 @@ model ThematicOnProject {
   projectId  String
   project    Project  @relation(fields: [projectId], references: [id])
   @@id([thematicId, projectId])
+}
+
+model PromoterOrganization {
+  promoterId    Int
+  organizationId Int
+  promoter       Promoter   @relation(fields: [promoterId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([promoterId, organizationId])
 }
 
 
@@ -258,6 +278,14 @@ enum Trimester {
   WINTER
   AUTOMNE
   SUMMER
+}
+
+enum FileType {
+    PDF
+    IMAGE
+    VIDEO
+    AUDIO
+    ZIP
 }
 
 enum ProjectStatus {
