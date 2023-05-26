@@ -10,6 +10,16 @@ export const organizationRouter = router({
       z.object({ name: z.string(), logo: z.string(), description: z.string() }),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.organization.create({ data: input });
+      return ctx.prisma.organization.create({
+        data: {
+          name: input.name,
+          logo: {
+            connect: {
+              key: input.logo,
+            },
+          },
+          description: input.description,
+        },
+      });
     }),
 });

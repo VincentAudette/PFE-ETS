@@ -147,6 +147,7 @@ export default function Modal({ open, setOpen }: any) {
                           label="Lien vers le logo de votre organisation"
                           Icon={CameraIcon}
                           placeholder="https://imgur.com/votre_logo"
+                          value={uploadedFile.data?.key}
                         />
                         <div className="mt-5 sm:mt-6">
                           <button
