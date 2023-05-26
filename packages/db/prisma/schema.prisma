@@ -97,10 +97,20 @@ model StudentChoice {
   @@unique([studentEmail, trimester, year])
 }
 
+model File{
+    key         String @id
+    name        String?
+    type        FileType
+    url         String 
+    uploadedAt  DateTime @default(now())
+    organizationId Int? @unique
+    organization Organization? @relation(fields: [organizationId], references: [id])
+}
+
 model Organization {
   id          Int       @id @default(autoincrement())
   name        String
-  logo        String?
+  logo        File?
   description String?
   projects    Project[]
   promoters   PromoterOrganization[]
@@ -108,11 +118,10 @@ model Organization {
 
 model Promoter {
   id          Int       @id @default(autoincrement())
-  organization String
   projects    Project[]
   userId  String @unique
   user    User @relation(fields: [userId], references: [clerkId])
-  hasBeenNotified Boolean
+  hasBeenNotified Boolean?
   organizations   PromoterOrganization[]
 }
 
@@ -269,6 +278,14 @@ enum Trimester {
   WINTER
   AUTOMNE
   SUMMER
+}
+
+enum FileType {
+    PDF
+    IMAGE
+    VIDEO
+    AUDIO
+    ZIP
 }
 
 enum ProjectStatus {
