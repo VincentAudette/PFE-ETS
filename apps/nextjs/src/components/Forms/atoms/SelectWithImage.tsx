@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import {
   BuildingOfficeIcon,
@@ -16,19 +16,17 @@ export default function SelectWithImage({
   name,
   label,
   options,
+  selected,
+  setSelected,
 }: {
   name: string;
   label: string;
   options: (Organization & { logo: File | null })[] | undefined;
+  selected: (Organization & { logo: File | null }) | null;
+  setSelected: Dispatch<
+    SetStateAction<(Organization & { logo: File | null }) | null>
+  >;
 }) {
-  const [selected, setSelected] = useState({
-    id: 0,
-    name: "Selectionner un organisation",
-    logo: {
-      url: "",
-    },
-  });
-
   console.log("options", options);
 
   return (

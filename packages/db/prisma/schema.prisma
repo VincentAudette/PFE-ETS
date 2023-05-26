@@ -118,11 +118,10 @@ model Organization {
 
 model Promoter {
   id          Int       @id @default(autoincrement())
-  organization String
   projects    Project[]
   userId  String @unique
   user    User @relation(fields: [userId], references: [clerkId])
-  hasBeenNotified Boolean
+  hasBeenNotified Boolean?
   organizations   PromoterOrganization[]
 }
 

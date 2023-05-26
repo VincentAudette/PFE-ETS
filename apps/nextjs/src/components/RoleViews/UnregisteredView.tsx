@@ -1,17 +1,18 @@
 import { usePFEAuth } from "../../context/PFEAuthContext";
-import { BuildingOfficeIcon, PlusIcon } from "@heroicons/react/24/solid";
 import Button from "../Forms/atoms/button";
-import InputWithIcon from "../Forms/atoms/InputWithIcon";
 import { trpc } from "../../utils/trpc";
-import SimpleSelect, { SelectOption } from "../Forms/atoms/SimpleSelect";
 import Modal from "../Forms/atoms/Modal";
 import { useState } from "react";
 import OrganisationForm from "../Forms/OrganisationForm";
 import SelectWithImage from "../Forms/atoms/SelectWithImage";
+import { FileType, Organization } from "@acme/db";
+import { File } from "@acme/db";
+import { PlusIcon } from "@heroicons/react/20/solid";
+import { toast } from "react-toastify";
 
 export interface IFormValues {
   orgName: string;
-  orgChoice: string;
+  orgChoice: number | undefined;
 }
 
 interface OrganisationFormElement extends HTMLFormElement {
@@ -19,25 +20,67 @@ interface OrganisationFormElement extends HTMLFormElement {
   orgChoice: { value: string };
 }
 
+const objetDefault: {
+  id: number;
+  name: string;
+  description: string | null;
+} & {
+  logo: {
+    key: string;
+    name: string | null;
+    type: "AUDIO" | "IMAGE" | "PDF" | "ZIP" | "VIDEO";
+    url: string;
+    uploadedAt: Date;
+    organizationId: number | null;
+  } | null;
+} = {
+  id: -1,
+  name: "Selectionner un organisation",
+  description: "",
+  logo: {
+    url: "",
+    name: "",
+    key: "",
+    type: "IMAGE",
+    uploadedAt: new Date(),
+    organizationId: null,
+  },
+};
+
 export default function UnregisteredView() {
   const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
+  const [selected, setSelected] = useState<
+    (Organization & { logo: File | null }) | null
+  >(objetDefault);
 
   const { userData } = usePFEAuth();
   const { data: organizations, isLoading: isLoadingOrgs } =
     trpc.organization.all.useQuery();
-  const updateToPromoter = trpc.user.updateToPromoter.useMutation();
+  const updateToPromoter =
+    trpc.user.updateToPromoterWithOrganisation.useMutation();
 
   const handleSelectionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as OrganisationFormElement;
     const formValues: IFormValues = {
-      orgName: target.orgName.value,
-      orgChoice: target.orgChoice.value,
+      orgName: target.orgName?.value,
+      orgChoice: selected?.id,
     };
 
-    //updateToPromoter.mutateAsync({ clerkId: userData.clerkId }).then(() => {
-    //  window.location.reload();
-    //});
+    console.log("formValues", formValues);
+
+    if (selected?.id !== -1 && selected?.id !== undefined) {
+      updateToPromoter
+        .mutateAsync({
+          clerkId: userData.clerkId,
+          organizationId: selected?.id,
+        })
+        .then(() => {
+          window.location.reload();
+        });
+    } else {
+      toast.error("Veuillez choisir une organisation");
+    }
     console.log(formValues);
   };
   return (
@@ -58,6 +101,7 @@ export default function UnregisteredView() {
             name="orgChoice"
             label="Choisissez votre organisation"
             options={organizations}
+            {...{ selected, setSelected }}
           />
           <button
             onClick={(e) => {
