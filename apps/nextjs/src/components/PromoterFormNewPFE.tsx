@@ -2,6 +2,7 @@ import { useState } from "react";
 import SimpleInput from "./Forms/atoms/SimpleInput";
 import SimpleSelect from "./Forms/atoms/SimpleSelect";
 import CheckBoxInput from "./Forms/atoms/CheckBoxInput";
+import InfoAlert from "./Forms/atoms/InfoAlert";
 
 export default function PromoterFormNewPFE() {
   const [form, setForm] = useState({
@@ -461,6 +462,82 @@ export default function PromoterFormNewPFE() {
 
         <div>
           <label
+            htmlFor="projectDescription"
+            className="mb-2 block text-sm font-medium text-gray-900 "
+          >
+            Contexte/Problématique
+          </label>
+          <textarea
+            name="thematics"
+            id="thematics"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
+            placeholder=" "
+          ></textarea>
+        </div>
+
+        <div>
+          <label
+            htmlFor="projectDescription"
+            className="mb-2 block text-sm font-medium text-gray-900 "
+          >
+            Objectifs de conception
+          </label>
+          <textarea
+            name="thematics"
+            id="thematics"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
+            placeholder=" "
+          ></textarea>
+        </div>
+
+        <div>
+          <label
+            htmlFor="projectDescription"
+            className="mb-2 block text-sm font-medium text-gray-900 "
+          >
+            Besoins/Contraintes
+          </label>
+          <textarea
+            name="thematics"
+            id="thematics"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
+            placeholder=" "
+          ></textarea>
+        </div>
+
+        <div>
+          <label
+            htmlFor="projectDescription"
+            className="mb-2 block text-sm font-medium text-gray-900 "
+          >
+            Résultats attendus/Livrables
+          </label>
+          <textarea
+            name="thematics"
+            id="thematics"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
+            placeholder=" "
+          ></textarea>
+        </div>
+
+        <div>
+          <label
+            htmlFor="projectDescription"
+            className="mb-2 block text-sm font-medium text-gray-900 "
+          >
+            • Les livrables suivants sont liés à l’évaluation académique :
+            <br />
+            - Rapport de proposition de projet - Cahier de charges
+            <br />
+            - Rapport d’étape
+            <br />
+            - Rapport final
+            <br />- Présentation orale
+          </label>
+        </div>
+
+        <div>
+          <label
             htmlFor="extraNotes"
             className="mb-2 block text-sm font-medium text-gray-900 "
           >
@@ -472,6 +549,9 @@ export default function PromoterFormNewPFE() {
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
             placeholder="Notes aditionnelles..."
           ></textarea>
+          <div className="h-3" />
+          <InfoAlert text=" En vue d’alléger ce texte, on n’y emploie généralement que le masculin pour désigner les femmes et les hommes." />
+          <div className="h-3" />
         </div>
 
         <button
