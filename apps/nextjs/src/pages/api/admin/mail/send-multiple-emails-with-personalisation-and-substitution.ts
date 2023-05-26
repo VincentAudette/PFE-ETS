@@ -4,7 +4,7 @@ const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-interface MailWithPersonalisationAndSubstitution {
+export interface MailWithPersonalisationAndSubstitution {
   from?: string; // the sender and reply to
   subject?: string; // subject of email
   text: string; // plain text version of email -- to add a variable, use {{variable}}
@@ -26,33 +26,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const msg: MailWithPersonalisationAndSubstitution = {
-    from: "sender1@example.org",
-    subject: "Ahoy!",
-    text: "Ahoy {{name}}!",
-    html: "<p>Ahoy {{name}}!</p>",
-    personalizations: [
-      {
-        to: "recipient1@example.org",
-        substitutions: {
-          name: "Jon",
-        },
-      },
-      {
-        to: "recipient2@example.org",
-        substitutions: {
-          name: "Jane",
-        },
-      },
-      {
-        to: "recipient3@example.org",
-        substitutions: {
-          name: "Jack",
-        },
-      },
-    ],
-  };
-
   sgMail
     .sendMultiple(req.body)
     .then(() => {
@@ -66,3 +39,32 @@ export default async function handler(
         .json({ message: "Cannot send mail at this time. Try again later." });
     });
 }
+
+//THIS IS WHAT THE REQUEST BODY SHOULD LOOK LIKE
+//
+//   const msg: MailWithPersonalisationAndSubstitution = {
+//   from: "sender1@example.org",
+//   subject: "Ahoy!",
+//   text: "Ahoy {{name}}!",
+//   html: "<p>Ahoy {{name}}!</p>",
+//   personalizations: [
+//     {
+//       to: "recipient1@example.org",
+//       substitutions: {
+//         name: "Jon",
+//       },
+//     },
+//     {
+//       to: "recipient2@example.org",
+//       substitutions: {
+//         name: "Jane",
+//       },
+//     },
+//     {
+//       to: "recipient3@example.org",
+//       substitutions: {
+//         name: "Jack",
+//       },
+//     },
+//   ],
+// };

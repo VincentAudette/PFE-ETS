@@ -1,5 +1,5 @@
 import { FileType } from "@acme/db";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 
 export const fileRouter = router({

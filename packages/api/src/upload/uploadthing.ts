@@ -12,7 +12,7 @@ export const pfeEtsFileRouter = {
     // Set permissions and file types for this FileRoute
     .fileTypes(["image", "video"])
     .maxSize("1GB")
-    .middleware(async (req, res) => {
+    .middleware(async (req) => {
       // This code runs on your server before upload
       const { userId } = await getAuth(req);
 
