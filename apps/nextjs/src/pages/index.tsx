@@ -11,12 +11,16 @@ import { useEffect } from "react";
 import DeveloperView from "../components/RoleViews/DeveloperView";
 import DevelopementPublicSection from "../components/DevelopmentPublicSection";
 import UnregisteredView from "../components/RoleViews/UnregisteredView";
+import LoadingPFE from "../components/LoadingPFE";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
-  const { data: getUserData } = trpc.auth.getUser.useQuery(clerkId as string, {
-    enabled: !!isSignedIn,
-  });
+  const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
+    clerkId as string,
+    {
+      enabled: !!isSignedIn,
+    },
+  );
 
   const { userData, setUserData, authProfile } = usePFEAuth();
 
@@ -41,17 +45,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-neutral-50">
+        {isSignedIn && isLoading && <LoadingPFE />}
         <TopNav isSignedIn={isSignedIn} activeRole={activeRole} />
-        <div className="h-10" />
         {activeRole === "STUDENT" && <StudentView />}
         {activeRole === "PROMOTER" && <PromoterView />}
         {activeRole === "ADMIN" && <AdminView />}
         {activeRole === "DEVELOPER" && <DeveloperView />}
         {activeRole === "UNREGISTERED" && <UnregisteredView />}
         {userData === null && (
-          <div>
+          <div className="max-w-7xl">
             <WelcomeSection />
-            <DevelopementPublicSection />
           </div>
         )}
       </main>

@@ -20,38 +20,38 @@ interface OrganisationFormElement extends HTMLFormElement {
   orgChoice: { value: string };
 }
 
-const objetDefault: {
-  id: number;
-  name: string;
-  description: string | null;
-} & {
-  logo: {
-    key: string;
-    name: string | null;
-    type: "AUDIO" | "IMAGE" | "PDF" | "ZIP" | "VIDEO";
-    url: string;
-    uploadedAt: Date;
-    organizationId: number | null;
-  } | null;
-} = {
-  id: -1,
-  name: "Selectionner un organisation",
-  description: "",
-  logo: {
-    url: "",
-    name: "",
-    key: "",
-    type: "IMAGE",
-    uploadedAt: new Date(),
-    organizationId: null,
-  },
-};
+// const objetDefault: {
+//   id: number;
+//   name: string;
+//   description: string | null;
+// } & {
+//   logo: {
+//     key: string;
+//     name: string | undefined;
+//     type: "AUDIO" | "IMAGE" | "PDF" | "ZIP" | "VIDEO";
+//     url: string;
+//     uploadedAt: Date;
+//     organizationId: number | null;
+//   } | null;
+// } = {
+//   id: -1,
+//   name: "Selectionner un organisation",
+//   description: "",
+//   logo: {
+//     url: "",
+//     name: "",
+//     key: "",
+//     type: "IMAGE",
+//     uploadedAt: new Date(),
+//     organizationId: null,
+//   },
+// };
 
 export default function UnregisteredView() {
   const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
   const [selected, setSelected] = useState<
     (Organization & { logo: File | null }) | null
-  >(objetDefault);
+  >(null);
 
   const { userData } = usePFEAuth();
   const { data: organizations, isLoading: isLoadingOrgs } =

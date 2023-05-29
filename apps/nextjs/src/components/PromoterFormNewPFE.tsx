@@ -3,6 +3,7 @@ import SimpleInput from "./Forms/atoms/SimpleInput";
 import SimpleSelect from "./Forms/atoms/SimpleSelect";
 import CheckBoxInput from "./Forms/atoms/CheckBoxInput";
 import InfoAlert from "./Forms/atoms/InfoAlert";
+import SimpleTextArea from "./Forms/atoms/SimpleTextArea";
 
 export default function PromoterFormNewPFE() {
   const [form, setForm] = useState({
@@ -62,8 +63,10 @@ export default function PromoterFormNewPFE() {
   };
 
   return (
-    <div>
-      <h1 className="text-center text-2xl font-bold">Projet de fin d'études</h1>
+    <div className="my-5">
+      <h1 className="text-center text-2xl font-bold">
+        Formulaire de projet de fin d'études
+      </h1>
       <br />
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <SimpleInput
@@ -190,18 +193,12 @@ export default function PromoterFormNewPFE() {
               label="Nom du contact"
               placeholder="Nom du contact"
             />
-            <label
-              htmlFor="teamEncadrementContactInfos"
-              className="mb-2 mt-4 block text-sm font-medium text-gray-900"
-            >
-              Contact de l'autre personne
-            </label>
-            <textarea
+            <SimpleTextArea
+              label="Contact de l'autre personne"
+              placeholder="Eg: tel: 5142223333 courriel:"
               name="teamEncadrementContactInfos"
               id="teamEncadrementContactInfos"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
-              placeholder="Eg: tel: 5142223333 courriel: email@courriel.com"
-            ></textarea>
+            />
           </div>
         )}
 
@@ -224,7 +221,8 @@ export default function PromoterFormNewPFE() {
               htmlFor="specificTeacherEndadrementNames"
               className="mb-2 mt-4 block text-sm font-medium text-gray-900"
             >
-              Noms du ou des professeurs
+              Noms du/des professeur(s) de l&apos;École de technologie
+              supérieure
             </label>
             <textarea
               name="specificTeacherEndadrementNames"
@@ -549,9 +547,6 @@ export default function PromoterFormNewPFE() {
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
             placeholder="Notes aditionnelles..."
           ></textarea>
-          <div className="h-3" />
-          <InfoAlert text=" En vue d’alléger ce texte, on n’y emploie généralement que le masculin pour désigner les femmes et les hommes." />
-          <div className="h-3" />
         </div>
 
         <button

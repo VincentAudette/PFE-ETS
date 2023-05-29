@@ -38,9 +38,9 @@ model Project {
   description           String @db.Text
   trimester             Trimester
   year                  Int
-  numberOfIterations    Int
   promoterId            Int
   promoter              Promoter                 @relation(fields: [promoterId], references: [id])
+  numberOfIterations    Int
   organizationId        Int?
   organization          Organization?              @relation(fields: [organizationId], references: [id])
   encouragementType     EncouragementType
@@ -53,23 +53,30 @@ model Project {
   authorizesCloudComputing Boolean
   authorizesCloudOutsideQuebec Boolean
   mustRespectRegulations Boolean
-  signatureImg          String
-  pdfVersion            String
-  submissionDate        DateTime
-  isAssingnedToTeacher  Boolean
-  teachers              TeacherOnProject[]
+  signatureImg          File?
+  pdfVersion            String?
+  submissionDate        DateTime                 @default(now())
+  isAssignedToTeacher  Boolean
+  isSelectedDuringSemester  Boolean
   departments           DepartmentOnProject[]
   thematics             ThematicOnProject[]
   students              StudentOnProject[]
   states                ProjectState[]
+  representativeRelations ProjectRepresentative[]
+  group                Group?
   firstChoices          StudentChoice[]          @relation("FirstProjectChoice")
   secondChoices         StudentChoice[]          @relation("SecondProjectChoice")
   thirdChoices          StudentChoice[]          @relation("ThirdProjectChoice")
   fourthChoices         StudentChoice[]          @relation("FourthProjectChoice")
-  representativeRelations ProjectRepresentative[]
 }
 
-
+model Group {
+  id                    Int         @id @default(autoincrement())
+  teachers              TeacherOnProject[] 
+  students              StudentOnProject[]
+  projectId             String @unique
+  project               Project      @relation(fields: [projectId], references: [id])
+}
 
 model StudentChoice {
   id                  Int       @id @default(autoincrement())
@@ -103,6 +110,8 @@ model File{
     type        FileType
     url         String 
     uploadedAt  DateTime @default(now())
+    projectId   String? @unique
+    project     Project? @relation(fields: [projectId], references: [id])
     organizationId Int? @unique
     organization Organization? @relation(fields: [organizationId], references: [id])
 }
@@ -145,7 +154,7 @@ model Teacher {
 }
 
 model Department {
-  id               Int                 @id @default(autoincrement())
+  id               String               @id @default(cuid())
   type             DepartementETS
   projectRelations DepartmentOnProject[]
   adminRelations   AdminDepartment[]
@@ -180,7 +189,7 @@ model Developer {
 model AdminDepartment {
   adminId     Int
   admin       Admin     @relation(fields: [adminId], references: [id])
-  departmentId Int
+  departmentId String
   department  Department @relation(fields: [departmentId], references: [id])
   @@id([adminId, departmentId])
 }
@@ -190,6 +199,8 @@ model StudentOnProject {
   student   Student @relation(fields: [studentEmail], references: [email])
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
+  groupId   Int?
+  group     Group? @relation(fields: [groupId], references: [id])
   hasBeenNotified Boolean
   @@id([studentEmail, projectId])
 }
@@ -198,14 +209,15 @@ model TeacherOnProject {
   teacherId Int
   teacher   Teacher @relation(fields: [teacherId], references: [id])
   projectId String
-  project   Project @relation(fields: [projectId], references: [id])
+  groupId   Int? 
+  group     Group? @relation(fields: [groupId], references: [id])
   contacted Boolean
   @@id([teacherId, projectId])
 }
 
 
 model DepartmentOnProject {
-  departmentId Int
+  departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
   projectId    String
   project      Project    @relation(fields: [projectId], references: [id])
@@ -223,7 +235,7 @@ model ThematicOnProject {
 model PromoterOrganization {
   promoterId    Int
   organizationId Int
-  promoter       Promoter   @relation(fields: [promoterId], references: [id])
+  promoter       Promoter   @relation(fields: [promoterId], references: [id], onDelete: Cascade)
   organization   Organization @relation(fields: [organizationId], references: [id])
 
   @@id([promoterId, organizationId])
