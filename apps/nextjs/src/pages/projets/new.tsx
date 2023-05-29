@@ -1,7 +1,7 @@
 import Head from "next/head";
 import PromoterView from "../../components/RoleViews/PromoterView";
 import TopNav from "../../components/TopNav";
-import PromoterFormNewPFE from "../../components/PromoterFormNewPFE"
+import PromoterFormNewPFE from "../../components/PromoterFormNewPFE";
 import { useEffect } from "react";
 import { usePFEAuth } from "../../context/PFEAuthContext";
 import { useAuth } from "@clerk/nextjs";
@@ -45,9 +45,7 @@ export default function NewProject() {
           activeRole={activeRole}
         />
         <PromoterView>
-          <PromoterFormNewPFE>
-
-          </PromoterFormNewPFE>
+          <PromoterFormNewPFE />
         </PromoterView>
       </main>
     </>
