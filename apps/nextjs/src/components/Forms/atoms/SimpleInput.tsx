@@ -2,7 +2,7 @@ export interface InputWithLabelProps {
   type: string;
   label: string;
   name: string;
-  id: string;
+  id?: string;
   placeholder: string;
 }
 export default function SimpleInput({

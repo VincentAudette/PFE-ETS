@@ -4,6 +4,7 @@ import { authRouter } from "./auth";
 import { userRouter } from "./user";
 import { organizationRouter } from "./organization";
 import { fileRouter } from "./file";
+import { projectRouter } from "./project";
 
 export const appRouter = router({
   post: postRouter,
@@ -11,6 +12,7 @@ export const appRouter = router({
   user: userRouter,
   organization: organizationRouter,
   file: fileRouter,
+  project: projectRouter,
 });
 
 // export type definition of API

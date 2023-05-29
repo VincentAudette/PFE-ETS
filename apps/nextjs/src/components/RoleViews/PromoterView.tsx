@@ -15,6 +15,7 @@ import { PlusCircleIcon, PlusIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { NextRouter, Router, useRouter } from "next/router";
 import { usePFEAuth } from "../../context/PFEAuthContext";
+import InfoAlert from "../Forms/atoms/InfoAlert";
 
 const navigation: NavigationItem[] = [
   {
@@ -50,27 +51,11 @@ export default function PromoterView({
   const { userData } = usePFEAuth();
 
   console.log("userData", userData);
+  console.log("routerAspath", router.asPath);
 
-  if (
-    navigation[0] !== undefined &&
-    navigation[1] !== undefined &&
-    navigation[2] !== undefined &&
-    navigation[3] !== undefined
-  ) {
-    if (router.asPath === "/") {
-      navigation[0].current = true;
-      navigation[1].current = false;
-      navigation[2].current = false;
-      navigation[3].current = false;
-    }
-
-    if (router.pathname.includes("projets/new")) {
-      navigation[0].current = false;
-      navigation[1].current = false;
-      navigation[2].current = true;
-      navigation[3].current = false;
-    }
-  }
+  navigation.forEach((navItem) => {
+    navItem.current = navItem.href === router.asPath;
+  });
 
   // if (userData.role === "UNASSIGNED") {
   //   return <div>TEST</div>;
@@ -80,10 +65,20 @@ export default function PromoterView({
     <SideBarLayout
       navigation={navigation}
       secondaryNavigation={secondaryNavigation}
+      showRightSide={router.asPath === "/projets/new"}
+      rightSide={
+        <div className="max-w-[18rem]">
+          <InfoAlert
+            textXs={true}
+            dimmed={true}
+            text=" En vue d’alléger ce texte, on n’y emploie généralement que le masculin pour désigner les femmes et les hommes."
+          />
+        </div>
+      }
     >
       <div>
-        {router.pathname === "" && (
-          <div>
+        {router.pathname === "/" && (
+          <div className=" flex h-full min-h-[85vh] items-center">
             Vous n&apos;avez pas de PFE en cours.{" "}
             <span>
               <Link

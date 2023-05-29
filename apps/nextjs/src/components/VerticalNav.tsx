@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { NavigationItem, SecondaryNavigationItem } from "./SideBarLayout";
 
 function classNames(...classes: string[]) {
@@ -18,7 +19,7 @@ export default function VerticalNav({
           <ul role="list" className="-mx-2 space-y-1">
             {navigation.map((item) => (
               <li key={item.name}>
-                <a
+                <Link
                   href={item.href}
                   className={classNames(
                     item.current
@@ -45,7 +46,7 @@ export default function VerticalNav({
                       {item.count}
                     </span>
                   ) : null}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -57,7 +58,7 @@ export default function VerticalNav({
           <ul role="list" className="-mx-2 mt-2 space-y-1">
             {secondaryNavigation?.map((item) => (
               <li key={item.name}>
-                <a
+                <Link
                   href={item.href}
                   className={classNames(
                     item.current
@@ -77,7 +78,7 @@ export default function VerticalNav({
                     {item.initial}
                   </span>
                   <span className="truncate">{item.name}</span>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
