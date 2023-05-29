@@ -63,7 +63,7 @@ model Project {
   students              StudentOnProject[]
   states                ProjectState[]
   representativeRelations ProjectRepresentative[]
-  group                Group?
+  group                 Group?
   firstChoices          StudentChoice[]          @relation("FirstProjectChoice")
   secondChoices         StudentChoice[]          @relation("SecondProjectChoice")
   thirdChoices          StudentChoice[]          @relation("ThirdProjectChoice")
@@ -90,10 +90,7 @@ model StudentChoice {
   thirdProject        Project  @relation("ThirdProjectChoice", fields: [thirdProjectId], references: [id])
   fourthProjectId     String
   fourthProject       Project  @relation("FourthProjectChoice", fields: [fourthProjectId], references: [id])
-  partner1            String    @default("")
-  partner2            String    @default("")
-  partner3            String    @default("")
-  partner4            String    @default("")
+  partners            Student[]  @relation("StudentPartners")
   isPreApprovedInPfe  Boolean
   isEnergyProfile     Boolean
   isHealthProfile     Boolean
@@ -171,6 +168,7 @@ model Student {
   email          String              @id @unique
   projectRelations StudentOnProject[]
   studentChoices   StudentChoice[]
+  partneredChoices   StudentChoice[] @relation("StudentPartners")
 }
 
 model Admin {
