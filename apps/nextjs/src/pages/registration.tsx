@@ -40,7 +40,6 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-neutral-50">
         <TopNav isSignedIn={isSignedIn} activeRole={activeRole} />
-        <div className="h-10" />
         {activeRole === "STUDENT" && <StudentView />}
         {activeRole === "PROMOTER" && <PromoterView />}
         {activeRole === "ADMIN" && <AdminView />}

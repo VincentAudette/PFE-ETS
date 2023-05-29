@@ -2,13 +2,13 @@ import { Features } from "./Features";
 
 export default function WelcomeSection() {
   return (
-    <div className="items-ce mx-auto mt-5 flex max-w-[89rem] flex-col gap-10 ">
+    <div className="items-ce mx-auto my-20 flex flex-col gap-10 ">
       <div>
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-items-center gap-4">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-items-center gap-10 gap-4">
           <h1 className="text-center text-4xl font-bold text-neutral-900">
             Plateforme PFE dédiée aux{" "}
-            <span className="bg-gradient-to-tr from-pink-500 to-purple-500 bg-clip-text text-transparent">
-              Promoteurs
+            <span className="bg-gradient-to-tr from-red-400 to-red-700 bg-clip-text text-transparent">
+              Promoteurs de projets
             </span>{" "}
             inscrits pour la session en cours ou à venir.
           </h1>
