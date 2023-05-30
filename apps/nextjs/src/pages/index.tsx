@@ -9,7 +9,6 @@ import PromoterView from "../components/RoleViews/PromoterView";
 import AdminView from "../components/RoleViews/AdminView";
 import { useEffect } from "react";
 import DeveloperView from "../components/RoleViews/DeveloperView";
-import DevelopementPublicSection from "../components/DevelopmentPublicSection";
 import UnregisteredView from "../components/RoleViews/UnregisteredView";
 import LoadingPFE from "../components/LoadingPFE";
 
@@ -22,11 +21,33 @@ export default function Home() {
     },
   );
 
-  const { userData, setUserData, authProfile } = usePFEAuth();
+  const organizations: number[] | undefined =
+    getUserData?.promoter?.organizations.map(
+      (promoterOrganization: { promoterId: number; organizationId: number }) =>
+        promoterOrganization.organizationId,
+    );
+
+  console.log(
+    "getUserData?.promoter?.organizations",
+    getUserData?.promoter?.organizations,
+  );
+
+  const { data: organizationData } = trpc.organization.getByIds.useQuery(
+    organizations,
+    { enabled: !!organizations },
+  );
+
+  console.log("organizationData", organizationData);
+
+  const { userData, setUserData, authProfile, setSelectedOrganization } =
+    usePFEAuth();
 
   useEffect(() => {
     if (getUserData !== undefined && authProfile === null) {
       setUserData(getUserData);
+    }
+    if (organizationData) {
+      setSelectedOrganization(organizationData[0]);
     }
   });
 
@@ -46,7 +67,11 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-neutral-50">
         {isSignedIn && isLoading && <LoadingPFE />}
-        <TopNav isSignedIn={isSignedIn} activeRole={activeRole} />
+        <TopNav
+          organizationData={organizationData}
+          isSignedIn={isSignedIn}
+          activeRole={activeRole}
+        />
         {activeRole === "STUDENT" && <StudentView />}
         {activeRole === "PROMOTER" && <PromoterView />}
         {activeRole === "ADMIN" && <AdminView />}

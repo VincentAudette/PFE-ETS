@@ -5,7 +5,7 @@ import Modal from "../Forms/atoms/Modal";
 import { useState } from "react";
 import OrganisationForm from "../Forms/OrganisationForm";
 import SelectWithImage from "../Forms/atoms/SelectWithImage";
-import { FileType, Organization } from "@acme/db";
+import { Organization } from "@acme/db";
 import { File } from "@acme/db";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
@@ -20,38 +20,32 @@ interface OrganisationFormElement extends HTMLFormElement {
   orgChoice: { value: string };
 }
 
-// const objetDefault: {
-//   id: number;
-//   name: string;
-//   description: string | null;
-// } & {
-//   logo: {
-//     key: string;
-//     name: string | undefined;
-//     type: "AUDIO" | "IMAGE" | "PDF" | "ZIP" | "VIDEO";
-//     url: string;
-//     uploadedAt: Date;
-//     organizationId: number | null;
-//   } | null;
-// } = {
-//   id: -1,
-//   name: "Selectionner un organisation",
-//   description: "",
-//   logo: {
-//     url: "",
-//     name: "",
-//     key: "",
-//     type: "IMAGE",
-//     uploadedAt: new Date(),
-//     organizationId: null,
-//   },
-// };
+const objetDefault: {
+  id: number;
+  name: string;
+  description: string | null;
+} & {
+  logo: File;
+} = {
+  id: -1,
+  name: "Selectionner un organisation",
+  description: "",
+  logo: {
+    url: "",
+    name: "",
+    key: "",
+    type: "IMAGE",
+    uploadedAt: new Date(),
+    organizationId: null,
+    projectId: null,
+  },
+};
 
 export default function UnregisteredView() {
   const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
   const [selected, setSelected] = useState<
     (Organization & { logo: File | null }) | null
-  >(null);
+  >(objetDefault);
 
   const { userData } = usePFEAuth();
   const { data: organizations, isLoading: isLoadingOrgs } =
@@ -66,8 +60,6 @@ export default function UnregisteredView() {
       orgName: target.orgName?.value,
       orgChoice: selected?.id,
     };
-
-    console.log("formValues", formValues);
 
     if (selected?.id !== -1 && selected?.id !== undefined) {
       updateToPromoter

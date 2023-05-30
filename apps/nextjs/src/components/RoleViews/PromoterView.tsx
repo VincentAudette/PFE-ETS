@@ -67,7 +67,7 @@ export default function PromoterView({
       secondaryNavigation={secondaryNavigation}
       showRightSide={router.asPath === "/projets/new"}
       rightSide={
-        <div className="max-w-[18rem]">
+        <div className="hyphenate max-w-[18rem]">
           <InfoAlert
             textXs={true}
             dimmed={true}
@@ -78,8 +78,8 @@ export default function PromoterView({
     >
       <div>
         {router.pathname === "/" && (
-          <div className=" flex h-full min-h-[85vh] items-center">
-            Vous n&apos;avez pas de PFE en cours.{" "}
+          <div className=" flex h-full min-h-[85vh] flex-col items-center">
+            <p>Vous n&apos;avez pas de PFE en cours.</p>
             <span>
               <Link
                 className=" rounded-lg px-3 py-2 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
