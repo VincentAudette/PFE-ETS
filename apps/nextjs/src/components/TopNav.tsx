@@ -18,10 +18,8 @@ import SelectOrCreateOrganization, {
 import { toast } from "react-toastify";
 
 export default function TopNav({
-  activeRole,
   pages,
 }: {
-  activeRole: string | undefined;
   pages?: { name: string; href: string; current: boolean }[];
 }) {
   const { isSignedIn, userId: clerkId } = useAuth();
@@ -35,8 +33,13 @@ export default function TopNav({
   );
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
-  const { selectedOrganization, setSelectedOrganization, authProfile } =
-    usePFEAuth();
+  const {
+    selectedOrganization,
+    setSelectedOrganization,
+    authProfile,
+    userData,
+    setUserData,
+  } = usePFEAuth();
 
   const [unassocitatedOrganization, setUnassociatedOrganization] = useState<
     (Organization & { logo: File | null }) | null
@@ -91,6 +94,14 @@ export default function TopNav({
     organizations,
     { enabled: !!organizations },
   );
+
+  useEffect(() => {
+    if (getUserData !== undefined && authProfile === null) {
+      setUserData(getUserData);
+    }
+  });
+
+  const activeRole = authProfile !== null ? authProfile : userData?.role;
 
   return (
     <>

@@ -7,7 +7,6 @@ import { usePFEAuth } from "../context/PFEAuthContext";
 import StudentView from "../components/RoleViews/StudentView";
 import PromoterView from "../components/RoleViews/PromoterView";
 import AdminView from "../components/RoleViews/AdminView";
-import { useEffect } from "react";
 import DeveloperView from "../components/RoleViews/DeveloperView";
 import UnregisteredView from "../components/RoleViews/UnregisteredView";
 import LoadingPFE from "../components/LoadingPFE";
@@ -21,15 +20,8 @@ export default function Home() {
     },
   );
 
-  const { userData, setUserData, authProfile } = usePFEAuth();
-
-  useEffect(() => {
-    if (getUserData !== undefined && authProfile === null) {
-      setUserData(getUserData);
-    }
-  });
-
-  const activeRole = authProfile !== null ? authProfile : userData?.role;
+  const { userData, authProfile } = usePFEAuth();
+  const activeRole = authProfile !== null ? authProfile : getUserData?.role;
 
   return (
     <>
@@ -45,7 +37,7 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-neutral-50">
         {isSignedIn && isLoading && <LoadingPFE />}
-        <TopNav activeRole={activeRole} />
+        <TopNav />
         {activeRole === "STUDENT" && <StudentView />}
         {activeRole === "PROMOTER" && <PromoterView />}
         {activeRole === "ADMIN" && <AdminView />}
