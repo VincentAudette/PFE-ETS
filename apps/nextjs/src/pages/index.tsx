@@ -21,33 +21,11 @@ export default function Home() {
     },
   );
 
-  const organizations: number[] | undefined =
-    getUserData?.promoter?.organizations.map(
-      (promoterOrganization: { promoterId: number; organizationId: number }) =>
-        promoterOrganization.organizationId,
-    );
-
-  console.log(
-    "getUserData?.promoter?.organizations",
-    getUserData?.promoter?.organizations,
-  );
-
-  const { data: organizationData } = trpc.organization.getByIds.useQuery(
-    organizations,
-    { enabled: !!organizations },
-  );
-
-  console.log("organizationData", organizationData);
-
-  const { userData, setUserData, authProfile, setSelectedOrganization } =
-    usePFEAuth();
+  const { userData, setUserData, authProfile } = usePFEAuth();
 
   useEffect(() => {
     if (getUserData !== undefined && authProfile === null) {
       setUserData(getUserData);
-    }
-    if (organizationData) {
-      setSelectedOrganization(organizationData[0]);
     }
   });
 
@@ -67,11 +45,7 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-neutral-50">
         {isSignedIn && isLoading && <LoadingPFE />}
-        <TopNav
-          organizationData={organizationData}
-          isSignedIn={isSignedIn}
-          activeRole={activeRole}
-        />
+        <TopNav activeRole={activeRole} />
         {activeRole === "STUDENT" && <StudentView />}
         {activeRole === "PROMOTER" && <PromoterView />}
         {activeRole === "ADMIN" && <AdminView />}

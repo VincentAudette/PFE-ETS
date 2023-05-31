@@ -1,19 +1,16 @@
-import { Post } from "@acme/db";
-import ProjectCard from "../ProjectCard";
 import SideBarLayout, {
   NavigationItem,
   SecondaryNavigationItem,
 } from "../SideBarLayout";
-import { trpc } from "../../utils/trpc";
 
 import {
   DocumentDuplicateIcon,
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
-import { PlusCircleIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { NextRouter, Router, useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import { usePFEAuth } from "../../context/PFEAuthContext";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 
