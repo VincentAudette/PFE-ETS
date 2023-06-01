@@ -66,7 +66,7 @@ export default function TopNav({
           </div>
         </div>
         {router.asPath !== "/" && (
-          <div className="fixed bottom-4 left-10 mx-auto mt-3 h-24 px-4 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
+          <div className="fixed bottom-4 z-50 mx-auto mt-3 px-4 sm:left-10 sm:h-24 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
             <Breadcrumb pages={pages} />
           </div>
         )}

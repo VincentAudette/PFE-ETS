@@ -44,6 +44,10 @@ export default function UnregisteredView() {
     }
     console.log(formValues);
   };
+
+  if (!userData) {
+    return <div>Chargement...</div>;
+  }
   return (
     <div>
       <h1 className="text-2xl font-bold">

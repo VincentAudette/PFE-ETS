@@ -18,8 +18,8 @@ const etudiantPlaceholderObj = {
   id: null,
   firstName: "Prénom",
   lastName: "Nom de famille",
-  phone: "Téléphone",
   email: "prenom.nom.1@ens.etsmtl.ca",
+  departement: "Departement",
 };
 
 const teacherPlaceholderObj = {
@@ -162,7 +162,7 @@ export default function PFEForm() {
           type="text"
           name="title"
           id="title"
-          label="Titre du projet"
+          label="Titre du projet (Le titre doit refléter qu’il s’agit d’un projet de conception d’un système, d’un composant, d’un procédé ou d’un processus.)"
           placeholder="Titre du projet"
         />
 
@@ -252,6 +252,7 @@ export default function PFEForm() {
               firstName: "Prénom",
               lastName: "Nom",
               email: "Courriel",
+              departement: "Departement",
             }}
             placeholderObj={etudiantPlaceholderObj}
             objs={students}

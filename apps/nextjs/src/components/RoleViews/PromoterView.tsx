@@ -62,8 +62,8 @@ export default function PromoterView({
     <SideBarLayout
       navigation={navigation}
       secondaryNavigation={secondaryNavigation}
-      showRightSide={router.asPath === "/projets/new"}
-      rightSide={
+      showAfterNav={router.asPath === "/projets/new"}
+      afterNav={
         <div className="hyphenate max-w-[18rem]">
           <InfoAlert
             textXs={true}
