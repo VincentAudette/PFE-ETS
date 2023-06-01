@@ -1,27 +1,37 @@
 export interface InputWithLabelProps {
-  type: string;
-  label: string;
+  type?: string;
+  label?: string;
   name: string;
+  value?: string;
   id?: string;
   placeholder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  withLabel?: boolean;
 }
 export default function SimpleInput({
-  type,
+  type = "text",
   label,
   name,
+  value,
   id,
   placeholder,
+  onChange,
+  withLabel = true,
 }: InputWithLabelProps) {
   return (
     <div>
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium leading-6 text-gray-900"
-      >
-        {label}
-      </label>
+      {withLabel && (
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          {label}
+        </label>
+      )}
       <div className="mt-2">
         <input
+          onChange={onChange}
+          value={value}
           type={type}
           name={name}
           id={id}

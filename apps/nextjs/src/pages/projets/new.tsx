@@ -2,6 +2,7 @@ import Head from "next/head";
 import PromoterView from "../../components/RoleViews/PromoterView";
 import TopNav from "../../components/TopNav";
 import PromoterFormNewPFE from "../../components/PromoterFormNewPFE";
+import PFEForm from "../../components/Forms/PFEForm";
 
 export default function NewProject() {
   return (
@@ -24,7 +25,8 @@ export default function NewProject() {
           ]}
         />
         <PromoterView>
-          <PromoterFormNewPFE />
+          <PFEForm />
+          {/* <PromoterFormNewPFE /> */}
         </PromoterView>
       </main>
     </>
