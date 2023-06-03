@@ -1,10 +1,14 @@
 import { useState } from "react";
 import TableWithAddButton from "../TableWithAddButton";
 import SimpleInput from "./atoms/SimpleInput";
-import SimpleSelect from "./atoms/SimpleSelect";
+import SimpleSelect, { SelectOption } from "./atoms/SimpleSelect";
 import CheckBoxInput from "./atoms/CheckBoxInput";
 import SimpleTextArea from "./atoms/SimpleTextArea";
-import { InformationCircleIcon } from "@heroicons/react/20/solid";
+import UploadThingButton from "./atoms/UploadThingButton";
+import Signature from "../SVG/Signature";
+import { ArrowPathIcon } from "@heroicons/react/20/solid";
+import { trpc } from "../../utils/trpc";
+import Image from "next/image";
 
 const representativePlaceholderObj = {
   id: null,
@@ -114,27 +118,79 @@ const encadrement = [
   },
 ];
 
+const textAreaSections = [
+  {
+    name: "description",
+    label: "Description du projet",
+    placeholder: "Décrivez ici l'essence de votre projet...",
+  },
+  {
+    name: "contextProblematic",
+    label: "Contexte et problématique",
+    placeholder: "Présentez le contexte et la problématique de votre projet...",
+  },
+  {
+    name: "objectives",
+    label: "Objectifs du projet",
+    placeholder: "Quels sont les objectifs ambitieux de votre projet...",
+  },
+  {
+    name: "needsConstraints",
+    label: "Besoins et contraintes",
+    placeholder:
+      "Expliquez vos besoins spécifiques et les contraintes du projet...",
+  },
+  {
+    name: "expectedResults",
+    label: "Résultats et livrables attendus",
+    placeholder:
+      "Quels sont les résultats et les livrables que vous attendez...",
+  },
+];
+
 const checkBoxesAtEndOfForm = [
   {
+    id: "acceptsConfidentiality",
+    name: "1.	CONFIDENTIALITÉ du projet (Un projet de fin d’étude ne peut pas être considéré comme confidentiel, les étudiants feront une présentation orale à la fin de la session devant tous les étudiants de la classe et les autres promoteurs de projets pourraient être présents) ",
+    notes: [
+      "NOTE – 1 : Le projet de fin d’études (PFE) est réalisé dans un contexte académique. Les PFE ne peuvent faire objet d’exploitation commerciale. Les concepts, les calculs, les dessins d’ateliers, les prototypes, les solutions proposées et la justification des choix retenus ne sont pas garantis d’aucune manière par l’École de Technologie Supérieure, par les professeurs ou par les étudiants associés au projet. Les étudiants au PFE, n’ayant pas encore obtenu leur titre d’ingénieur, n’ont aucune autorité pour signer à ce titre et ne peuvent engendrer leur responsabilité professionnelle, n’étant pas encore membres de l’Ordre des ingénieurs du Québec. Par ailleurs, le rôle des professeurs se limite à l’encadrement du projet au niveau académique. En aucun temps et sous aucune considération, les professeurs participeront au développement du projet, notamment par la mise à profit de leurs expertises. De ce fait, les professeurs ou l’ÉTS ne signeront pas d’entente de confidentialité et ne pourront être tenus responsables des résultats d’un projet de PFE ou de son exploitation subséquente à des fins commerciales. Les étudiants ne signeront pas non plus d’ententes de confidentialité. Il est de la seule responsabilité du promoteur de s’assurer que les informations transmises aux étudiants ne soient pas confidentielles. ",
+    ],
+  },
+  {
     id: "authorizesCloudComputing",
-    name: "Autorise l'utilisation de services d'infonuagiques",
+    name: "2.	Le promoteur autorise l’utilisation de services d’infonuagiques (Cloud-Computing, i.e. Google drive, Dropbox, etc.) privés ou publics ? (Voir Note 2)",
   },
   {
     id: "authorizesCloudOutsideQuebec",
-    name: "Autorise l'utilisation de services d'infonuagiques hors Québec",
-  },
-  {
-    id: "acceptsConfidentiality",
-    name: "Accepte la confidentialité du projet",
-    hoverText:
-      "Les projets de fin d'études sont académiques et publics. Ils ne sont pas garantis par l'ÉTS, les professeurs ou les étudiants, et ne peuvent être utilisés à des fins commerciales. Les étudiants n'ont pas d'autorité pour signer en tant qu'ingénieurs et n'engageront pas leur responsabilité professionnelle. Les professeurs n'assisteront pas au développement du projet, et aucune entente de confidentialité ne sera signée. Il est de la responsabilité du promoteur de garantir que les informations fournies ne sont pas confidentielles.",
+    name: "Si oui, sur des serveurs localisés au Québec? ",
   },
   {
     id: "mustRespectRegulations",
-    name: "Respecte les exigences réglementaires",
-    hoverText:
-      "Le projet doit respecter les réglementations d'exportation et de protection des données personnelles en vigueur. L'ÉTS n'autorise pas la délocalisation des données en dehors du Québec pour des raisons de protection des renseignements personnels. Les données doivent être stockées sur des serveurs au Québec. Le promoteur est responsable de cette conformité et l'ÉTS se dégage de toute responsabilité en cas de non-respect. L'ÉTS se réserve le droit de refuser un projet ou de mettre fin à une collaboration si ces exigences ne sont pas respectées.",
+    name: "3.	Le projet proposé respecte les exigences réglementaires au niveau des contrôles à l’exportation (PMC/ITAR, EAR, ISP, JCP, NATO) et/ou à la protection des renseignements personnels dans le respect de la législation applicable (notamment la Loi sur l’accès à l’information et à la protection des renseignements personnels, RLRQ c. A-2.1, Loi sur la protection des renseignements personnels dans le secteur privé, RLRQ c. P-39.1 et Loi sur la protection des renseignements personnels et les documents électroniques) ? (Voir Note 2) ",
+    notes: [
+      "NOTE – 2 : L’ÉTS ne permet pas une délocalisation des données dans un territoire ne pouvant offrir les mêmes garanties qu’au Québec en matière de protection des renseignements personnels. Ainsi, l’hébergement des données doit être assuré sur des serveurs localisés sur le territoire du Québec (pas de cloud, Google Drive, Dropbox).  Le promoteur peut fournir l’infrastructure des technologies de l’information nécessaire aux étudiants qui répondent à cette exigence. Le promoteur est responsable de garantir le respect de cette disposition.  En cas de non-respect de cette exigence par le promoteur, l’ÉTS se dégage de toute responsabilité en lien avec les données hébergées sur des serveurs non conformes à la présente note. ",
+      "NOTE – 3 : Dans tous les cas, l’ÉTS se réserve le droit de refuser un projet de PFE qui ne respecterait pas les exigences explicitées dans la présente offre de projet ou de cesser toute collaboration avec un Promoteur qui ne respecterait plus les présentes. ",
+    ],
   },
+];
+
+const attestations = [
+  `Je, soussigné, représentant dûment autorisé du Promoteur,
+  reconnais avoir lu le présent formulaire d’offre de projet, en
+  accepte tous les termes et conditions et reconnais être lié par
+  ceux-ci et convient de faire en sorte que toutes les personnes
+  impliquées de mon entreprise soient informées de leurs obligations
+  et des limites de responsabilité de la part de l’ÉTS en vertu de
+  la présente offre de projet.`,
+  `Je m’engage spécifiquement à respecter et faire respecter les
+  demandes de l’ÉTS en matière d’infonuagique et de respect des
+  renseignements confidentiels.`,
+  ` En outre, je confirme que tous résultats, plans ou prototypes
+reçus dans le cadre de ce PFE ne pourront être utilisés à d’autres
+fins qu’académiques. Je confirme également comprendre qu’aucune
+utilisation ou exploitation à des fins commerciales des résultats,
+plans ou prototypes conçus ou obtenus dans le cadre de ce PFE
+n’est autorisée par l’ÉTS.`,
 ];
 
 const years = () => {
@@ -150,10 +206,22 @@ export default function PFEForm() {
   const [teachers, setTeachers] = useState<any[]>([]);
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
+  const [selectedDepartment, setSelectedDepartment] = useState<SelectOption>(
+    departement[0] as SelectOption,
+  );
+  const [selectedFile, setSelectedFile] = useState<
+    { fileUrl: string; fileKey: string }[] | undefined
+  >(undefined);
+
+  const { data: uploadedFile, isLoading: isFileLoading } =
+    trpc.file.byKey.useQuery(selectedFile?.[0]?.fileKey as string, {
+      enabled: selectedFile != undefined && selectedFile[0] != undefined,
+    });
+
   const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
 
   return (
-    <div className="my-5 flex flex-col gap-12 px-4 py-3 sm:px-6">
+    <div className="my-5 flex flex-col gap-12 px-4 py-3 text-base sm:px-6">
       <h1 className="text-center text-2xl font-bold">
         Formulaire de projet de fin d&apos;études
       </h1>
@@ -166,13 +234,14 @@ export default function PFEForm() {
           placeholder="Titre du projet"
         />
 
-        {!isMultiDepartment && (
-          <SimpleSelect
-            name="departement"
-            options={departement}
-            label="Département de quel génie?"
-          />
-        )}
+        <SimpleSelect
+          name="departement"
+          options={departement}
+          selectedState={selectedDepartment}
+          setSelectedState={setSelectedDepartment}
+          label="Département de quel génie?"
+        />
+
         <CheckBoxInput
           id="isMultiDepartment"
           name="isMultiDepartment"
@@ -184,10 +253,14 @@ export default function PFEForm() {
         />
 
         {isMultiDepartment && (
-          <div className="flex max-w-3xl flex-wrap gap-12">
+          <div
+            id="autres-departements"
+            className="flex max-w-3xl flex-wrap gap-12"
+          >
             {departement.map((dep) => {
               return (
-                dep.type && (
+                dep.type &&
+                dep.name !== selectedDepartment.name && (
                   <CheckBoxInput
                     key={dep.id}
                     id={dep.id}
@@ -295,37 +368,7 @@ export default function PFEForm() {
           ></textarea>
         </div>
 
-        {[
-          {
-            name: "description",
-            label: "Description du projet",
-            placeholder: "Décrivez ici l'essence de votre projet...",
-          },
-          {
-            name: "contextProblematic",
-            label: "Contexte et problématique",
-            placeholder:
-              "Présentez le contexte et la problématique de votre projet...",
-          },
-          {
-            name: "objectives",
-            label: "Objectifs du projet",
-            placeholder:
-              "Quels sont les objectifs ambitieux de votre projet...",
-          },
-          {
-            name: "needsConstraints",
-            label: "Besoins et contraintes",
-            placeholder:
-              "Expliquez vos besoins spécifiques et les contraintes du projet...",
-          },
-          {
-            name: "expectedResults",
-            label: "Résultats et livrables attendus",
-            placeholder:
-              "Quels sont les résultats et les livrables que vous attendez...",
-          },
-        ].map((textArea) => {
+        {textAreaSections.map((textArea) => {
           return (
             <SimpleTextArea
               id={textArea.name}
@@ -336,23 +379,66 @@ export default function PFEForm() {
           );
         })}
         <div className="flex flex-col gap-8">
-          {checkBoxesAtEndOfForm.map(({ id, name, hoverText }) => (
+          {checkBoxesAtEndOfForm.map(({ id, name, notes }) => (
             <div key={id} className="group relative">
-              <div className="flex items-center gap-2">
+              <div className="items-center gap-2">
                 <CheckBoxInput id={id} name={name} label={name} />
-                {hoverText && (
-                  <div className="group relative">
-                    <span className="cursor-pointer text-blue-500 group-hover:underline">
-                      <InformationCircleIcon className="h-5 w-5" />
-                      <div className="absolute  z-40 -mt-20 ml-10 hidden w-[30rem] rounded-lg bg-blue-600 p-3 text-sm text-blue-50 group-hover:block">
-                        {hoverText}
+                {notes &&
+                  notes.map((note) => {
+                    return (
+                      <div
+                        key={note.substring(0, 10)}
+                        className="mt-3 flex flex-col gap-2 px-7"
+                      >
+                        <span className="text-sm text-gray-500">{note}</span>
                       </div>
-                    </span>
-                  </div>
-                )}
+                    );
+                  })}
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="border p-9">
+          <h2 className="my-3 text-base font-bold">Attestation</h2>
+          <div className="flex flex-col gap-4">
+            {attestations.map((attestation) => (
+              <blockquote
+                key={attestation.substring(0, 10)}
+                className="text-sm"
+              >
+                {attestation}
+              </blockquote>
+            ))}
+          </div>
+
+          <div className="flex py-5">
+            {selectedFile && selectedFile[0]?.fileUrl ? (
+              <Image
+                src={selectedFile[0].fileUrl}
+                alt="signuature"
+                className="h-32 w-32"
+                width={128}
+                height={128}
+              />
+            ) : selectedFile != undefined && isFileLoading ? (
+              <div className="flex h-32 w-32 items-center justify-center border">
+                <ArrowPathIcon className="h-12 w-12 animate-spin text-gray-400" />
+              </div>
+            ) : (
+              <div className="h-22 flex w-64 items-center justify-center border">
+                <Signature className="h-12 w-24 text-gray-400" />
+              </div>
+            )}
+
+            <UploadThingButton
+              handleUploadComplete={(res) => {
+                if (res !== undefined) {
+                  setSelectedFile(res);
+                }
+              }}
+            />
+          </div>
         </div>
 
         <button

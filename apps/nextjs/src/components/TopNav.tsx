@@ -1,9 +1,9 @@
 import AuthShowcase from "./AuthShowcase";
-import PFELogo from "./PFELogo";
+import PFELogo from "./SVG/PFELogo";
 import LinkBox from "./LinkBox";
 import Breadcrumb from "./Breadcrumb";
 import { useRouter } from "next/router";
-import PFELogoSmall from "./PFELogoSmall";
+import PFELogoSmall from "./SVG/PFELogoSmall";
 import { usePFEAuth } from "../context/PFEAuthContext";
 import { useEffect } from "react";
 import { trpc } from "../utils/trpc";

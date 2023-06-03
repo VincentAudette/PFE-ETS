@@ -15,15 +15,29 @@ export default function SimpleSelect({
   label,
   options,
   name,
+  selectedState,
+  setSelectedState,
 }: {
   label: string;
   options: SelectOption[];
   name: string;
+  selectedState?: SelectOption;
+  setSelectedState?: React.Dispatch<React.SetStateAction<SelectOption>>;
 }) {
   const [selected, setSelected] = useState(options[0]);
 
   return (
-    <Listbox value={selected} name={name} onChange={setSelected}>
+    <Listbox
+      value={selectedState ?? selected}
+      name={name}
+      onChange={(value) => {
+        if (setSelectedState) {
+          setSelectedState(value);
+        } else {
+          setSelected(value);
+        }
+      }}
+    >
       {({ open }) => (
         <div className="w-full">
           <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
@@ -31,7 +45,9 @@ export default function SimpleSelect({
           </Listbox.Label>
           <div className="relative mt-2">
             <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6">
-              <span className="block truncate">{selected?.name}</span>
+              <span className="block truncate">
+                {selectedState?.name ?? selected?.name}
+              </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
                   className="h-5 w-5 text-gray-400"
