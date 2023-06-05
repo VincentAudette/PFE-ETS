@@ -1,4 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/20/solid";
+import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import SimpleInput from "./Forms/atoms/SimpleInput";
 
@@ -87,7 +87,7 @@ export default function TableWithAddButton({
       </div>
       {objs.length >= 1 && (
         <div className="mt-5 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="-mx-4 -my-2 overflow-x-visible sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle">
               <table className="min-w-full divide-y divide-gray-300">
                 <thead>
@@ -164,9 +164,12 @@ export default function TableWithAddButton({
                                 }
                                 cancelEdit();
                               }}
-                              className="text-blue-600 hover:text-blue-900"
+                              className=" group ml-2 rounded-md p-1 text-stone-600 hover:bg-stone-200 hover:text-stone-900"
                             >
-                              Canceller
+                              <NoSymbolIcon className="h-4 w-4" />
+                              <div className="absolute z-50 m-1 hidden rounded-md border-t bg-stone-700 px-2 py-1 text-xs text-stone-50 shadow-md shadow-stone-400/20 group-hover:block">
+                                Canceller
+                              </div>
                             </button>
                           </div>
                         ) : (
@@ -188,10 +191,10 @@ export default function TableWithAddButton({
                                 e.preventDefault();
                                 handleDelete(object.id);
                               }}
-                              className="group ml-2 text-gray-500 hover:text-red-600"
+                              className="group ml-2 rounded-md p-1 text-gray-500 hover:bg-red-200 hover:text-red-600"
                             >
                               <XMarkIcon className="h-4 w-4" />
-                              <div className="absolute hidden rounded-md border-t bg-red-700 px-2 py-1 text-xs text-stone-50 shadow-md shadow-stone-400/20 group-hover:block">
+                              <div className="absolute m-1 hidden rounded-md border-t bg-red-700 px-2 py-1 text-xs text-stone-50 shadow-md shadow-stone-400/20 group-hover:block">
                                 Supprimer
                               </div>
                             </button>
