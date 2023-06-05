@@ -1,19 +1,16 @@
-import { Post } from "@acme/db";
-import ProjectCard from "../ProjectCard";
 import SideBarLayout, {
   NavigationItem,
   SecondaryNavigationItem,
 } from "../SideBarLayout";
-import { trpc } from "../../utils/trpc";
 
 import {
   DocumentDuplicateIcon,
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
-import { PlusCircleIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { NextRouter, Router, useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import { usePFEAuth } from "../../context/PFEAuthContext";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 
@@ -65,9 +62,9 @@ export default function PromoterView({
     <SideBarLayout
       navigation={navigation}
       secondaryNavigation={secondaryNavigation}
-      showRightSide={router.asPath === "/projets/new"}
-      rightSide={
-        <div className="max-w-[18rem]">
+      showAfterNav={router.asPath === "/projets/new"}
+      afterNav={
+        <div className="hyphenate max-w-[18rem]">
           <InfoAlert
             textXs={true}
             dimmed={true}
@@ -78,8 +75,8 @@ export default function PromoterView({
     >
       <div>
         {router.pathname === "/" && (
-          <div className=" flex h-full min-h-[85vh] items-center">
-            Vous n&apos;avez pas de PFE en cours.{" "}
+          <div className=" flex h-full min-h-[85vh] flex-col items-center">
+            <p>Vous n&apos;avez pas de PFE en cours.</p>
             <span>
               <Link
                 className=" rounded-lg px-3 py-2 text-blue-500 hover:bg-blue-50 hover:text-blue-600"

@@ -246,9 +246,7 @@ export default function PromoterFormNewPFE() {
           </div>
         )}
 
-        <hr className="my-4 h-px border-0 bg-gray-300"></hr>
-
-        <div className="columns-2">
+        <div className="grid grid-cols-2 gap-2">
           <SimpleInput
             type="number"
             name="numberOfTeams"

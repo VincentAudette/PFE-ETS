@@ -14,12 +14,11 @@ export default function LoadingPFE() {
             preserveAspectRatio: "xMidYMid slice",
           },
         }}
-        height={400}
-        width={700}
+        height={150}
+        width={300}
       />
-      <h1 className="sr-only text-2xl font-bold text-gray-700">
-        Chargement...
-      </h1>
+      <div className="h-4" />
+      <h1 className=" text-xl text-gray-500">Chargement...</h1>
     </div>
   );
 }

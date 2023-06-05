@@ -8,6 +8,11 @@ export const authRouter = router({
   getUser: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
     const profile = ctx.prisma.user.findUnique({
       where: { clerkId: input },
+      include: {
+        promoter: {
+          include: { organizations: true },
+        },
+      },
     });
 
     if (profile !== null || profile !== undefined) {

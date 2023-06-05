@@ -1,32 +1,11 @@
 import Head from "next/head";
-import { trpc } from "../utils/trpc";
 import TopNav from "../components/TopNav";
-import { useAuth } from "@clerk/nextjs";
-import { usePFEAuth } from "../context/PFEAuthContext";
-import { useEffect } from "react";
 import Image from "next/image";
 import { ArrowDownTrayIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import RecommandationsLogo from "../components/RecommendationsLogo";
 
 export default function Home() {
-  // const postQuery = trpc.post.all.useQuery();
-
-  const { isSignedIn, userId: clerkId } = useAuth();
-  const { data: getUserData } = trpc.auth.getUser.useQuery(clerkId as string, {
-    enabled: !!isSignedIn,
-  });
-
-  const { userData, setUserData, authProfile } = usePFEAuth();
-
-  useEffect(() => {
-    if (getUserData !== undefined) {
-      setUserData(getUserData);
-    }
-  });
-
-  const activeRole = authProfile !== null ? authProfile : userData?.role;
-
   return (
     <>
       <Head>
@@ -38,8 +17,6 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-neutral-50 ">
         <TopNav
-          isSignedIn={isSignedIn}
-          activeRole={activeRole}
           pages={[
             {
               name: "Logos",

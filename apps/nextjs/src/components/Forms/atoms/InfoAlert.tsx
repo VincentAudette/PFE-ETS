@@ -24,11 +24,11 @@ export default function InfoAlert({
             aria-hidden="true"
           />
         </div>
-        <div className="ml-3 flex-1 md:flex md:justify-between">
+        <div className="hyphens-auto ml-3 flex-1 md:flex md:justify-between">
           <p
-            className={` ${textXs ? "text-xs" : "text-sm"}
-            
-            ${dimmed ? "text-neutral-600" : "text-blue-800"}`}
+            className={` 
+            ${textXs ? " text-xs" : "text-sm"}
+            ${dimmed ? "text-neutral-600 " : "text-blue-800"}`}
           >
             {text}
           </p>
