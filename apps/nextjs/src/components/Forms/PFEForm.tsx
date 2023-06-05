@@ -57,7 +57,14 @@ const trimesters = [
   },
 ];
 
-const departement = [
+type DepartmentType = "ELE" | "LOG_TI" | "MEC" | "GPA" | "GOL" | "CTN";
+export type DepartmentOption = {
+  id: string;
+  name: string;
+  type: DepartmentType | null;
+};
+
+const departement: DepartmentOption[] = [
   {
     id: "0",
     name: "Choisir un département",
@@ -193,6 +200,12 @@ plans ou prototypes conçus ou obtenus dans le cadre de ce PFE
 n’est autorisée par l’ÉTS.`,
 ];
 
+const descriptionDuProjet = [
+  "Il doit développer des éléments, des systèmes et des processus qui répondent à des besoins précis",
+  "Il doit s'agir d'un processus créatif, itératif et évolutif assujetti à des contraintes (l’économie, la santé, la sécurité, l’environnement, la société, etc.)",
+  "Tous les projets doivent être approuvés par le département pour assurer le respect des exigences et pour la poursuite du processus",
+];
+
 const years = () => {
   const currentYear = new Date().getFullYear();
   const years = [];
@@ -213,10 +226,21 @@ export default function PFEForm() {
     { fileUrl: string; fileKey: string }[] | undefined
   >(undefined);
 
+  const [selectedThematics, setSelectedThematics] = useState<any>(new Set());
+
   const { data: uploadedFile, isLoading: isFileLoading } =
     trpc.file.byKey.useQuery(selectedFile?.[0]?.fileKey as string, {
       enabled: selectedFile != undefined && selectedFile[0] != undefined,
     });
+
+  const { data: thematicsOfDepartment, isLoading: isThematicsLoading } =
+    trpc.thematic.byDepartment.useQuery(
+      (selectedDepartment as DepartmentOption)?.type as DepartmentType,
+      {
+        enabled:
+          selectedDepartment != undefined && selectedDepartment.id != undefined,
+      },
+    );
 
   const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
 
@@ -318,8 +342,8 @@ export default function PFEForm() {
             setObjs={setTeachers}
           />
           <TableWithAddButton
-            title="Étudiants préalablement sélectionnés"
-            description="Avez-vous déjà sélectionné des étudiants pour votre projet?"
+            title="Étudiants préalablement sélectionnés (Maximum 4 étudiants)"
+            description="Avez-vous déjà sélectionné des étudiants pour votre projet? NOTE :  Les étudiants inscrits dans cette section ont été contactés et sont assurés de vouloir faire partie du projet. De ce fait, ils ne pourront choisir d’autres projets."
             buttonTitle="Nouvel étudiant"
             obj={{
               firstName: "Prénom",
@@ -351,21 +375,52 @@ export default function PFEForm() {
         <div>
           <label
             htmlFor="thematics"
-            className="mb-2 block text-sm font-medium text-gray-900 "
+            className=" mb-4 block text-sm font-medium text-gray-900"
           >
             Thématiques du projet{" "}
-            <span className="text-lime-500">
-              {
-                "//TODO Create list associated to departments and fetch from db then load ISR"
-              }
-            </span>
           </label>
-          <textarea
-            name="thematics"
-            id="thematics"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 "
-            placeholder="Eg: Télécommunication, Informatique, Intelligence artificielle, énergie"
-          ></textarea>
+
+          {thematicsOfDepartment && (
+            <div className="flex flex-wrap gap-2">
+              {thematicsOfDepartment.map((thematic) => {
+                const isThematicSelected = selectedThematics.has(thematic.id);
+                return (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const thematicSet = new Set(selectedThematics);
+                      if (isThematicSelected) {
+                        thematicSet.delete(thematic.id);
+                      } else {
+                        thematicSet.add(thematic.id);
+                      }
+                      setSelectedThematics(thematicSet);
+                    }}
+                    key={thematic.id}
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                  ${
+                    isThematicSelected
+                      ? "border border-blue-500 bg-blue-600 text-white "
+                      : "border bg-gray-100 text-gray-800 shadow-sm"
+                  }
+                  `}
+                  >
+                    {thematic.name}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <h2 className="mt-3 text-base font-bold">Description du projet</h2>
+
+          <ul className="flex list-disc flex-col gap-2 text-sm text-gray-800">
+            {descriptionDuProjet.map((listItem) => (
+              <li key={listItem.substring(0, 10)}>{listItem}</li>
+            ))}
+          </ul>
         </div>
 
         {textAreaSections.map((textArea) => {
@@ -414,20 +469,22 @@ export default function PFEForm() {
 
           <div className="flex py-5">
             {selectedFile && selectedFile[0]?.fileUrl ? (
-              <Image
-                src={selectedFile[0].fileUrl}
-                alt="signuature"
-                className="h-32 w-32"
-                width={128}
-                height={128}
-              />
+              <div className="h-22 flex w-64 items-center justify-center border">
+                <Image
+                  src={selectedFile[0].fileUrl}
+                  alt="signuature"
+                  className="h-[4rem] w-32"
+                  width={128}
+                  height={64}
+                />
+              </div>
             ) : selectedFile != undefined && isFileLoading ? (
-              <div className="flex h-32 w-32 items-center justify-center border">
-                <ArrowPathIcon className="h-12 w-12 animate-spin text-gray-400" />
+              <div className="h-22 flex w-64 items-center justify-center border">
+                <ArrowPathIcon className="h-8 w-8 animate-spin text-gray-400" />
               </div>
             ) : (
               <div className="h-22 flex w-64 items-center justify-center border">
-                <Signature className="h-12 w-24 text-gray-400" />
+                <Signature className="h-[4rem] w-32 text-gray-400" />
               </div>
             )}
 

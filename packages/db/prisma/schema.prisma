@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -36,101 +33,100 @@ model Project {
   pfeId                        String                  @unique
   title                        String
   description                  String                  @db.Text
-  contextProblematic           String                  @db.Text
-  objectives                   String                  @db.Text
-  needsConstraints             String                  @db.Text
-  expectedResults              String                  @db.Text
   trimester                    Trimester
   year                         Int
-  promoterId                   Int
-  promoter                     Promoter                @relation(fields: [promoterId], references: [id])
   numberOfIterations           Int
+  promoterId                   Int
   organizationId               Int?
-  organization                 Organization?           @relation(fields: [organizationId], references: [id])
   encouragementType            EncouragementType
+  multipleTeams                Boolean
   numberOfTeamsRequested       Int
   numberOfTeams                Int                     @default(1)
   numberOfStudents             Int
-  multipleTeams                Boolean
   isMultidepartment            Boolean
   acceptsConfidentiality       Boolean
   authorizesCloudComputing     Boolean
   authorizesCloudOutsideQuebec Boolean
   mustRespectRegulations       Boolean
-  isAssignedToTeacher          Boolean                @default(false)
-  isSelectedDuringSemester     Boolean
-  signatureImg                 File?
   pdfVersion                   String?
   submissionDate               DateTime                @default(now())
-  departments                  DepartmentOnProject[]
-  thematics                    ThematicOnProject[]
-  states                       ProjectState[]
-  representatives              ProjectRepresentative[]
+  isSelectedDuringSemester     Boolean
+  isAssignedToTeacher          Boolean                 @default(false)
+  contextProblematic           String                  @db.Text
+  expectedResults              String                  @db.Text
+  needsConstraints             String                  @db.Text
+  objectives                   String                  @db.Text
+  promoter                     Promoter                @relation(fields: [promoterId], references: [id])
+  organization                 Organization?           @relation(fields: [organizationId], references: [id])
   group                        Group?
   firstChoices                 StudentChoice[]         @relation("FirstProjectChoice")
   secondChoices                StudentChoice[]         @relation("SecondProjectChoice")
   thirdChoices                 StudentChoice[]         @relation("ThirdProjectChoice")
   fourthChoices                StudentChoice[]         @relation("FourthProjectChoice")
+  signatureImg                 File?
+  departments                  DepartmentOnProject[]
+  thematics                    ThematicOnProject[]
+  representatives              ProjectRepresentative[]
+  states                       ProjectState[]
 }
 
 model Group {
   id        Int                @id @default(autoincrement())
-  teachers  TeacherOnProject[]
-  students  Student[]
   projectId String             @unique
   project   Project            @relation(fields: [projectId], references: [id])
+  students  Student[]
+  teachers  TeacherOnProject[]
 }
 
 model StudentChoice {
   id                 Int       @id @default(autoincrement())
-  studentEmail       String
-  student            Student   @relation(fields: [studentEmail], references: [email])
   firstProjectId     String
-  firstProject       Project   @relation("FirstProjectChoice", fields: [firstProjectId], references: [id])
   secondProjectId    String
-  secondProject      Project   @relation("SecondProjectChoice", fields: [secondProjectId], references: [id])
   thirdProjectId     String
-  thirdProject       Project   @relation("ThirdProjectChoice", fields: [thirdProjectId], references: [id])
   fourthProjectId    String
-  fourthProject      Project   @relation("FourthProjectChoice", fields: [fourthProjectId], references: [id])
-  partners           Student[] @relation("StudentPartners")
   isPreApprovedInPfe Boolean
   isEnergyProfile    Boolean
   isHealthProfile    Boolean
-  dateSubmitted      DateTime
   trimester          Trimester
   year               Int
+  studentEmail       String
+  dateSubmitted      DateTime
+  student            Student   @relation(fields: [studentEmail], references: [email])
+  firstProject       Project   @relation("FirstProjectChoice", fields: [firstProjectId], references: [id])
+  secondProject      Project   @relation("SecondProjectChoice", fields: [secondProjectId], references: [id])
+  thirdProject       Project   @relation("ThirdProjectChoice", fields: [thirdProjectId], references: [id])
+  fourthProject      Project   @relation("FourthProjectChoice", fields: [fourthProjectId], references: [id])
 
   @@unique([studentEmail, trimester, year])
 }
 
 model File {
-  key            String        @id
   name           String?
   type           FileType
   url            String
   uploadedAt     DateTime      @default(now())
+  organizationId Int?          @unique
+  key            String        @id
   projectId      String?       @unique
   project        Project?      @relation(fields: [projectId], references: [id])
-  organizationId Int?          @unique
   organization   Organization? @relation(fields: [organizationId], references: [id])
 }
 
 model Organization {
   id          Int                    @id @default(autoincrement())
   name        String
-  logo        File?
   description String?
   projects    Project[]
+  logo        File?
   promoters   PromoterOrganization[]
 }
 
 model Promoter {
   id              Int                    @id @default(autoincrement())
-  projects        Project[]
   userId          String                 @unique
-  user            User                   @relation(fields: [userId], references: [clerkId])
   hasBeenNotified Boolean?
+  projects        Project[]
+  user            User                   @relation(fields: [userId], references: [clerkId])
   organizations   PromoterOrganization[]
 }
 
@@ -155,25 +151,28 @@ model Teacher {
 model Department {
   id               String                @id @default(cuid())
   type             DepartementETS
-  projectRelations DepartmentOnProject[]
+  thematics        Thematic[]
   adminRelations   AdminDepartment[]
+  projectRelations DepartmentOnProject[]
 }
 
 model Thematic {
   id               Int                 @id @default(autoincrement())
   name             String
-  courses          String
+  departmentId     String
+  departement      Department          @relation(fields: [departmentId], references: [id])
   projectRelations ThematicOnProject[]
+
+  @@index([departmentId], map: "departmentId")
 }
 
 model Student {
-  firstName        String
-  lastName         String
-  email            String          @id @unique
-  groupId          Int
-  group            Group           @relation(fields: [groupId], references: [id])
-  studentChoices   StudentChoice[]
-  partneredChoices StudentChoice[] @relation("StudentPartners")
+  email          String          @id @unique
+  firstName      String
+  groupId        Int
+  lastName       String
+  studentChoices StudentChoice[]
+  group          Group           @relation(fields: [groupId], references: [id])
 }
 
 model Admin {
@@ -191,8 +190,8 @@ model Developer {
 
 model AdminDepartment {
   adminId      Int
-  admin        Admin      @relation(fields: [adminId], references: [id])
   departmentId String
+  admin        Admin      @relation(fields: [adminId], references: [id])
   department   Department @relation(fields: [departmentId], references: [id])
 
   @@id([adminId, departmentId])
@@ -200,19 +199,19 @@ model AdminDepartment {
 
 model TeacherOnProject {
   teacherId Int
-  teacher   Teacher @relation(fields: [teacherId], references: [id])
   projectId String
-  groupId   Int?
-  group     Group?  @relation(fields: [groupId], references: [id])
   contacted Boolean
+  groupId   Int?
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  group     Group?  @relation(fields: [groupId], references: [id])
 
   @@id([teacherId, projectId])
 }
 
 model DepartmentOnProject {
   departmentId String
-  department   Department @relation(fields: [departmentId], references: [id])
   projectId    String
+  department   Department @relation(fields: [departmentId], references: [id])
   project      Project    @relation(fields: [projectId], references: [id])
 
   @@id([departmentId, projectId])
@@ -220,8 +219,8 @@ model DepartmentOnProject {
 
 model ThematicOnProject {
   thematicId Int
-  thematic   Thematic @relation(fields: [thematicId], references: [id])
   projectId  String
+  thematic   Thematic @relation(fields: [thematicId], references: [id])
   project    Project  @relation(fields: [projectId], references: [id])
 
   @@id([thematicId, projectId])
@@ -238,8 +237,8 @@ model PromoterOrganization {
 
 model ProjectRepresentative {
   projectId        String
-  project          Project        @relation(fields: [projectId], references: [id])
   representativeId Int
+  project          Project        @relation(fields: [projectId], references: [id])
   representative   Representative @relation(fields: [representativeId], references: [id])
 
   @@id([projectId, representativeId])
@@ -248,11 +247,20 @@ model ProjectRepresentative {
 model ProjectState {
   id        Int           @id @default(autoincrement())
   projectId String
-  project   Project       @relation(fields: [projectId], references: [id])
   state     ProjectStatus
   timestamp DateTime      @default(now())
+  project   Project       @relation(fields: [projectId], references: [id])
 
   @@index([timestamp])
+}
+
+model StudentPartners {
+  A String
+  B Int
+
+  @@unique([A, B], map: "_StudentPartners_AB_unique")
+  @@index([B], map: "_StudentPartners_B_index")
+  @@map("_StudentPartners")
 }
 
 enum DepartementETS {
