@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@manypkg/cli": "^0.19.2",
-    "@pdfme/generator": "^1.2.2",
     "@trpc/client": "^10.1.0",
     "@trpc/server": "^10.1.0",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
