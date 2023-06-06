@@ -219,11 +219,24 @@ const years = () => {
 
 export default function PFEForm() {
   const [projObject, setProjObject] = useState<any>({
-    title: "",
+    title: { value: "", error: "", label: "titre du projet" },
+    otherThematics: { value: "" },
+    requiredSkills: { value: "", label: "expertises requises" },
+    description: { value: "", error: "", label: "description du projet" },
+    contextProblematic: {
+      value: "",
+      error: "",
+      label: "contexte et problématique",
+    },
+    expectedResults: {
+      value: "",
+      error: "",
+      label: "résultats et livrables attendus",
+    },
+    needsConstraints: { value: "", error: "", label: "besoins et contraintes" },
+    objectives: { value: "", error: "", label: "objectifs du projet" },
   });
-  const [projValidationError, setValidationError] = useState<any>({
-    title: "",
-  });
+
   const [teachers, setTeachers] = useState<any[]>([]);
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
@@ -234,25 +247,17 @@ export default function PFEForm() {
     { fileUrl: string; fileKey: string }[] | undefined
   >(undefined);
 
-  const [selectedThematics, setSelectedThematics] = useState<any>(undefined);
+  const [selectedThematics, setSelectedThematics] = useState<any>(new Set());
 
   const { data: uploadedFile, isLoading: isFileLoading } =
     trpc.file.byKey.useQuery(selectedFile?.[0]?.fileKey as string, {
       enabled: selectedFile != undefined && selectedFile[0] != undefined,
     });
 
-  let thematicsOfDepartment, isThematicsLoading;
-
-  if (selectedDepartment && selectedDepartment.id !== "0") {
-    const result = trpc.thematic.byDepartment.useQuery(
+  const { data: thematicsOfDepartment, isLoading: isThematicsLoading } =
+    trpc.thematic.byDepartment.useQuery(
       (selectedDepartment as DepartmentOption)?.type as DepartmentType,
-      {
-        enabled: true,
-      },
     );
-    thematicsOfDepartment = result.data;
-    isThematicsLoading = result.isLoading;
-  }
 
   const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
 
@@ -262,16 +267,25 @@ export default function PFEForm() {
 
     let containsErrors = false;
 
-    if (projObject.title == "") {
-      toast.error("Le titre du projet est obligatoire");
-      setValidationError({
-        ...projValidationError,
-        title: "Le titre du projet est obligatoire",
-      });
-      containsErrors = true;
-    }
+    let projObjectCopy = { ...projObject };
+
+    Object.keys(projObjectCopy).forEach((key) => {
+      if (projObjectCopy[key].value == "") {
+        toast.error(`Le champ ${projObjectCopy[key].label} est obligatoire`);
+        projObjectCopy = {
+          ...projObjectCopy,
+          [key]: {
+            value: projObject[key].value,
+            error: "Ce champ est obligatoire",
+            label: projObject[key].label,
+          },
+        };
+        containsErrors = true;
+      }
+    });
 
     if (containsErrors) {
+      setProjObject(projObjectCopy);
       // Scroll to top
       window.scrollTo({
         top: 0,
@@ -292,13 +306,13 @@ export default function PFEForm() {
             e.preventDefault();
             setProjObject({ ...projObject, title: e.target.value });
           }}
-          value={projObject.title}
+          value={projObject.title.value}
+          validationError={projObject.title.error}
           type="text"
           name="title"
           id="title"
           label="Titre du projet (Le titre doit refléter qu’il s’agit d’un projet de conception d’un système, d’un composant, d’un procédé ou d’un processus.)"
           placeholder="Titre du projet"
-          validationError={projValidationError.title}
         />
 
         <SimpleSelect
@@ -371,7 +385,7 @@ export default function PFEForm() {
             setObjs={setRepresentatives}
           />
           <TableWithAddButton
-            title="Représentants de l'École de technologie supérieure"
+            title="Professeurs de l'École de technologie supérieure"
             description="Est-ce que vous avez déjà sélectionné un professeur pour votre projet?"
             buttonTitle="Nouveau professeur"
             obj={{
@@ -423,47 +437,70 @@ export default function PFEForm() {
             Thématiques du projet{" "}
           </label>
 
-          {isThematicsLoading ? (
-            <LoadingDots />
-          ) : (
-            thematicsOfDepartment && (
-              <div className="flex flex-wrap gap-2">
-                {thematicsOfDepartment.map((thematic) => {
-                  const isThematicSelected = selectedThematics.has(thematic.id);
-                  return (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const thematicSet = new Set(selectedThematics);
-                        if (isThematicSelected) {
-                          thematicSet.delete(thematic.id);
-                        } else {
-                          thematicSet.add(thematic.id);
-                        }
-                        setSelectedThematics(thematicSet);
-                      }}
-                      key={thematic.id}
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-                  ${
-                    isThematicSelected
-                      ? "border border-blue-500 bg-blue-600 text-white "
-                      : "border bg-gray-100 text-gray-800 shadow-sm"
-                  }
-                  `}
-                    >
-                      {thematic.name}
-                    </button>
-                  );
-                })}
-              </div>
-            )
-          )}
+          <section className="my-9">
+            {isThematicsLoading ? (
+              <LoadingDots />
+            ) : (
+              thematicsOfDepartment && (
+                <div className="flex flex-wrap gap-2">
+                  {thematicsOfDepartment.map((thematic) => {
+                    const isThematicSelected = selectedThematics.has(
+                      thematic.id,
+                    );
+                    return (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const thematicSet = new Set(selectedThematics);
+                          if (isThematicSelected) {
+                            thematicSet.delete(thematic.id);
+                          } else {
+                            thematicSet.add(thematic.id);
+                          }
+                          setSelectedThematics(thematicSet);
+                        }}
+                        key={thematic.id}
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                      ${
+                        isThematicSelected
+                          ? "border border-blue-500 bg-blue-600 text-white "
+                          : "border bg-gray-100 text-gray-800 shadow-sm"
+                      }
+                      `}
+                      >
+                        {thematic.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              )
+            )}
+          </section>
+
+          <SimpleTextArea
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+              e.preventDefault();
+              setProjObject({ ...projObject, requiredSkills: e.target.value });
+            }}
+            value={projObject.otherThematics.value}
+            id="otherThematics"
+            label="Autres thématiques"
+            name="otherThematics"
+            placeholder="Si votre projet contient d'autres thématiques, veuillez les indiquer ici."
+            rows={2}
+          />
         </div>
 
         <SimpleTextArea
-          id="expertisesRequises"
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            e.preventDefault();
+            setProjObject({ ...projObject, requiredSkills: e.target.value });
+          }}
+          value={projObject.requiredSkills.value}
+          validationError={projObject.requiredSkills.error}
+          id="requiredSkills"
           label="Expertises requises"
-          name="expertisesRequises"
+          name="requiredSkills"
           placeholder="Quelles sont les expertises requises pour le projet?"
           rows={4}
         />
@@ -481,6 +518,15 @@ export default function PFEForm() {
         {textAreaSections.map((textArea) => {
           return (
             <SimpleTextArea
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                e.preventDefault();
+                setProjObject({
+                  ...projObject,
+                  [textArea.name]: e.target.value,
+                });
+              }}
+              value={projObject[textArea.name].value}
+              validationError={projObject[textArea.name].error}
               id={textArea.name}
               {...textArea}
               key={textArea.name}
