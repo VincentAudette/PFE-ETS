@@ -9,6 +9,8 @@ import Signature from "../SVG/Signature";
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
 import { trpc } from "../../utils/trpc";
 import Image from "next/image";
+import LoadingDots from "../LoadingDots";
+import { toast } from "react-toastify";
 
 const representativePlaceholderObj = {
   id: null,
@@ -216,6 +218,12 @@ const years = () => {
 };
 
 export default function PFEForm() {
+  const [projObject, setProjObject] = useState<any>({
+    title: "",
+  });
+  const [projValidationError, setValidationError] = useState<any>({
+    title: "",
+  });
   const [teachers, setTeachers] = useState<any[]>([]);
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
@@ -226,36 +234,71 @@ export default function PFEForm() {
     { fileUrl: string; fileKey: string }[] | undefined
   >(undefined);
 
-  const [selectedThematics, setSelectedThematics] = useState<any>(new Set());
+  const [selectedThematics, setSelectedThematics] = useState<any>(undefined);
 
   const { data: uploadedFile, isLoading: isFileLoading } =
     trpc.file.byKey.useQuery(selectedFile?.[0]?.fileKey as string, {
       enabled: selectedFile != undefined && selectedFile[0] != undefined,
     });
 
-  const { data: thematicsOfDepartment, isLoading: isThematicsLoading } =
-    trpc.thematic.byDepartment.useQuery(
+  let thematicsOfDepartment, isThematicsLoading;
+
+  if (selectedDepartment && selectedDepartment.id !== "0") {
+    const result = trpc.thematic.byDepartment.useQuery(
       (selectedDepartment as DepartmentOption)?.type as DepartmentType,
       {
-        enabled:
-          selectedDepartment != undefined && selectedDepartment.id != undefined,
+        enabled: true,
       },
     );
+    thematicsOfDepartment = result.data;
+    isThematicsLoading = result.isLoading;
+  }
 
   const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
+
+  const handlePFEFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("projObject", projObject);
+
+    let containsErrors = false;
+
+    if (projObject.title == "") {
+      toast.error("Le titre du projet est obligatoire");
+      setValidationError({
+        ...projValidationError,
+        title: "Le titre du projet est obligatoire",
+      });
+      containsErrors = true;
+    }
+
+    if (containsErrors) {
+      // Scroll to top
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      return;
+    }
+  };
 
   return (
     <div className="my-5 flex flex-col gap-12 px-4 py-3 text-base sm:px-6">
       <h1 className="text-center text-2xl font-bold">
         Formulaire de projet de fin d&apos;études
       </h1>
-      <form className="flex flex-col gap-12">
+      <form className="flex flex-col gap-12" onSubmit={handlePFEFormSubmit}>
         <SimpleInput
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            e.preventDefault();
+            setProjObject({ ...projObject, title: e.target.value });
+          }}
+          value={projObject.title}
           type="text"
           name="title"
           id="title"
           label="Titre du projet (Le titre doit refléter qu’il s’agit d’un projet de conception d’un système, d’un composant, d’un procédé ou d’un processus.)"
           placeholder="Titre du projet"
+          validationError={projValidationError.title}
         />
 
         <SimpleSelect
@@ -380,38 +423,50 @@ export default function PFEForm() {
             Thématiques du projet{" "}
           </label>
 
-          {thematicsOfDepartment && (
-            <div className="flex flex-wrap gap-2">
-              {thematicsOfDepartment.map((thematic) => {
-                const isThematicSelected = selectedThematics.has(thematic.id);
-                return (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const thematicSet = new Set(selectedThematics);
-                      if (isThematicSelected) {
-                        thematicSet.delete(thematic.id);
-                      } else {
-                        thematicSet.add(thematic.id);
-                      }
-                      setSelectedThematics(thematicSet);
-                    }}
-                    key={thematic.id}
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+          {isThematicsLoading ? (
+            <LoadingDots />
+          ) : (
+            thematicsOfDepartment && (
+              <div className="flex flex-wrap gap-2">
+                {thematicsOfDepartment.map((thematic) => {
+                  const isThematicSelected = selectedThematics.has(thematic.id);
+                  return (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const thematicSet = new Set(selectedThematics);
+                        if (isThematicSelected) {
+                          thematicSet.delete(thematic.id);
+                        } else {
+                          thematicSet.add(thematic.id);
+                        }
+                        setSelectedThematics(thematicSet);
+                      }}
+                      key={thematic.id}
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
                   ${
                     isThematicSelected
                       ? "border border-blue-500 bg-blue-600 text-white "
                       : "border bg-gray-100 text-gray-800 shadow-sm"
                   }
                   `}
-                  >
-                    {thematic.name}
-                  </button>
-                );
-              })}
-            </div>
+                    >
+                      {thematic.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )
           )}
         </div>
+
+        <SimpleTextArea
+          id="expertisesRequises"
+          label="Expertises requises"
+          name="expertisesRequises"
+          placeholder="Quelles sont les expertises requises pour le projet?"
+          rows={4}
+        />
 
         <div className="flex flex-col gap-3">
           <h2 className="mt-3 text-base font-bold">Description du projet</h2>
