@@ -63,26 +63,56 @@ export default function TableWithAddButton({
           <p className="mt-2  text-sm text-gray-700">{description}</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
-            onClick={() => {
-              setEditingId(null); // Cancel any current editing
-              setObjs([...objs, placeholderObj]); // Add the placeholder object to objs
-              setEditingId(placeholderObj.id); // Start editing the new row
-              const newObj = {
-                id: generateUniqueId(),
-                name: "",
-                phone: "",
-                email: "",
-              };
-              setObjs([...objs, newObj]);
-              setEditingId(newObj.id);
-              setIsNewObj(true);
-            }}
-            type="button"
-            className="block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            {buttonTitle}
-          </button>
+          {objs.length < 1 ? (
+            <div className="flex max-w-min rounded-md border shadow-sm">
+              <button
+                onClick={() => {
+                  setEditingId(null); // Cancel any current editing
+                  setObjs([...objs, placeholderObj]); // Add the placeholder object to objs
+                  setEditingId(placeholderObj.id); // Start editing the new row
+                  const newObj = {
+                    id: generateUniqueId(),
+                    name: "",
+                    phone: "",
+                    email: "",
+                  };
+                  setObjs([...objs, newObj]);
+                  setEditingId(newObj.id);
+                  setIsNewObj(true);
+                }}
+                className=" rounded-l-md bg-gray-50 px-3 py-2 hover:bg-gray-200"
+              >
+                OUI
+              </button>
+              <button
+                disabled={true}
+                className="rounded-r-md bg-blue-600 px-3 py-2 text-white hover:cursor-not-allowed"
+              >
+                NON
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                setEditingId(null); // Cancel any current editing
+                setObjs([...objs, placeholderObj]); // Add the placeholder object to objs
+                setEditingId(placeholderObj.id); // Start editing the new row
+                const newObj = {
+                  id: generateUniqueId(),
+                  name: "",
+                  phone: "",
+                  email: "",
+                };
+                setObjs([...objs, newObj]);
+                setEditingId(newObj.id);
+                setIsNewObj(true);
+              }}
+              type="button"
+              className="block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              {buttonTitle}
+            </button>
+          )}
         </div>
       </div>
       {objs.length >= 1 && (

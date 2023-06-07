@@ -38,18 +38,18 @@ model Project {
   promoterId                   Int
   organizationId               Int?
   encouragementType            EncouragementType
-  multipleTeams                Boolean
+  multipleTeams                Boolean               @default(false)
   numberOfTeamsRequested       Int
   numberOfTeams                Int                     @default(1)
   numberOfStudents             Int
-  isMultidepartment            Boolean
+  isMultiDepartment            Boolean
   acceptsConfidentiality       Boolean
   authorizesCloudComputing     Boolean
   authorizesCloudOutsideQuebec Boolean
   mustRespectRegulations       Boolean
   pdfVersion                   String?
   submissionDate               DateTime                @default(now())
-  isSelectedDuringSemester     Boolean
+  isSelectedDuringSemester     Boolean?
   isAssignedToTeacher          Boolean                 @default(false)
   description                  String                  @db.Text
   requiredSkills               String                  @db.Text

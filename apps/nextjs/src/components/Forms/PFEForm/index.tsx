@@ -1,245 +1,43 @@
 import { useState } from "react";
-import TableWithAddButton from "../TableWithAddButton";
-import SimpleInput from "./atoms/SimpleInput";
-import SimpleSelect, { SelectOption } from "./atoms/SimpleSelect";
-import CheckBoxInput from "./atoms/CheckBoxInput";
-import SimpleTextArea from "./atoms/SimpleTextArea";
-import UploadThingButton from "./atoms/UploadThingButton";
-import Signature from "../SVG/Signature";
+import TableWithAddButton from "../../TableWithAddButton";
+import SimpleInput from "../atoms/SimpleInput";
+import SimpleSelect, { SelectOption } from "../atoms/SimpleSelect";
+import CheckBoxInput from "../atoms/CheckBoxInput";
+import SimpleTextArea from "../atoms/SimpleTextArea";
+import UploadThingButton from "../atoms/UploadThingButton";
+import Signature from "../../SVG/Signature";
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import Image from "next/image";
-import LoadingDots from "../LoadingDots";
+import LoadingDots from "../../LoadingDots";
 import { toast } from "react-toastify";
-
-const representativePlaceholderObj = {
-  id: null,
-  firstName: "Prénom",
-  lastName: "Nom de famille",
-  phone: "Téléphone",
-  email: "representant@etsmtl.ca",
-};
-
-const etudiantPlaceholderObj = {
-  id: null,
-  firstName: "Prénom",
-  lastName: "Nom de famille",
-  email: "prenom.nom.1@ens.etsmtl.ca",
-  departement: "Departement",
-};
-
-const teacherPlaceholderObj = {
-  id: null,
-  firstName: "Prénom",
-  lastName: "Nom de famille",
-  phone: "Téléphone",
-  email: "prenom.nom@etsmtl.ca",
-};
-
-const trimesters = [
-  {
-    id: "0",
-    name: "Choisir un trimestre",
-    type: null,
-  },
-  {
-    id: "1",
-    name: "Hiver",
-    type: "WINTER",
-  },
-  {
-    id: "2",
-    name: "Été",
-    type: "SUMMER",
-  },
-  {
-    id: "3",
-    name: "Automne",
-    type: "AUTOMNE",
-  },
-];
-
-type DepartmentType = "ELE" | "LOG_TI" | "MEC" | "GPA" | "GOL" | "CTN";
-export type DepartmentOption = {
-  id: string;
-  name: string;
-  type: DepartmentType | null;
-};
-
-const departement: DepartmentOption[] = [
-  {
-    id: "0",
-    name: "Choisir un département",
-    type: null,
-  },
-  {
-    id: "1",
-    name: "Génie électrique",
-    type: "ELE",
-  },
-  {
-    id: "2",
-    name: "Génie logiciel et des TI",
-    type: "LOG_TI",
-  },
-  {
-    id: "3",
-    name: "Génie mécanique",
-    type: "MEC",
-  },
-  {
-    id: "4",
-    name: "Génie de la production automatisée",
-    type: "GPA",
-  },
-  {
-    id: "5",
-    name: "Génie des opérations et de la logistique",
-    type: "GOL",
-  },
-  {
-    id: "6",
-    name: "Génie de la construction",
-    type: "CTN",
-  },
-];
-
-const encadrement = [
-  {
-    id: "0",
-    name: "Choisir un l'encadrement",
-    type: null,
-  },
-  {
-    id: "1",
-    name: "Par semaine",
-    type: "WEEKLY",
-  },
-  {
-    id: "2",
-    name: "À la demande",
-    type: "UPON_REQUEST",
-  },
-  {
-    id: "3",
-    name: "Pas d'encadrement",
-    type: "NO_ENCOURAGEMENT",
-  },
-];
-
-const textAreaSections = [
-  {
-    name: "description",
-    label: "Description du projet",
-    placeholder: "Décrivez ici l'essence de votre projet...",
-  },
-  {
-    name: "contextProblematic",
-    label: "Contexte et problématique",
-    placeholder: "Présentez le contexte et la problématique de votre projet...",
-  },
-  {
-    name: "objectives",
-    label: "Objectifs du projet",
-    placeholder: "Quels sont les objectifs ambitieux de votre projet...",
-  },
-  {
-    name: "needsConstraints",
-    label: "Besoins et contraintes",
-    placeholder:
-      "Expliquez vos besoins spécifiques et les contraintes du projet...",
-  },
-  {
-    name: "expectedResults",
-    label: "Résultats et livrables attendus",
-    placeholder:
-      "Quels sont les résultats et les livrables que vous attendez...",
-  },
-];
-
-const checkBoxesAtEndOfForm = [
-  {
-    id: "acceptsConfidentiality",
-    name: "1.	CONFIDENTIALITÉ du projet (Un projet de fin d’étude ne peut pas être considéré comme confidentiel, les étudiants feront une présentation orale à la fin de la session devant tous les étudiants de la classe et les autres promoteurs de projets pourraient être présents) ",
-    notes: [
-      "NOTE – 1 : Le projet de fin d’études (PFE) est réalisé dans un contexte académique. Les PFE ne peuvent faire objet d’exploitation commerciale. Les concepts, les calculs, les dessins d’ateliers, les prototypes, les solutions proposées et la justification des choix retenus ne sont pas garantis d’aucune manière par l’École de Technologie Supérieure, par les professeurs ou par les étudiants associés au projet. Les étudiants au PFE, n’ayant pas encore obtenu leur titre d’ingénieur, n’ont aucune autorité pour signer à ce titre et ne peuvent engendrer leur responsabilité professionnelle, n’étant pas encore membres de l’Ordre des ingénieurs du Québec. Par ailleurs, le rôle des professeurs se limite à l’encadrement du projet au niveau académique. En aucun temps et sous aucune considération, les professeurs participeront au développement du projet, notamment par la mise à profit de leurs expertises. De ce fait, les professeurs ou l’ÉTS ne signeront pas d’entente de confidentialité et ne pourront être tenus responsables des résultats d’un projet de PFE ou de son exploitation subséquente à des fins commerciales. Les étudiants ne signeront pas non plus d’ententes de confidentialité. Il est de la seule responsabilité du promoteur de s’assurer que les informations transmises aux étudiants ne soient pas confidentielles. ",
-    ],
-  },
-  {
-    id: "authorizesCloudComputing",
-    name: "2.	Le promoteur autorise l’utilisation de services d’infonuagiques (Cloud-Computing, i.e. Google drive, Dropbox, etc.) privés ou publics ? (Voir Note 2)",
-  },
-  {
-    id: "authorizesCloudOutsideQuebec",
-    name: "Si oui, sur des serveurs localisés au Québec? ",
-  },
-  {
-    id: "mustRespectRegulations",
-    name: "3.	Le projet proposé respecte les exigences réglementaires au niveau des contrôles à l’exportation (PMC/ITAR, EAR, ISP, JCP, NATO) et/ou à la protection des renseignements personnels dans le respect de la législation applicable (notamment la Loi sur l’accès à l’information et à la protection des renseignements personnels, RLRQ c. A-2.1, Loi sur la protection des renseignements personnels dans le secteur privé, RLRQ c. P-39.1 et Loi sur la protection des renseignements personnels et les documents électroniques) ? (Voir Note 2) ",
-    notes: [
-      "NOTE – 2 : L’ÉTS ne permet pas une délocalisation des données dans un territoire ne pouvant offrir les mêmes garanties qu’au Québec en matière de protection des renseignements personnels. Ainsi, l’hébergement des données doit être assuré sur des serveurs localisés sur le territoire du Québec (pas de cloud, Google Drive, Dropbox).  Le promoteur peut fournir l’infrastructure des technologies de l’information nécessaire aux étudiants qui répondent à cette exigence. Le promoteur est responsable de garantir le respect de cette disposition.  En cas de non-respect de cette exigence par le promoteur, l’ÉTS se dégage de toute responsabilité en lien avec les données hébergées sur des serveurs non conformes à la présente note. ",
-      "NOTE – 3 : Dans tous les cas, l’ÉTS se réserve le droit de refuser un projet de PFE qui ne respecterait pas les exigences explicitées dans la présente offre de projet ou de cesser toute collaboration avec un Promoteur qui ne respecterait plus les présentes. ",
-    ],
-  },
-];
-
-const attestations = [
-  `Je, soussigné, représentant dûment autorisé du Promoteur,
-  reconnais avoir lu le présent formulaire d’offre de projet, en
-  accepte tous les termes et conditions et reconnais être lié par
-  ceux-ci et convient de faire en sorte que toutes les personnes
-  impliquées de mon entreprise soient informées de leurs obligations
-  et des limites de responsabilité de la part de l’ÉTS en vertu de
-  la présente offre de projet.`,
-  `Je m’engage spécifiquement à respecter et faire respecter les
-  demandes de l’ÉTS en matière d’infonuagique et de respect des
-  renseignements confidentiels.`,
-  ` En outre, je confirme que tous résultats, plans ou prototypes
-reçus dans le cadre de ce PFE ne pourront être utilisés à d’autres
-fins qu’académiques. Je confirme également comprendre qu’aucune
-utilisation ou exploitation à des fins commerciales des résultats,
-plans ou prototypes conçus ou obtenus dans le cadre de ce PFE
-n’est autorisée par l’ÉTS.`,
-];
-
-const descriptionDuProjet = [
-  "Il doit développer des éléments, des systèmes et des processus qui répondent à des besoins précis",
-  "Il doit s'agir d'un processus créatif, itératif et évolutif assujetti à des contraintes (l’économie, la santé, la sécurité, l’environnement, la société, etc.)",
-  "Tous les projets doivent être approuvés par le département pour assurer le respect des exigences et pour la poursuite du processus",
-];
-
-const years = () => {
-  const currentYear = new Date().getFullYear();
-  const years = [];
-  for (let i = 0; i < 3; i++) {
-    years.push({ id: `annee-${currentYear + i}`, name: currentYear + i + "" });
-  }
-  return years;
-};
+import {
+  departement,
+  descriptionDuProjet,
+  representativePlaceholderObj,
+  etudiantPlaceholderObj,
+  teacherPlaceholderObj,
+  trimesters,
+  encouragementTypes,
+  textAreaSections,
+  checkBoxesAtEndOfForm,
+  attestations,
+  PFEFormElement,
+  years,
+  projObjectPresets,
+  ProjObject,
+  FieldKey,
+} from "./helpers";
+import { usePFEAuth } from "../../../context/PFEAuthContext";
 
 export default function PFEForm() {
-  const [projObject, setProjObject] = useState<any>({
-    title: { value: "", error: "", label: "titre du projet" },
-    otherThematics: { value: "" },
-    requiredSkills: { value: "", label: "expertises requises" },
-    description: { value: "", error: "", label: "description du projet" },
-    contextProblematic: {
-      value: "",
-      error: "",
-      label: "contexte et problématique",
-    },
-    expectedResults: {
-      value: "",
-      error: "",
-      label: "résultats et livrables attendus",
-    },
-    needsConstraints: { value: "", error: "", label: "besoins et contraintes" },
-    objectives: { value: "", error: "", label: "objectifs du projet" },
-  });
+  const { userData, selectedOrganization } = usePFEAuth();
+  const [projObject, setProjObject] = useState<ProjObject>(projObjectPresets);
 
   const [teachers, setTeachers] = useState<any[]>([]);
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
+
   const [selectedDepartment, setSelectedDepartment] = useState<SelectOption>(
     departement[0] as SelectOption,
   );
@@ -255,22 +53,25 @@ export default function PFEForm() {
     });
 
   const { data: thematicsOfDepartment, isLoading: isThematicsLoading } =
-    trpc.thematic.byDepartment.useQuery(
-      (selectedDepartment as DepartmentOption)?.type as DepartmentType,
-    );
-
+    trpc.thematic.all.useQuery();
   const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
 
   const handlePFEFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const target = e.target as PFEFormElement;
     console.log("projObject", projObject);
 
     let containsErrors = false;
 
     let projObjectCopy = { ...projObject };
 
-    Object.keys(projObjectCopy).forEach((key) => {
-      if (projObjectCopy[key].value == "") {
+    const keys = Object.keys(projObjectCopy) as FieldKey[];
+
+    keys.forEach((key) => {
+      if (
+        projObjectCopy[key].value == "" &&
+        projObjectCopy[key].hasOwnProperty("error")
+      ) {
         toast.error(`Le champ ${projObjectCopy[key].label} est obligatoire`);
         projObjectCopy = {
           ...projObjectCopy,
@@ -293,6 +94,33 @@ export default function PFEForm() {
       });
       return;
     }
+
+    const formData = {
+      acceptsConfidentiality: target.acceptsConfidentiality.checked,
+      authorizesCloudComputing: target.authorizesCloudComputing.checked,
+      authorizesCloudOutsideQuebec: target.authorizesCloudOutsideQuebec.checked,
+      mustRespectRegulations: target.mustRespectRegulations.checked,
+      projectTitle: target.projectTitle.value,
+      numberOfStudents: target.numberOfStudents.value,
+      numberOfTeams: target.numberOfTeams.value,
+      isMultiDepartment,
+      encouragementType: target["encouragementType[type]"].value,
+      trimester: target["trimester[type]"].value,
+      year: target["year[name]"].value,
+      otherThematics: projObject.otherThematics.value,
+      requiredSkills: projObject.requiredSkills.value,
+      description: target.description.value,
+      contextProblematic: target.contextProblematic.value,
+      expectedResults: target.expectedResults.value,
+      needsConstraints: target.needsConstraints.value,
+      objectives: target.objectives.value,
+      signatureImgKey: uploadedFile?.key,
+      thematics: Array.from(selectedThematics),
+      promoterId: userData?.clerkId,
+      organizationId: selectedOrganization?.id,
+    };
+
+    console.log(formData);
   };
 
   return (
@@ -304,13 +132,19 @@ export default function PFEForm() {
         <SimpleInput
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             e.preventDefault();
-            setProjObject({ ...projObject, title: e.target.value });
+            setProjObject({
+              ...projObject,
+              projectTitle: {
+                ...projObject.projectTitle,
+                value: e.target.value,
+              },
+            });
           }}
-          value={projObject.title.value}
-          validationError={projObject.title.error}
+          value={projObject.projectTitle.value}
+          validationError={projObject.projectTitle.error}
           type="text"
-          name="title"
-          id="title"
+          name="projectTitle"
+          id="projectTitle"
           label="Titre du projet (Le titre doit refléter qu’il s’agit d’un projet de conception d’un système, d’un composant, d’un procédé ou d’un processus.)"
           placeholder="Titre du projet"
         />
@@ -364,12 +198,12 @@ export default function PFEForm() {
         </div>
 
         <SimpleSelect
-          name="encadrement"
-          options={encadrement}
+          name="encouragementType"
+          options={encouragementTypes}
           label="Que voulez-vous offrir comme encadrement?"
         />
 
-        <div className="flex flex-col gap-32 py-12">
+        <div className="flex flex-col gap-[6.2rem] py-12">
           <TableWithAddButton
             title="Représentants de l'entreprise"
             description="Est-ce que d'autres personnes de l'entreprise doivent être ajoutées au projet?"
@@ -384,6 +218,7 @@ export default function PFEForm() {
             objs={representatives}
             setObjs={setRepresentatives}
           />
+          <hr />
           <TableWithAddButton
             title="Professeurs de l'École de technologie supérieure"
             description="Est-ce que vous avez déjà sélectionné un professeur pour votre projet?"
@@ -398,8 +233,11 @@ export default function PFEForm() {
             objs={teachers}
             setObjs={setTeachers}
           />
+          <hr />
           <TableWithAddButton
-            title="Étudiants préalablement sélectionnés (Maximum 4 étudiants)"
+            title={`Étudiants préalablement sélectionnés (Maximum ${
+              isMultiDepartment ? 8 : 5
+            } étudiants)`}
             description="Avez-vous déjà sélectionné des étudiants pour votre projet? NOTE :  Les étudiants inscrits dans cette section ont été contactés et sont assurés de vouloir faire partie du projet. De ce fait, ils ne pourront choisir d’autres projets."
             buttonTitle="Nouvel étudiant"
             obj={{
@@ -413,19 +251,27 @@ export default function PFEForm() {
             setObjs={setStudents}
           />
 
-          <div className="columns-2">
-            <SimpleInput
-              type="number"
-              name="numberOfStudentsPerTeam"
-              label="Nombre d'étudiants requis par équipe"
-              placeholder="Minimum 3 étudiants"
-            />
-            <SimpleInput
-              type="number"
-              name="numberOfTeams"
-              label="Nombre d'équipes sur le projet"
-              placeholder="Minimum 1 équipe"
-            />
+          <div className=" flex items-end gap-3">
+            <div className="w-1/2">
+              <SimpleInput
+                type="number"
+                name="numberOfStudents"
+                label={`Nombre d'étudiants par équipe (minimum 3 et maximum ${
+                  isMultiDepartment ? 8 : 5
+                })`}
+                placeholder={`Minimum 3 étudiants et maximum ${
+                  isMultiDepartment ? 8 : 5
+                } étudiants`}
+              />
+            </div>
+            <div className="w-1/2">
+              <SimpleInput
+                type="number"
+                name="numberOfTeams"
+                label="Nombre d'équipes sur le projet"
+                placeholder="Minimum 1 équipe"
+              />
+            </div>
           </div>
         </div>
 
@@ -480,7 +326,13 @@ export default function PFEForm() {
           <SimpleTextArea
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
               e.preventDefault();
-              setProjObject({ ...projObject, requiredSkills: e.target.value });
+              setProjObject({
+                ...projObject,
+                otherThematics: {
+                  ...projObject.otherThematics,
+                  value: e.target.value,
+                },
+              });
             }}
             value={projObject.otherThematics.value}
             id="otherThematics"
@@ -494,7 +346,13 @@ export default function PFEForm() {
         <SimpleTextArea
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             e.preventDefault();
-            setProjObject({ ...projObject, requiredSkills: e.target.value });
+            setProjObject({
+              ...projObject,
+              requiredSkills: {
+                ...projObject.requiredSkills,
+                value: e.target.value,
+              },
+            });
           }}
           value={projObject.requiredSkills.value}
           validationError={projObject.requiredSkills.error}
@@ -574,7 +432,7 @@ export default function PFEForm() {
                 <Image
                   src={selectedFile[0].fileUrl}
                   alt="signuature"
-                  className="h-[4rem] w-32"
+                  className="h-auto w-full"
                   width={128}
                   height={64}
                 />
