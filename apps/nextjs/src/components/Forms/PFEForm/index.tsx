@@ -31,12 +31,30 @@ import {
 import { usePFEAuth } from "../../../context/PFEAuthContext";
 
 export default function PFEForm() {
+  // User data and selected organization
   const { userData, selectedOrganization } = usePFEAuth();
+
+  // Project object containing all the fields for error handling
   const [projObject, setProjObject] = useState<ProjObject>(projObjectPresets);
 
+  // Associated teachers, representatives and students
   const [teachers, setTeachers] = useState<any[]>([]);
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
+
+  // Trimester
+  const [selectedTrimester, setSelectedTrimester] = useState<SelectOption>(
+    trimesters[0] as SelectOption,
+  );
+
+  // Year
+  const [selectedYear, setSelectedYear] = useState<SelectOption>(
+    years()[0] as SelectOption,
+  );
+
+  // EncouragementType
+  const [selectedEncouragementType, setSelectedEncouragementType] =
+    useState<SelectOption>(encouragementTypes[0] as SelectOption);
 
   const [selectedDepartment, setSelectedDepartment] = useState<SelectOption>(
     departement[0] as SelectOption,
@@ -67,13 +85,14 @@ export default function PFEForm() {
   const handlePFEFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as PFEFormElement;
-    console.log("projObject", projObject);
 
     let containsErrors = false;
 
     let projObjectCopy = { ...projObject };
 
     const keys = Object.keys(projObjectCopy) as FieldKey[];
+
+    //Error handling
 
     keys.forEach((key) => {
       if (
@@ -123,14 +142,26 @@ export default function PFEForm() {
       expectedResults: target.expectedResults.value,
       needsConstraints: target.needsConstraints.value,
       objectives: target.objectives.value,
-      // signatureImg: uploadedFile.key, FIXME: uncomment this
-      signatureImg: "3fea96f7-a4e4-4272-ac56-573c98c76df0_download.png",
+      signatureImg: (uploadedFile as { key: string }).key,
       thematics: Array.from(selectedThematics),
       promoterId: userData?.promoter.id,
       organizationId: selectedOrganization?.id,
     };
 
     createProject.mutateAsync(formData);
+
+    //clear the form
+    setProjObject(projObjectPresets);
+    setSelectedFile(undefined);
+    setSelectedThematics(new Set());
+    setSelectedDepartment(departement[0] as SelectOption);
+    setSelectedTrimester(trimesters[0] as SelectOption);
+    setSelectedYear(years()[0] as SelectOption);
+    setSelectedEncouragementType(encouragementTypes[0] as SelectOption);
+    setTeachers([]);
+    setStudents([]);
+    setRepresentatives([]);
+    e.currentTarget.reset();
   };
 
   return (
@@ -203,14 +234,24 @@ export default function PFEForm() {
             name="trimester"
             options={trimesters}
             label="Trimestre"
+            selectedState={selectedTrimester}
+            setSelectedState={setSelectedTrimester}
           />
-          <SimpleSelect name="year" options={years()} label="Année" />
+          <SimpleSelect
+            name="year"
+            options={years()}
+            label="Année"
+            selectedState={selectedYear}
+            setSelectedState={setSelectedYear}
+          />
         </div>
 
         <SimpleSelect
           name="encouragementType"
           options={encouragementTypes}
           label="Que voulez-vous offrir comme encadrement?"
+          selectedState={selectedEncouragementType}
+          setSelectedState={setSelectedEncouragementType}
         />
 
         <div className="flex flex-col gap-[6.2rem] py-12">

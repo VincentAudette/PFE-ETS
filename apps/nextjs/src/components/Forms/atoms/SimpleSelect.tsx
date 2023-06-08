@@ -9,6 +9,7 @@ function classNames(...classes: any[]) {
 export interface SelectOption {
   id: string;
   name: string;
+  type?: string | null;
 }
 
 export default function SimpleSelect({

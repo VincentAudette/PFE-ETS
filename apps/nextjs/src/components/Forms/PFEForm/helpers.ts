@@ -1,3 +1,5 @@
+import { SelectOption } from "../atoms/SimpleSelect";
+
 export const representativePlaceholderObj = {
   id: null,
   firstName: "Prénom",
@@ -22,7 +24,7 @@ export const teacherPlaceholderObj = {
   email: "prenom.nom@etsmtl.ca",
 };
 
-export const trimesters = [
+export const trimesters: SelectOption[] = [
   {
     id: "0",
     name: "Choisir un trimestre",
@@ -90,7 +92,7 @@ export const departement: DepartmentOption[] = [
   },
 ];
 
-export const encouragementTypes = [
+export const encouragementTypes: SelectOption[] = [
   {
     id: "0",
     name: "Choisir un l'encadrement",
@@ -198,7 +200,7 @@ export const descriptionDuProjet = [
   "Tous les projets doivent être approuvés par le département pour assurer le respect des exigences et pour la poursuite du processus",
 ];
 
-export const years = () => {
+export const years = (): SelectOption[] => {
   const currentYear = new Date().getFullYear();
   const years = [];
   for (let i = 0; i < 3; i++) {
