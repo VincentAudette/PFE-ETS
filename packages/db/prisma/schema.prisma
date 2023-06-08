@@ -32,39 +32,40 @@ model Project {
   id                           String                  @id @default(cuid())
   pfeId                        String                  @unique
   title                        String
-  description                  String                  @db.Text
   trimester                    Trimester
   year                         Int
-  numberOfIterations           Int
   promoterId                   Int
-  organizationId               Int?
+  promoter                     Promoter                @relation(fields: [promoterId], references: [id])
+  organizationId               Int
+  organization                 Organization            @relation(fields: [organizationId], references: [id])
   encouragementType            EncouragementType
-  multipleTeams                Boolean
   numberOfTeamsRequested       Int
-  numberOfTeams                Int                     @default(1)
   numberOfStudents             Int
-  isMultidepartment            Boolean
+  isMultiDepartment            Boolean
   acceptsConfidentiality       Boolean
   authorizesCloudComputing     Boolean
   authorizesCloudOutsideQuebec Boolean
   mustRespectRegulations       Boolean
-  pdfVersion                   String?
   submissionDate               DateTime                @default(now())
-  isSelectedDuringSemester     Boolean
-  isAssignedToTeacher          Boolean                 @default(false)
+  description                  String                  @db.Text
+  requiredSkills               String                  @db.Text
   contextProblematic           String                  @db.Text
   expectedResults              String                  @db.Text
   needsConstraints             String                  @db.Text
   objectives                   String                  @db.Text
-  promoter                     Promoter                @relation(fields: [promoterId], references: [id])
-  organization                 Organization?           @relation(fields: [organizationId], references: [id])
+  files                        File[]
+  isMultipleTeams              Boolean?                @default(false)
+  numberOfTeams                Int?                    @default(1)
+  numberOfIterations           Int?                    @default(0)
+  isSelectedDuringSemester     Boolean?
+  isAssignedToTeacher          Boolean?                @default(false)
   group                        Group?
+  otherThematics               String?
+  departments                  DepartmentOnProject[]
   firstChoices                 StudentChoice[]         @relation("FirstProjectChoice")
   secondChoices                StudentChoice[]         @relation("SecondProjectChoice")
   thirdChoices                 StudentChoice[]         @relation("ThirdProjectChoice")
   fourthChoices                StudentChoice[]         @relation("FourthProjectChoice")
-  signatureImg                 File?
-  departments                  DepartmentOnProject[]
   thematics                    ThematicOnProject[]
   representatives              ProjectRepresentative[]
   states                       ProjectState[]
@@ -101,15 +102,15 @@ model StudentChoice {
 }
 
 model File {
+  key            String        @id
   name           String?
   type           FileType
   url            String
   uploadedAt     DateTime      @default(now())
   organizationId Int?          @unique
-  key            String        @id
-  projectId      String?       @unique
-  project        Project?      @relation(fields: [projectId], references: [id])
   organization   Organization? @relation(fields: [organizationId], references: [id])
+  projectId      String?
+  project        Project?       @relation(fields: [projectId], references: [id])
 }
 
 model Organization {

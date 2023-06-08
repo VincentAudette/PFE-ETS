@@ -1,7 +1,7 @@
 import { BookOpenIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 
-const linkItems = [
+export const linkItems = [
   {
     href: "https://pfe-etsmtl.notion.site",
     IconSvg: BookOpenIcon,
@@ -95,15 +95,17 @@ const linkItems = [
   },
 ];
 
-const ItemSquare = ({
+export const ItemSquare = ({
   href,
   IconSvg,
   text,
+  className,
   withTargetBlank,
 }: {
   href: string;
   IconSvg: (props: { className: string }) => JSX.Element;
   text: string;
+  className?: string;
   withTargetBlank: boolean;
 }) => {
   return (
@@ -111,7 +113,9 @@ const ItemSquare = ({
       href={href}
       target={withTargetBlank ? "_blank" : undefined}
       className={
-        "flex h-[3.5rem] w-[3.5rem] flex-col items-center justify-center bg-neutral-800/25 hover:bg-neutral-100/50 hover:text-red-600 "
+        className
+          ? className
+          : "flex h-[3.5rem] w-[3.5rem] flex-col items-center justify-center bg-stone-700/25 hover:bg-stone-100/50 hover:text-red-600 "
       }
     >
       <IconSvg className="h-8 w-8" />

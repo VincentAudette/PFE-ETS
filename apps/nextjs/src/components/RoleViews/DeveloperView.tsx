@@ -1,7 +1,55 @@
+import { Role } from "@acme/db";
+import { usePFEAuth } from "../../context/PFEAuthContext";
+import { ItemSquare, linkItems } from "../LinkBox";
+
 export default function DeveloperView() {
+  const { setAuthProfile } = usePFEAuth();
   return (
     <div>
-      <h1>Developer View</h1>
+      <div className="py-10">
+        <h1 className="font-mono text-2xl font-bold">Vue Développeur</h1>
+        <p className="text-stone-500">
+          Selectionner un profil pour commencer à créer votre fonctionnalité.
+        </p>
+      </div>
+      <div className="flex gap-5">
+        {[
+          {
+            key: "STUDENT",
+            name: "Étudiant",
+          },
+          {
+            key: "PROMOTER",
+            name: "Promoteur",
+          },
+          {
+            key: "ADMIN",
+            name: "Administrateur",
+          },
+        ].map((role: { key: string; name: string }) => (
+          <button
+            key={role.key}
+            onClick={() => setAuthProfile(role.key as Role)}
+            className="rounded-2xl bg-stone-200 px-32 py-12 text-xl font-semibold text-gray-900 hover:bg-stone-300"
+          >
+            {role.name}
+          </button>
+        ))}
+      </div>
+      <div className="flex gap-5 py-10">
+        {linkItems.map((item) => (
+          <ItemSquare
+            className="flex grow flex-col items-center justify-center rounded-md bg-stone-200 py-8 hover:bg-stone-300"
+            href={item.href}
+            key={item.href}
+            IconSvg={
+              item.IconSvg as (props: { className: string }) => JSX.Element
+            }
+            text={item.text}
+            withTargetBlank={item.withTargetBlank}
+          />
+        ))}
+      </div>
     </div>
   );
 }
