@@ -1,5 +1,4 @@
 import { BuildingOfficeIcon, PhotoIcon } from "@heroicons/react/24/solid";
-import { File, FileType } from "@acme/db";
 import Image from "next/image";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";

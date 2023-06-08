@@ -45,7 +45,9 @@ export default function PFEForm() {
     { fileUrl: string; fileKey: string }[] | undefined
   >(undefined);
 
-  const [selectedThematics, setSelectedThematics] = useState<any>(new Set());
+  const [selectedThematics, setSelectedThematics] = useState<Set<number>>(
+    new Set(),
+  );
 
   const { data: uploadedFile, isLoading: isFileLoading } =
     trpc.file.byKey.useQuery(selectedFile?.[0]?.fileKey as string, {
@@ -55,6 +57,12 @@ export default function PFEForm() {
   const { data: thematicsOfDepartment, isLoading: isThematicsLoading } =
     trpc.thematic.all.useQuery();
   const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
+
+  const createProject = trpc.project.create.useMutation({
+    onSuccess: () => {
+      toast.success("Projet créé avec succès");
+    },
+  });
 
   const handlePFEFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,13 +108,14 @@ export default function PFEForm() {
       authorizesCloudComputing: target.authorizesCloudComputing.checked,
       authorizesCloudOutsideQuebec: target.authorizesCloudOutsideQuebec.checked,
       mustRespectRegulations: target.mustRespectRegulations.checked,
-      projectTitle: target.projectTitle.value,
-      numberOfStudents: target.numberOfStudents.value,
-      numberOfTeams: target.numberOfTeams.value,
+      title: target.projectTitle.value,
+      numberOfStudents: Number.parseInt(target.numberOfStudents.value),
+      numberOfTeamsRequested: Number.parseInt(target.numberOfTeams.value),
+      isMultipleTeams: Number.parseInt(target.numberOfTeams.value) > 1,
       isMultiDepartment,
       encouragementType: target["encouragementType[type]"].value,
       trimester: target["trimester[type]"].value,
-      year: target["year[name]"].value,
+      year: Number.parseInt(target["year[name]"].value),
       otherThematics: projObject.otherThematics.value,
       requiredSkills: projObject.requiredSkills.value,
       description: target.description.value,
@@ -114,13 +123,14 @@ export default function PFEForm() {
       expectedResults: target.expectedResults.value,
       needsConstraints: target.needsConstraints.value,
       objectives: target.objectives.value,
-      signatureImgKey: uploadedFile?.key,
+      // signatureImg: uploadedFile.key, FIXME: uncomment this
+      signatureImg: "3fea96f7-a4e4-4272-ac56-573c98c76df0_download.png",
       thematics: Array.from(selectedThematics),
-      promoterId: userData?.clerkId,
+      promoterId: userData?.promoter.id,
       organizationId: selectedOrganization?.id,
     };
 
-    console.log(formData);
+    createProject.mutateAsync(formData);
   };
 
   return (
