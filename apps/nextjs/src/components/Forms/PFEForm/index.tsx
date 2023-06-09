@@ -289,7 +289,7 @@ export default function PFEForm() {
             title={`Étudiants préalablement sélectionnés (Maximum ${
               isMultiDepartment ? 8 : 5
             } étudiants)`}
-            description="Avez-vous déjà sélectionné des étudiants pour votre projet? NOTE :  Les étudiants inscrits dans cette section ont été contactés et sont assurés de vouloir faire partie du projet. De ce fait, ils ne pourront choisir d’autres projets."
+            description="Avez-vous déjà sélectionné des étudiants pour votre projet? NOTE :  Les étudiants inscrits dans cette section ont été contactés et sont assurés de vouloir faire partie du projet. De ce fait, ils ne pourront choisir d’autres projets. Vous devez demander une autorisation au coordonnateur des PFE de votre département pour avoir une équipe de plus de 5 personnes."
             buttonTitle="Nouvel étudiant"
             obj={{
               firstName: "Prénom",
