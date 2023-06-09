@@ -2,6 +2,31 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { EncouragementType, Prisma, Trimester } from "@acme/db";
 export const projectRouter = router({
+  all: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.project.findMany({
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    return await ctx.prisma.project.findUnique({
+      where: { id: input },
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({
