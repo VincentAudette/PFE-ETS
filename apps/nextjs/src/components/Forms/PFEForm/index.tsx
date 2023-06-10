@@ -12,7 +12,7 @@ import Image from "next/image";
 import LoadingDots from "../../LoadingDots";
 import { toast } from "react-toastify";
 import {
-  departement,
+  department,
   descriptionDuProjet,
   representativePlaceholderObj,
   etudiantPlaceholderObj,
@@ -42,6 +42,8 @@ export default function PFEForm() {
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
 
+  console.log("students", students);
+
   // Trimester
   const [selectedTrimester, setSelectedTrimester] = useState<SelectOption>(
     trimesters[0] as SelectOption,
@@ -57,7 +59,7 @@ export default function PFEForm() {
     useState<SelectOption>(encouragementTypes[0] as SelectOption);
 
   const [selectedDepartment, setSelectedDepartment] = useState<SelectOption>(
-    departement[0] as SelectOption,
+    department[0] as SelectOption,
   );
   const [selectedFile, setSelectedFile] = useState<
     { fileUrl: string; fileKey: string }[] | undefined
@@ -146,6 +148,9 @@ export default function PFEForm() {
       thematics: Array.from(selectedThematics),
       promoterId: userData?.promoter.id,
       organizationId: selectedOrganization?.id,
+      teachers,
+      representatives,
+      students,
     };
 
     createProject.mutateAsync(formData);
@@ -154,7 +159,7 @@ export default function PFEForm() {
     setProjObject(projObjectPresets);
     setSelectedFile(undefined);
     setSelectedThematics(new Set());
-    setSelectedDepartment(departement[0] as SelectOption);
+    setSelectedDepartment(department[0] as SelectOption);
     setSelectedTrimester(trimesters[0] as SelectOption);
     setSelectedYear(years()[0] as SelectOption);
     setSelectedEncouragementType(encouragementTypes[0] as SelectOption);
@@ -191,8 +196,8 @@ export default function PFEForm() {
         />
 
         <SimpleSelect
-          name="departement"
-          options={departement}
+          name="department"
+          options={department}
           selectedState={selectedDepartment}
           setSelectedState={setSelectedDepartment}
           label="Département de quel génie?"
@@ -213,7 +218,7 @@ export default function PFEForm() {
             id="autres-departements"
             className="flex max-w-3xl flex-wrap gap-12"
           >
-            {departement.map((dep) => {
+            {department.map((dep) => {
               return (
                 dep.type &&
                 dep.name !== selectedDepartment.name && (
@@ -295,11 +300,13 @@ export default function PFEForm() {
               firstName: "Prénom",
               lastName: "Nom",
               email: "Courriel",
-              departement: "Departement",
+              department: "Departement",
             }}
             placeholderObj={etudiantPlaceholderObj}
             objs={students}
             setObjs={setStudents}
+            selectFields={["department"]}
+            selectOptions={{ department }}
           />
 
           <div className=" flex items-end gap-3">
@@ -329,69 +336,72 @@ export default function PFEForm() {
         <div>
           <label
             htmlFor="thematics"
-            className=" mb-4 block text-sm font-medium text-gray-900"
+            className=" mb-2 block text-sm font-medium text-gray-900"
           >
             Thématiques du projet{" "}
           </label>
 
-          <section className="my-9">
-            {isThematicsLoading ? (
-              <LoadingDots />
-            ) : (
-              thematicsOfDepartment && (
-                <div className="flex flex-wrap gap-2">
-                  {thematicsOfDepartment.map((thematic) => {
-                    const isThematicSelected = selectedThematics.has(
-                      thematic.id,
-                    );
-                    return (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const thematicSet = new Set(selectedThematics);
-                          if (isThematicSelected) {
-                            thematicSet.delete(thematic.id);
-                          } else {
-                            thematicSet.add(thematic.id);
-                          }
-                          setSelectedThematics(thematicSet);
-                        }}
-                        key={thematic.id}
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+          <section className="my-5 flex flex-col gap-10 lg:flex-row">
+            <div className="lg:w-1/2">
+              {isThematicsLoading ? (
+                <LoadingDots />
+              ) : (
+                thematicsOfDepartment && (
+                  <div className="flex flex-wrap gap-2">
+                    {thematicsOfDepartment.map((thematic) => {
+                      const isThematicSelected = selectedThematics.has(
+                        thematic.id,
+                      );
+                      return (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const thematicSet = new Set(selectedThematics);
+                            if (isThematicSelected) {
+                              thematicSet.delete(thematic.id);
+                            } else {
+                              thematicSet.add(thematic.id);
+                            }
+                            setSelectedThematics(thematicSet);
+                          }}
+                          key={thematic.id}
+                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
                       ${
                         isThematicSelected
                           ? "border border-blue-500 bg-blue-600 text-white "
                           : "border bg-gray-100 text-gray-800 shadow-sm"
                       }
                       `}
-                      >
-                        {thematic.name}
-                      </button>
-                    );
-                  })}
-                </div>
-              )
-            )}
+                        >
+                          {thematic.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )
+              )}
+            </div>
+            <div className="lg:w-1/2">
+              <SimpleTextArea
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                  e.preventDefault();
+                  setProjObject({
+                    ...projObject,
+                    otherThematics: {
+                      ...projObject.otherThematics,
+                      value: e.target.value,
+                    },
+                  });
+                }}
+                value={projObject.otherThematics.value}
+                id="otherThematics"
+                label="Autres thématiques"
+                name="otherThematics"
+                placeholder="Si votre projet contient d'autres thématiques, veuillez les indiquer ici."
+                rows={2}
+              />
+            </div>
           </section>
-
-          <SimpleTextArea
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-              e.preventDefault();
-              setProjObject({
-                ...projObject,
-                otherThematics: {
-                  ...projObject.otherThematics,
-                  value: e.target.value,
-                },
-              });
-            }}
-            value={projObject.otherThematics.value}
-            id="otherThematics"
-            label="Autres thématiques"
-            name="otherThematics"
-            placeholder="Si votre projet contient d'autres thématiques, veuillez les indiquer ici."
-            rows={2}
-          />
         </div>
 
         <SimpleTextArea
@@ -464,7 +474,7 @@ export default function PFEForm() {
           ))}
         </div>
 
-        <div className="border p-9">
+        <div className="rounded-md border p-9 shadow-sm">
           <h2 className="my-3 text-base font-bold">Attestation</h2>
           <div className="flex flex-col gap-4">
             {attestations.map((attestation) => (

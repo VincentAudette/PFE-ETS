@@ -13,7 +13,7 @@ export const etudiantPlaceholderObj = {
   firstName: "Prénom",
   lastName: "Nom de famille",
   email: "prenom.nom.1@ens.etsmtl.ca",
-  departement: "Departement",
+  department: "Departement",
 };
 
 export const teacherPlaceholderObj = {
@@ -54,39 +54,39 @@ export type DepartmentOption = {
   type: DepartmentType | null;
 };
 
-export const departement: DepartmentOption[] = [
+export const department: DepartmentOption[] = [
   {
     id: "0",
     name: "Choisir un département",
     type: null,
   },
   {
-    id: "1",
+    id: "ele",
     name: "Génie électrique",
     type: "ELE",
   },
   {
-    id: "2",
+    id: "log_ti",
     name: "Génie logiciel et des TI",
     type: "LOG_TI",
   },
   {
-    id: "3",
+    id: "mec",
     name: "Génie mécanique",
     type: "MEC",
   },
   {
-    id: "4",
+    id: "gpa",
     name: "Génie de la production automatisée",
     type: "GPA",
   },
   {
-    id: "5",
+    id: "gol",
     name: "Génie des opérations et de la logistique",
     type: "GOL",
   },
   {
-    id: "6",
+    id: "ctn",
     name: "Génie de la construction",
     type: "CTN",
   },

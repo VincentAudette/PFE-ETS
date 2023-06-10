@@ -52,12 +52,52 @@ export const projectRouter = router({
         needsConstraints: z.string(),
         objectives: z.string(),
         thematics: z.array(z.number()).optional(),
+        departments: z.array(z.object({ id: z.string() })).optional(),
+        teachers: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              phone: z.string(),
+            }),
+          )
+          .optional(),
+        representatives: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              phone: z.string(),
+            }),
+          )
+          .optional(),
+        students: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              department: z.string(),
+            }),
+          )
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const project = await ctx.prisma.project.create({
         data: {
-          pfeId: "PFE-" + input.promoterId + input.year + "-" + input.trimester,
+          pfeId:
+            "PFE-" +
+            input.promoterId +
+            "-" +
+            input.year +
+            "-" +
+            input.trimester,
           title: input.title,
           description: input.description,
           trimester: input.trimester,
@@ -96,6 +136,7 @@ export const projectRouter = router({
         },
       });
 
+      // link thematics to project
       if (input.thematics) {
         await ctx.prisma.thematicOnProject.createMany({
           data: input.thematics.map((thematicId) => ({
@@ -112,6 +153,34 @@ export const projectRouter = router({
           state: "EVALUATION", // Set the initial state to EVALUATION
         },
       });
+
+      //link department to project
+      if (
+        input.departments &&
+        input.departments.length > 1 &&
+        input.isMultiDepartment
+      ) {
+        await ctx.prisma.departmentOnProject.createMany({
+          data: input.departments.map((department) => ({
+            projectId: project.id,
+            departmentId: department.id,
+          })),
+        });
+      } else if (
+        input.departments &&
+        input.departments.length > 0 &&
+        !input.isMultiDepartment &&
+        input.departments[0] !== undefined
+      ) {
+        await ctx.prisma.departmentOnProject.create({
+          data: {
+            projectId: project.id,
+            departmentId: input.departments[0].id,
+          },
+        });
+      }
+
+      //link
 
       return project;
     }),

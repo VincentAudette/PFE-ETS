@@ -1,6 +1,7 @@
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import SimpleInput from "./Forms/atoms/SimpleInput";
+import SimpleSelect from "./Forms/atoms/SimpleSelect";
 
 const generateUniqueId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -14,6 +15,8 @@ export default function TableWithAddButton({
   obj,
   placeholderObj,
   setObjs,
+  selectFields,
+  selectOptions,
 }: {
   title: string;
   description: string;
@@ -22,6 +25,8 @@ export default function TableWithAddButton({
   buttonTitle?: string;
   placeholderObj: any;
   setObjs: (objs: any[]) => void;
+  selectFields?: string[];
+  selectOptions?: any;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tempValues, setTempValues] = useState({});
@@ -72,9 +77,6 @@ export default function TableWithAddButton({
                   setEditingId(placeholderObj.id); // Start editing the new row
                   const newObj = {
                     id: generateUniqueId(),
-                    name: "",
-                    phone: "",
-                    email: "",
                   };
                   setObjs([...objs, newObj]);
                   setEditingId(newObj.id);
@@ -99,9 +101,6 @@ export default function TableWithAddButton({
                 setEditingId(placeholderObj.id); // Start editing the new row
                 const newObj = {
                   id: generateUniqueId(),
-                  name: "",
-                  phone: "",
-                  email: "",
                 };
                 setObjs([...objs, newObj]);
                 setEditingId(newObj.id);
@@ -116,10 +115,10 @@ export default function TableWithAddButton({
         </div>
       </div>
       {objs.length >= 1 && (
-        <div className="mt-5 flow-root">
+        <div className="mt-10 flow-root">
           <div className="-mx-4 -my-2 overflow-x-visible sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle">
-              <table className="min-w-full divide-y divide-gray-300">
+            <div className="inline-block min-w-full py-2 align-middle shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+              <table className="min-w-full table-auto divide-y divide-gray-300">
                 <thead>
                   <tr>
                     {Object.keys(obj).map((key: any) => (
@@ -139,7 +138,7 @@ export default function TableWithAddButton({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y  divide-gray-200 bg-white">
                   {objs.map((object, i) => (
                     <tr key={object.id}>
                       {Object.keys(obj).map((key: any, i: number) => (
@@ -152,21 +151,40 @@ export default function TableWithAddButton({
                           }
                         >
                           {editingId === object.id ? (
-                            <SimpleInput
-                              name={key + "-" + object.id}
-                              placeholder={placeholderObj[key]}
-                              withLabel={false}
-                              value={
-                                // @ts-ignore
-                                editingId === object.id
-                                  ? // @ts-ignore
-                                    tempValues[key] || ""
-                                  : object[key]
-                              }
-                              onChange={(e) =>
-                                handleInputChange(key, e.target.value)
-                              }
-                            />
+                            selectFields?.includes(key) ? (
+                              <SimpleSelect
+                                withLabel={false}
+                                name={key}
+                                options={selectOptions[key]}
+                                selectedState={
+                                  //@ts-ignore
+                                  tempValues[key] || selectOptions[key][0]
+                                }
+                                setSelectedState={(value) =>
+                                  //@ts-ignore
+                                  handleInputChange(key, value)
+                                }
+                                label={placeholderObj[key]}
+                              />
+                            ) : (
+                              <SimpleInput
+                                name={key + "-" + object.id}
+                                placeholder={placeholderObj[key]}
+                                withLabel={false}
+                                value={
+                                  // @ts-ignore
+                                  editingId === object.id
+                                    ? // @ts-ignore
+                                      tempValues[key] || ""
+                                    : object[key]
+                                }
+                                onChange={(e) =>
+                                  handleInputChange(key, e.target.value)
+                                }
+                              />
+                            )
+                          ) : selectFields?.includes(key) ? (
+                            object[key].name
                           ) : (
                             object[key]
                           )}

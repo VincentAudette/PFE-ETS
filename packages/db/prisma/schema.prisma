@@ -68,6 +68,7 @@ model Project {
   fourthChoices                StudentChoice[]         @relation("FourthProjectChoice")
   thematics                    ThematicOnProject[]
   representatives              ProjectRepresentative[]
+  teachers                     TeacherOnProject[]
   states                       ProjectState[]
 }
 
@@ -76,7 +77,6 @@ model Group {
   projectId String             @unique
   project   Project            @relation(fields: [projectId], references: [id])
   students  Student[]
-  teachers  TeacherOnProject[]
 }
 
 model StudentChoice {
@@ -144,7 +144,7 @@ model Teacher {
   id               Int                @id @default(autoincrement())
   firstName        String?
   lastName         String?
-  email            String
+  email            String            @unique
   phone            String?
   projectRelations TeacherOnProject[]
 }
@@ -155,6 +155,7 @@ model Department {
   thematics        Thematic[]
   adminRelations   AdminDepartment[]
   projectRelations DepartmentOnProject[]
+  students         Student[]            
 }
 
 model Thematic {
@@ -173,6 +174,8 @@ model Student {
   groupId        Int
   lastName       String
   studentChoices StudentChoice[]
+  departmentId   String
+  department     Department     @relation(fields: [departmentId], references: [id])
   group          Group           @relation(fields: [groupId], references: [id])
 }
 
@@ -202,10 +205,8 @@ model TeacherOnProject {
   teacherId Int
   projectId String
   contacted Boolean
-  groupId   Int?
   teacher   Teacher @relation(fields: [teacherId], references: [id])
-  group     Group?  @relation(fields: [groupId], references: [id])
-
+  project   Project @relation(fields: [projectId], references: [id])
   @@id([teacherId, projectId])
 }
 
