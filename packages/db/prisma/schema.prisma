@@ -67,7 +67,7 @@ model Project {
   thirdChoices                 StudentChoice[]         @relation("ThirdProjectChoice")
   fourthChoices                StudentChoice[]         @relation("FourthProjectChoice")
   thematics                    ThematicOnProject[]
-  representatives              ProjectRepresentative[]
+  representatives              RepresentativeOnProject[]
   teachers                     TeacherOnProject[]
   states                       ProjectState[]
 }
@@ -135,9 +135,9 @@ model Representative {
   id               Int                     @id @default(autoincrement())
   firstName        String?
   lastName         String?
-  email            String
+  email            String                  @unique
   phone            String?
-  projectRelations ProjectRepresentative[]
+  projectRelations RepresentativeOnProject[]
 }
 
 model Teacher {
@@ -237,7 +237,7 @@ model PromoterOrganization {
   @@id([promoterId, organizationId])
 }
 
-model ProjectRepresentative {
+model RepresentativeOnProject {
   projectId        String
   representativeId Int
   project          Project        @relation(fields: [projectId], references: [id])

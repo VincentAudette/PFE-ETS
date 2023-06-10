@@ -109,7 +109,7 @@ export default function TableWithAddButton({
               type="button"
               className="block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
-              {buttonTitle}
+              Ajouter un <span className="lowercase">{buttonTitle}</span>
             </button>
           )}
         </div>
@@ -130,10 +130,7 @@ export default function TableWithAddButton({
                         {obj[key]}
                       </th>
                     ))}
-                    <th
-                      scope="col"
-                      className="relative py-3.5 pl-3 pr-4 sm:pr-6 lg:pr-8"
-                    >
+                    <th scope="col" className="relative py-3.5 pl-3">
                       <span className="sr-only">Modifier</span>
                     </th>
                   </tr>
@@ -153,6 +150,7 @@ export default function TableWithAddButton({
                           {editingId === object.id ? (
                             selectFields?.includes(key) ? (
                               <SimpleSelect
+                                maxWidth={"max-w-[12.75rem]"}
                                 withLabel={false}
                                 name={key}
                                 options={selectOptions[key]}
@@ -190,7 +188,7 @@ export default function TableWithAddButton({
                           )}
                         </td>
                       ))}
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 lg:pr-8">
+                      <td className="relative whitespace-nowrap py-4 text-right text-sm font-medium">
                         {editingId === object.id ? (
                           <div className="flex gap-2">
                             <button
@@ -198,7 +196,7 @@ export default function TableWithAddButton({
                                 e.preventDefault();
                                 saveEdit(object);
                               }}
-                              className="text-blue-600 hover:text-blue-900"
+                              className="rounded-md bg-blue-600 py-1 px-2 text-white hover:bg-blue-900"
                             >
                               Sauvegarder
                             </button>

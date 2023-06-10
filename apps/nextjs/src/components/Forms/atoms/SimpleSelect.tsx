@@ -14,6 +14,7 @@ export interface SelectOption {
 
 export default function SimpleSelect({
   withLabel = true,
+  maxWidth = null,
   label,
   options,
   name,
@@ -21,6 +22,7 @@ export default function SimpleSelect({
   setSelectedState,
 }: {
   withLabel?: boolean;
+  maxWidth?: string | null;
   label: string;
   options: SelectOption[];
   name: string;
@@ -53,7 +55,9 @@ export default function SimpleSelect({
           )}
           <div className="relative">
             <Listbox.Button
-              className={`relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm ${textColor} shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6`}
+              className={`relative ${
+                maxWidth !== null ? maxWidth : "w-full"
+              } cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm ${textColor} shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6`}
             >
               <span className="block truncate">
                 {selectedState?.name ?? selected?.name}
