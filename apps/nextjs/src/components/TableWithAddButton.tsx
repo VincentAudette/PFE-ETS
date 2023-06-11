@@ -188,9 +188,9 @@ export default function TableWithAddButton({
                           )}
                         </td>
                       ))}
-                      <td className="relative whitespace-nowrap py-4 text-right text-sm font-medium">
+                      <td className="relative whitespace-nowrap py-4 px-3 text-right text-sm font-medium">
                         {editingId === object.id ? (
-                          <div className="flex gap-2">
+                          <div className="flex gap-1">
                             <button
                               onClick={(e) => {
                                 e.preventDefault();

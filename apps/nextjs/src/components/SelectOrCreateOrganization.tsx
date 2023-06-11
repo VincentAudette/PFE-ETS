@@ -15,6 +15,8 @@ export interface IFormOrganizationValues {
 export interface OrganisationFormElement extends HTMLFormElement {
   orgName: { value: string };
   orgChoice: { value: string };
+  firstName: { value: string };
+  lastName: { value: string };
 }
 
 export const organizationObjetDefault: {
@@ -44,12 +46,12 @@ export default function SelectOrCreateOrganization({
   setSelected,
   buttonText,
 }: {
-  handleSelectionSubmit: FormEventHandler<HTMLFormElement>;
+  handleSelectionSubmit?: FormEventHandler<HTMLFormElement>;
   selected: (Organization & { logo: File | null }) | null;
   setSelected: Dispatch<
     SetStateAction<(Organization & { logo: File | null }) | null>
   >;
-  buttonText: string;
+  buttonText?: string;
 }) {
   const { data: organizations, isLoading: isLoadingOrgs } =
     trpc.organization.all.useQuery();
@@ -58,8 +60,8 @@ export default function SelectOrCreateOrganization({
 
   return (
     <>
-      <form className=" flex flex-col gap-4 " onSubmit={handleSelectionSubmit}>
-        <div className="mx-auto flex w-full max-w-xl items-end gap-3 rounded-lg p-10">
+      <form className=" flex flex-col gap-4 mb-2" onSubmit={handleSelectionSubmit ?? undefined}>
+        <div className=" flex w-full max-w-xl items-end gap-3 rounded-lg">
           <SelectWithImage
             name="orgChoice"
             label="Choisissez votre organisation"
@@ -80,9 +82,9 @@ export default function SelectOrCreateOrganization({
           </button>
         </div>
 
-        <div className=" self-end">
-          <Button text={buttonText} type="submit" />
-        </div>
+       {handleSelectionSubmit && <div className=" self-end">
+          <Button text={buttonText ?? ""} type="submit" />
+        </div>}
       </form>
       <Modal
         title="Créer une organisation"

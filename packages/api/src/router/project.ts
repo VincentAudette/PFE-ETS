@@ -63,7 +63,8 @@ export const projectRouter = router({
         needsConstraints: z.string(),
         objectives: z.string(),
         thematics: z.array(z.number()).optional(),
-        departments: z.array(z.object({ id: z.string() })).optional(),
+        departments: z.array(z.string()),
+        mainDepartment: z.string(),
         teachers: z
           .array(
             z.object({
@@ -131,6 +132,7 @@ export const projectRouter = router({
           expectedResults: input.expectedResults,
           needsConstraints: input.needsConstraints,
           objectives: input.objectives,
+          mainDepartmentId: input.mainDepartment,
           promoter: {
             connect: {
               id: input.promoterId,
@@ -178,7 +180,7 @@ export const projectRouter = router({
         await ctx.prisma.departmentOnProject.createMany({
           data: input.departments.map((department) => ({
             projectId: project.id,
-            departmentId: department.id,
+            departmentId: department,
           })),
         });
       } else if (
@@ -190,7 +192,7 @@ export const projectRouter = router({
         await ctx.prisma.departmentOnProject.create({
           data: {
             projectId: project.id,
-            departmentId: input.departments[0].id,
+            departmentId: input.departments[0],
           },
         });
       }

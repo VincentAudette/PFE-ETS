@@ -15,7 +15,7 @@ const trimesters = {
     displayName: "Hiver",
   },
   SUMMER: {
-    class: "text-yellow-400 bg-yellow-400/10 ring-yellow-400/20",
+    class: "text-yellow-700 bg-yellow-400/10 ring-yellow-400/20",
     displayName: "Été",
   },
   AUTUMN: {

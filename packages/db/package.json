@@ -10,10 +10,12 @@
     "dev": "pnpm with-env prisma studio --port 5556",
     "db-push": "pnpm with-env prisma db push",
     "db-pull": "pnpm with-env prisma db pull",
-    "db-generate": "pnpm with-env prisma generate"
+    "db-generate": "pnpm with-env prisma generate",
+    "db-seed": "pnpm with-env ts-node seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^4.6.1"
+    "@prisma/client": "^4.6.1",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "dotenv-cli": "^6.0.0",
