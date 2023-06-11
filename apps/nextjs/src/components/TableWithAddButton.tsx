@@ -1,10 +1,15 @@
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import SimpleInput from "./Forms/atoms/SimpleInput";
+import SimpleSelect, { SelectOption } from "./Forms/atoms/SimpleSelect";
 
 const generateUniqueId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
+
+interface TempValues {
+  [key: string]: SelectOption | string;
+}
 
 export default function TableWithAddButton({
   title,
@@ -14,6 +19,8 @@ export default function TableWithAddButton({
   obj,
   placeholderObj,
   setObjs,
+  selectFields,
+  selectOptions,
 }: {
   title: string;
   description: string;
@@ -22,12 +29,14 @@ export default function TableWithAddButton({
   buttonTitle?: string;
   placeholderObj: any;
   setObjs: (objs: any[]) => void;
+  selectFields?: string[];
+  selectOptions?: any;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [tempValues, setTempValues] = useState({});
+  const [tempValues, setTempValues] = useState<TempValues>({});
   const [isNewObj, setIsNewObj] = useState(false);
 
-  const handleInputChange = (key: string, value: string) => {
+  const handleInputChange = (key: string, value: any) => {
     setTempValues({ ...tempValues, [key]: value });
   };
 
@@ -72,9 +81,6 @@ export default function TableWithAddButton({
                   setEditingId(placeholderObj.id); // Start editing the new row
                   const newObj = {
                     id: generateUniqueId(),
-                    name: "",
-                    phone: "",
-                    email: "",
                   };
                   setObjs([...objs, newObj]);
                   setEditingId(newObj.id);
@@ -99,9 +105,6 @@ export default function TableWithAddButton({
                 setEditingId(placeholderObj.id); // Start editing the new row
                 const newObj = {
                   id: generateUniqueId(),
-                  name: "",
-                  phone: "",
-                  email: "",
                 };
                 setObjs([...objs, newObj]);
                 setEditingId(newObj.id);
@@ -110,16 +113,16 @@ export default function TableWithAddButton({
               type="button"
               className="block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
-              {buttonTitle}
+              Ajouter un <span className="lowercase">{buttonTitle}</span>
             </button>
           )}
         </div>
       </div>
       {objs.length >= 1 && (
-        <div className="mt-5 flow-root">
+        <div className="mt-10 flow-root">
           <div className="-mx-4 -my-2 overflow-x-visible sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle">
-              <table className="min-w-full divide-y divide-gray-300">
+            <div className="inline-block min-w-full py-2 align-middle shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+              <table className="min-w-full table-auto divide-y divide-gray-300">
                 <thead>
                   <tr>
                     {Object.keys(obj).map((key: any) => (
@@ -131,18 +134,15 @@ export default function TableWithAddButton({
                         {obj[key]}
                       </th>
                     ))}
-                    <th
-                      scope="col"
-                      className="relative py-3.5 pl-3 pr-4 sm:pr-6 lg:pr-8"
-                    >
+                    <th scope="col" className="relative py-3.5 pl-3">
                       <span className="sr-only">Modifier</span>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y  divide-gray-200 bg-white">
                   {objs.map((object, i) => (
                     <tr key={object.id}>
-                      {Object.keys(obj).map((key: any, i: number) => (
+                      {Object.keys(obj).map((key: string, i: number) => (
                         <td
                           key={key}
                           className={
@@ -152,35 +152,51 @@ export default function TableWithAddButton({
                           }
                         >
                           {editingId === object.id ? (
-                            <SimpleInput
-                              name={key + "-" + object.id}
-                              placeholder={placeholderObj[key]}
-                              withLabel={false}
-                              value={
-                                // @ts-ignore
-                                editingId === object.id
-                                  ? // @ts-ignore
-                                    tempValues[key] || ""
-                                  : object[key]
-                              }
-                              onChange={(e) =>
-                                handleInputChange(key, e.target.value)
-                              }
-                            />
+                            selectFields?.includes(key) ? (
+                              <SimpleSelect
+                                maxWidth={"max-w-[12.75rem]"}
+                                withLabel={false}
+                                name={key}
+                                options={selectOptions[key]}
+                                selectedState={
+                                  tempValues[key] || selectOptions[key][0]
+                                }
+                                setSelectedState={(value) =>
+                                  handleInputChange(key, value)
+                                }
+                                label={placeholderObj[key]}
+                              />
+                            ) : (
+                              <SimpleInput
+                                name={key + "-" + object.id}
+                                placeholder={placeholderObj[key]}
+                                withLabel={false}
+                                value={
+                                  editingId === object.id
+                                    ? tempValues[key] || ""
+                                    : object[key]
+                                }
+                                onChange={(e) =>
+                                  handleInputChange(key, e.target.value)
+                                }
+                              />
+                            )
+                          ) : selectFields?.includes(key) ? (
+                            object[key].name
                           ) : (
                             object[key]
                           )}
                         </td>
                       ))}
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 lg:pr-8">
+                      <td className="relative whitespace-nowrap py-4 px-3 text-right text-sm font-medium">
                         {editingId === object.id ? (
-                          <div className="flex gap-2">
+                          <div className="flex gap-1">
                             <button
                               onClick={(e) => {
                                 e.preventDefault();
                                 saveEdit(object);
                               }}
-                              className="text-blue-600 hover:text-blue-900"
+                              className="rounded-md bg-blue-600 py-1 px-2 text-white hover:bg-blue-900"
                             >
                               Sauvegarder
                             </button>

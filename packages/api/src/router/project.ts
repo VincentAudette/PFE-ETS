@@ -1,7 +1,43 @@
-import { z } from "zod";
+import { nativeEnum, z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { EncouragementType, Prisma, Trimester } from "@acme/db";
+import {
+  DepartementETS,
+  EncouragementType,
+  Prisma,
+  PrismaPromise,
+  Representative,
+  RepresentativeOnProject,
+  Student,
+  Teacher,
+  TeacherOnProject,
+  Trimester,
+} from "@acme/db";
 export const projectRouter = router({
+  all: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.project.findMany({
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    return await ctx.prisma.project.findUnique({
+      where: { id: input },
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({
@@ -27,12 +63,57 @@ export const projectRouter = router({
         needsConstraints: z.string(),
         objectives: z.string(),
         thematics: z.array(z.number()).optional(),
+        departments: z.array(z.string()),
+        mainDepartment: z.string(),
+        teachers: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              phone: z.string(),
+            }),
+          )
+          .optional(),
+        representatives: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              phone: z.string(),
+            }),
+          )
+          .optional(),
+        students: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              department: z.object({
+                id: z.string(),
+                name: z.string(),
+                type: nativeEnum(DepartementETS),
+              }),
+            }),
+          )
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const project = await ctx.prisma.project.create({
         data: {
-          pfeId: "PFE-" + input.promoterId + input.year + "-" + input.trimester,
+          pfeId:
+            "PFE-" +
+            input.promoterId +
+            "-" +
+            input.year +
+            "-" +
+            input.trimester,
           title: input.title,
           description: input.description,
           trimester: input.trimester,
@@ -51,6 +132,7 @@ export const projectRouter = router({
           expectedResults: input.expectedResults,
           needsConstraints: input.needsConstraints,
           objectives: input.objectives,
+          mainDepartmentId: input.mainDepartment,
           promoter: {
             connect: {
               id: input.promoterId,
@@ -71,6 +153,7 @@ export const projectRouter = router({
         },
       });
 
+      // link thematics to project
       if (input.thematics) {
         await ctx.prisma.thematicOnProject.createMany({
           data: input.thematics.map((thematicId) => ({
@@ -87,6 +170,132 @@ export const projectRouter = router({
           state: "EVALUATION", // Set the initial state to EVALUATION
         },
       });
+
+      //link department to project
+      if (
+        input.departments &&
+        input.departments.length > 1 &&
+        input.isMultiDepartment
+      ) {
+        await ctx.prisma.departmentOnProject.createMany({
+          data: input.departments.map((department) => ({
+            projectId: project.id,
+            departmentId: department,
+          })),
+        });
+      } else if (
+        input.departments &&
+        input.departments.length > 0 &&
+        !input.isMultiDepartment &&
+        input.departments[0] !== undefined
+      ) {
+        await ctx.prisma.departmentOnProject.create({
+          data: {
+            projectId: project.id,
+            departmentId: input.departments[0],
+          },
+        });
+      }
+
+      // link teachers to project
+      if (input.teachers) {
+        const upsertTeachers: PrismaPromise<Teacher>[] = [];
+        const createTeachersOnProject: PrismaPromise<TeacherOnProject>[] = [];
+
+        input.teachers.forEach((teacher) => {
+          upsertTeachers.push(
+            ctx.prisma.teacher.upsert({
+              where: { email: teacher.email },
+              update: {},
+              create: {
+                firstName: teacher.firstName,
+                lastName: teacher.lastName,
+                email: teacher.email,
+                phone: teacher.phone,
+              },
+            }),
+          );
+          createTeachersOnProject.push(
+            ctx.prisma.teacherOnProject.create({
+              data: {
+                contacted: false,
+                project: { connect: { id: project.id } },
+                teacher: { connect: { email: teacher.email } },
+              },
+            }),
+          );
+        });
+
+        await ctx.prisma.$transaction([
+          ...upsertTeachers,
+          ...createTeachersOnProject,
+        ]);
+      }
+
+      // link representatives to project
+      if (input.representatives) {
+        const upsertRepresentatives: PrismaPromise<Representative>[] = [];
+        const createRepresentativesOnProject: PrismaPromise<RepresentativeOnProject>[] =
+          [];
+
+        input.representatives.forEach((representative) => {
+          upsertRepresentatives.push(
+            ctx.prisma.representative.upsert({
+              where: { email: representative.email },
+              update: {},
+              create: {
+                firstName: representative.firstName,
+                lastName: representative.lastName,
+                email: representative.email,
+                phone: representative.phone,
+              },
+            }),
+          );
+          createRepresentativesOnProject.push(
+            ctx.prisma.representativeOnProject.create({
+              data: {
+                project: { connect: { id: project.id } },
+                representative: { connect: { email: representative.email } },
+              },
+            }),
+          );
+        });
+
+        await ctx.prisma.$transaction([
+          ...upsertRepresentatives,
+          ...createRepresentativesOnProject,
+        ]);
+      }
+
+      // link students to group
+      if (input.students) {
+        const group = await ctx.prisma.group.create({
+          data: {
+            projectId: project.id,
+          },
+        });
+
+        const upsertStudents: PrismaPromise<Student>[] = input.students.map(
+          (student) =>
+            ctx.prisma.student.upsert({
+              where: { email: student.email },
+              update: { group: { connect: { id: group.id } } },
+              create: {
+                firstName: student.firstName,
+                lastName: student.lastName,
+                email: student.email,
+                group: { connect: { id: group.id } },
+                department: {
+                  connect: {
+                    id: student.department.id,
+                  },
+                },
+              },
+            }),
+        );
+
+        await ctx.prisma.$transaction(upsertStudents);
+      }
 
       return project;
     }),
