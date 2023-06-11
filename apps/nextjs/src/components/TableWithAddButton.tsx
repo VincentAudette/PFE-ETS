@@ -1,11 +1,15 @@
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import SimpleInput from "./Forms/atoms/SimpleInput";
-import SimpleSelect from "./Forms/atoms/SimpleSelect";
+import SimpleSelect, { SelectOption } from "./Forms/atoms/SimpleSelect";
 
 const generateUniqueId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
+
+interface TempValues {
+  [key: string]: SelectOption | string;
+}
 
 export default function TableWithAddButton({
   title,
@@ -29,10 +33,10 @@ export default function TableWithAddButton({
   selectOptions?: any;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [tempValues, setTempValues] = useState({});
+  const [tempValues, setTempValues] = useState<TempValues>({});
   const [isNewObj, setIsNewObj] = useState(false);
 
-  const handleInputChange = (key: string, value: string) => {
+  const handleInputChange = (key: string, value: any) => {
     setTempValues({ ...tempValues, [key]: value });
   };
 
@@ -138,7 +142,7 @@ export default function TableWithAddButton({
                 <tbody className="divide-y  divide-gray-200 bg-white">
                   {objs.map((object, i) => (
                     <tr key={object.id}>
-                      {Object.keys(obj).map((key: any, i: number) => (
+                      {Object.keys(obj).map((key: string, i: number) => (
                         <td
                           key={key}
                           className={
@@ -155,11 +159,9 @@ export default function TableWithAddButton({
                                 name={key}
                                 options={selectOptions[key]}
                                 selectedState={
-                                  //@ts-ignore
                                   tempValues[key] || selectOptions[key][0]
                                 }
                                 setSelectedState={(value) =>
-                                  //@ts-ignore
                                   handleInputChange(key, value)
                                 }
                                 label={placeholderObj[key]}
@@ -170,10 +172,8 @@ export default function TableWithAddButton({
                                 placeholder={placeholderObj[key]}
                                 withLabel={false}
                                 value={
-                                  // @ts-ignore
                                   editingId === object.id
-                                    ? // @ts-ignore
-                                      tempValues[key] || ""
+                                    ? tempValues[key] || ""
                                     : object[key]
                                 }
                                 onChange={(e) =>
