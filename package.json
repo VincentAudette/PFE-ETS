@@ -31,8 +31,5 @@
     "typescript": "^4.9.3",
     "zod": "^3.18.0"
   },
-  "pnpm": {},
-  "devDependencies": {
-    "ts-node": "^10.9.1"
-  }
+  "pnpm": {}
 }
