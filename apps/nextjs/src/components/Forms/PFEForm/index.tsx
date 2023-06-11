@@ -24,24 +24,29 @@ import {
   attestations,
   PFEFormElement,
   years,
-  projObjectPresets,
-  ProjObject,
+  pfeFormInputFields,
+  PfeFormInputFields,
   FieldKey,
+  SelectKeys,
+  selectValidationDefault,
 } from "./helpers";
 import { usePFEAuth } from "../../../context/PFEAuthContext";
-
+import { EncouragementType, Trimester } from "@acme/db";
+const _years = years();
 export default function PFEForm() {
   // User data and selected organization
   const { userData, selectedOrganization } = usePFEAuth();
 
   // Project object containing all the fields for error handling
-  const [projObject, setProjObject] = useState<ProjObject>(projObjectPresets);
+  const [inputFields, setInputFields] =
+    useState<PfeFormInputFields>(pfeFormInputFields);
+  const [selectFieldValidationErrors, setSelectFieldValidationErrors] =
+    useState<{ [key in SelectKeys]?: boolean }>(selectValidationDefault);
 
   // Associated teachers, representatives and students
   const [teachers, setTeachers] = useState<any[]>([]);
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
-
 
   // Trimester
   const [selectedTrimester, setSelectedTrimester] = useState<SelectOption>(
@@ -49,8 +54,9 @@ export default function PFEForm() {
   );
 
   // Year
+
   const [selectedYear, setSelectedYear] = useState<SelectOption>(
-    years()[0] as SelectOption,
+    _years[0] as SelectOption,
   );
 
   // EncouragementType
@@ -64,7 +70,6 @@ export default function PFEForm() {
   const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
   const [otherDepartments, setOtherDepartments] = useState<string[]>([]);
 
-
   // File
   const [selectedFile, setSelectedFile] = useState<
     { fileUrl: string; fileKey: string }[] | undefined
@@ -73,7 +78,7 @@ export default function PFEForm() {
     trpc.file.byKey.useQuery(selectedFile?.[0]?.fileKey as string, {
       enabled: selectedFile != undefined && selectedFile[0] != undefined,
     });
-  
+
   // Thematics
   const [selectedThematics, setSelectedThematics] = useState<Set<number>>(
     new Set(),
@@ -82,15 +87,12 @@ export default function PFEForm() {
   const { data: allThematics, isLoading: isThematicsLoading } =
     trpc.thematic.all.useQuery();
 
-
-
-    // Project creation mutation
+  // Project creation mutation
   const createProject = trpc.project.create.useMutation({
     onSuccess: () => {
       toast.success("Projet créé avec succès");
     },
   });
-
 
   // Handle form submit and error handling for required fields
   const handlePFEFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -99,7 +101,7 @@ export default function PFEForm() {
 
     let containsErrors = false;
 
-    let projObjectCopy = { ...projObject };
+    let projObjectCopy = { ...inputFields };
 
     const keys = Object.keys(projObjectCopy) as FieldKey[];
 
@@ -114,17 +116,77 @@ export default function PFEForm() {
         projObjectCopy = {
           ...projObjectCopy,
           [key]: {
-            value: projObject[key].value,
+            value: inputFields[key].value,
             error: "Ce champ est obligatoire",
-            label: projObject[key].label,
+            label: inputFields[key].label,
           },
         };
         containsErrors = true;
       }
+
+      if (
+        projObjectCopy[key].value != "" &&
+        projObjectCopy[key].hasOwnProperty("error")
+      ) {
+        projObjectCopy = {
+          ...projObjectCopy,
+          [key]: {
+            value: inputFields[key].value,
+            error: "",
+            label: inputFields[key].label,
+          },
+        };
+      }
+    });
+
+    const selectFields: Record<SelectKeys, SelectOption> = {
+      trimester: selectedTrimester,
+      year: selectedYear,
+      encouragementType: selectedEncouragementType,
+      department: selectedDepartment,
+    };
+
+    const selectChoices: { key: SelectKeys; displayName: string }[] = [
+      {
+        key: "trimester",
+        displayName: "trimestre",
+      },
+      {
+        key: "year",
+        displayName: "année",
+      },
+      {
+        key: "encouragementType",
+        displayName: "type d'encadrement",
+      },
+      {
+        key: "department",
+        displayName: "département",
+      },
+    ];
+
+    selectChoices.forEach((selectChoice) => {
+      if (
+        selectFields[selectChoice.key].id.includes("0") &&
+        selectFields[selectChoice.key].name.includes("Choisir")
+      ) {
+        // Check if 'id' is empty or not defined
+        toast.error(`Le champ ${selectChoice.displayName} est obligatoire`);
+        setSelectFieldValidationErrors((prevErrors) => ({
+          ...prevErrors,
+          [selectChoice.key]: true,
+        }));
+        containsErrors = true;
+      } else {
+        setSelectFieldValidationErrors((prevErrors) => ({
+          ...prevErrors,
+          [selectChoice.key]: false,
+        }));
+      }
     });
 
     if (containsErrors) {
-      setProjObject(projObjectCopy);
+      setInputFields(projObjectCopy);
       // Scroll to top
       window.scrollTo({
         top: 0,
@@ -132,11 +194,10 @@ export default function PFEForm() {
       });
       return;
     }
-
-    if(selectedFile == undefined || selectedFile[0] == undefined) {
+    if (selectedFile == undefined || selectedFile[0] == undefined) {
       toast.error("Veuillez ajouter une signature");
       return;
-    } 
+    }
 
     const formData = {
       acceptsConfidentiality: target.acceptsConfidentiality.checked,
@@ -148,11 +209,11 @@ export default function PFEForm() {
       numberOfTeamsRequested: Number.parseInt(target.numberOfTeams.value),
       isMultipleTeams: Number.parseInt(target.numberOfTeams.value) > 1,
       isMultiDepartment,
-      encouragementType: target["encouragementType[type]"].value,
-      trimester: target["trimester[type]"].value,
-      year: Number.parseInt(target["year[name]"].value),
-      otherThematics: projObject.otherThematics.value,
-      requiredSkills: projObject.requiredSkills.value,
+      encouragementType: selectedEncouragementType.type as EncouragementType,
+      trimester: selectedTrimester.type as Trimester,
+      year: Number.parseInt(selectedYear.name),
+      otherThematics: inputFields.otherThematics.value,
+      requiredSkills: inputFields.requiredSkills.value,
       description: target.description.value,
       contextProblematic: target.contextProblematic.value,
       expectedResults: target.expectedResults.value,
@@ -167,13 +228,13 @@ export default function PFEForm() {
       teachers,
       representatives,
       students,
-      otherDepartments
+      otherDepartments,
     };
 
     createProject.mutateAsync(formData);
 
     //clear the form
-    setProjObject(projObjectPresets);
+    setInputFields(pfeFormInputFields);
     setSelectedFile(undefined);
     setSelectedThematics(new Set());
     setSelectedDepartment(department[0] as SelectOption);
@@ -196,16 +257,16 @@ export default function PFEForm() {
         <SimpleInput
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             e.preventDefault();
-            setProjObject({
-              ...projObject,
+            setInputFields({
+              ...inputFields,
               projectTitle: {
-                ...projObject.projectTitle,
+                ...inputFields.projectTitle,
                 value: e.target.value,
               },
             });
           }}
-          value={projObject.projectTitle.value}
-          validationError={projObject.projectTitle.error}
+          value={inputFields.projectTitle.value}
+          validationError={inputFields.projectTitle.error}
           type="text"
           name="projectTitle"
           id="projectTitle"
@@ -219,6 +280,7 @@ export default function PFEForm() {
           selectedState={selectedDepartment}
           setSelectedState={setSelectedDepartment}
           label="Département de quel génie?"
+          validationError={selectFieldValidationErrors.department}
         />
 
         <CheckBoxInput
@@ -226,10 +288,10 @@ export default function PFEForm() {
           name="isMultiDepartment"
           label="Est-ce que le projet est multi-département?"
           checked={isMultiDepartment}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            {setIsMultiDepartment(e.target.checked);
-            if(!e.target.checked) {
-              setOtherDepartments([])
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setIsMultiDepartment(e.target.checked);
+            if (!e.target.checked) {
+              setOtherDepartments([]);
             }
           }}
         />
@@ -255,7 +317,7 @@ export default function PFEForm() {
                       }
                       if (!e.target.checked) {
                         setOtherDepartments(
-                          otherDepartments.filter((d) => d !== dep.id)
+                          otherDepartments.filter((d) => d !== dep.id),
                         );
                       }
                     }}
@@ -273,13 +335,15 @@ export default function PFEForm() {
             label="Trimestre"
             selectedState={selectedTrimester}
             setSelectedState={setSelectedTrimester}
+            validationError={selectFieldValidationErrors.trimester}
           />
           <SimpleSelect
             name="year"
-            options={years()}
+            options={_years}
             label="Année"
             selectedState={selectedYear}
             setSelectedState={setSelectedYear}
+            validationError={selectFieldValidationErrors.year}
           />
         </div>
 
@@ -289,6 +353,7 @@ export default function PFEForm() {
           label="Que voulez-vous offrir comme encadrement?"
           selectedState={selectedEncouragementType}
           setSelectedState={setSelectedEncouragementType}
+          validationError={selectFieldValidationErrors.encouragementType}
         />
 
         <h2 className="pt-5 text-base font-bold">2. Participants au projet</h2>
@@ -342,7 +407,7 @@ export default function PFEForm() {
             selectOptions={{ department }}
           />
 
-          <div className=" flex items-end gap-3">
+          <div className=" flex items-center gap-3">
             <div className="w-1/2">
               <SimpleInput
                 type="number"
@@ -353,6 +418,18 @@ export default function PFEForm() {
                 placeholder={`Minimum 3 étudiants et maximum ${
                   isMultiDepartment ? 8 : 5
                 } étudiants`}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  e.preventDefault();
+                  setInputFields({
+                    ...inputFields,
+                    numberOfStudents: {
+                      ...inputFields.numberOfStudents,
+                      value: e.target.value,
+                    },
+                  });
+                }}
+                value={inputFields.numberOfStudents.value}
+                validationError={inputFields.numberOfStudents.error}
               />
             </div>
             <div className="w-1/2">
@@ -361,6 +438,18 @@ export default function PFEForm() {
                 name="numberOfTeams"
                 label="Nombre d'équipes sur le projet"
                 placeholder="Minimum 1 équipe"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  e.preventDefault();
+                  setInputFields({
+                    ...inputFields,
+                    numberOfTeams: {
+                      ...inputFields.numberOfTeams,
+                      value: e.target.value,
+                    },
+                  });
+                }}
+                value={inputFields.numberOfTeams.value}
+                validationError={inputFields.numberOfTeams.error}
               />
             </div>
           </div>
@@ -378,7 +467,12 @@ export default function PFEForm() {
               >
                 Sélectionner parmis la list de thématiques
               </label>
-              {selectedDepartment.id === "0" ? <div className="text-sm text-gray-700">Vous devez choisir un département pour voir la liste de thématiques</div> : isThematicsLoading ? (
+              {selectedDepartment.id === "0" ? (
+                <div className="py-3 text-sm text-gray-400">
+                  Vous devez choisir un département pour voir la liste de
+                  thématiques
+                </div>
+              ) : isThematicsLoading ? (
                 <LoadingDots />
               ) : (
                 allThematics && (
@@ -387,29 +481,32 @@ export default function PFEForm() {
                       const isThematicSelected = selectedThematics.has(
                         thematic.id,
                       );
-                      return ( selectedDepartment.id === thematic.departmentId || otherDepartments.includes(thematic.departmentId))  && (
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            const thematicSet = new Set(selectedThematics);
-                            if (isThematicSelected) {
-                              thematicSet.delete(thematic.id);
-                            } else {
-                              thematicSet.add(thematic.id);
-                            }
-                            setSelectedThematics(thematicSet);
-                          }}
-                          key={thematic.id}
-                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                      return (
+                        (selectedDepartment.id === thematic.departmentId ||
+                          otherDepartments.includes(thematic.departmentId)) && (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const thematicSet = new Set(selectedThematics);
+                              if (isThematicSelected) {
+                                thematicSet.delete(thematic.id);
+                              } else {
+                                thematicSet.add(thematic.id);
+                              }
+                              setSelectedThematics(thematicSet);
+                            }}
+                            key={thematic.id}
+                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
                       ${
                         isThematicSelected
                           ? "border border-blue-500 bg-blue-600 text-white "
                           : "border bg-gray-100 text-gray-800 shadow-sm"
                       }
                       `}
-                        >
-                          {thematic.name}
-                        </button>
+                          >
+                            {thematic.name}
+                          </button>
+                        )
                       );
                     })}
                   </div>
@@ -420,15 +517,15 @@ export default function PFEForm() {
               <SimpleTextArea
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                   e.preventDefault();
-                  setProjObject({
-                    ...projObject,
+                  setInputFields({
+                    ...inputFields,
                     otherThematics: {
-                      ...projObject.otherThematics,
+                      ...inputFields.otherThematics,
                       value: e.target.value,
                     },
                   });
                 }}
-                value={projObject.otherThematics.value}
+                value={inputFields.otherThematics.value}
                 id="otherThematics"
                 label="Autres thématiques"
                 name="otherThematics"
@@ -442,16 +539,16 @@ export default function PFEForm() {
         <SimpleTextArea
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             e.preventDefault();
-            setProjObject({
-              ...projObject,
+            setInputFields({
+              ...inputFields,
               requiredSkills: {
-                ...projObject.requiredSkills,
+                ...inputFields.requiredSkills,
                 value: e.target.value,
               },
             });
           }}
-          value={projObject.requiredSkills.value}
-          validationError={projObject.requiredSkills.error}
+          value={inputFields.requiredSkills.value}
+          validationError={inputFields.requiredSkills.error}
           id="requiredSkills"
           label="Expertises requises"
           name="requiredSkills"
@@ -474,13 +571,16 @@ export default function PFEForm() {
             <SimpleTextArea
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 e.preventDefault();
-                setProjObject({
-                  ...projObject,
-                  [textArea.name]: e.target.value,
+                setInputFields({
+                  ...inputFields,
+                  [textArea.name]: {
+                    ...inputFields[textArea.name],
+                    value: e.target.value,
+                  },
                 });
               }}
-              value={projObject[textArea.name].value}
-              validationError={projObject[textArea.name].error}
+              value={inputFields[textArea.name].value}
+              validationError={inputFields[textArea.name].error}
               id={textArea.name}
               {...textArea}
               key={textArea.name}

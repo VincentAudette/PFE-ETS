@@ -4,7 +4,7 @@ export interface InputWithLabelProps {
   type?: string;
   label?: string;
   name: string;
-  value?: string;
+  value?: string | number;
   id?: string;
   defaultValue?: string;
   placeholder: string;
