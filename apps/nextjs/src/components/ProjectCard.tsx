@@ -11,15 +11,15 @@ const statuses = {
 
 const trimesters = {
   WINTER: {
-    class: "text-blue-400 bg-blue-400/10 ring-blue-400/20",
+    class: "text-blue-700 bg-blue-400/10 ring-blue-400/20",
     displayName: "Hiver",
   },
   SUMMER: {
     class: "text-yellow-700 bg-yellow-400/10 ring-yellow-400/20",
     displayName: "Été",
   },
-  AUTUMN: {
-    class: "text-orange-400 bg-orange-400/10 ring-orange-400/20",
+  AUTOMNE: {
+    class: "text-orange-700 bg-orange-400/10 ring-orange-400/20",
     displayName: "Automne",
   },
 };
@@ -58,7 +58,7 @@ const ProjectCard: React.FC<{
               </Link>
             </h2>
           </div>
-          <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-gray-400">
+          <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-gray-600">
             <p className="truncate">{project.description}</p>
             <span className="text-stone-300">&middot;</span>
             <p className="whitespace-nowrap">INSERT STATUS</p>

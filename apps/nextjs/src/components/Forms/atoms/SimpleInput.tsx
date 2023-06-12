@@ -33,7 +33,7 @@ export default function SimpleInput({
           {label}
         </label>
       )}
-      <div className="relative mt-2 rounded-md">
+      <div className="relative mt-2 min-w-[10rem] rounded-md">
         <input
           onChange={onChange}
           value={value}

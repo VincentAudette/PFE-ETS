@@ -105,15 +105,14 @@ export const projectRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // get the total number of projects
+      const totalProjects = await ctx.prisma.project.count();
+      // make the id padded with zeros up to 3 digits
+      const paddedId = String(totalProjects + 1).padStart(3, "0");
+
       const project = await ctx.prisma.project.create({
         data: {
-          pfeId:
-            "PFE-" +
-            input.promoterId +
-            "-" +
-            input.year +
-            "-" +
-            input.trimester,
+          pfeId: `PFE-${paddedId}-${input.year}-${input.trimester}`,
           title: input.title,
           description: input.description,
           trimester: input.trimester,

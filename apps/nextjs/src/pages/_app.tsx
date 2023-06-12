@@ -7,13 +7,16 @@ import { frFR } from "@clerk/localizations";
 import { PFEAuthProvider } from "../context/PFEAuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ProjectProvider } from "../context/ProjectContext";
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return (
     <ClerkProvider localization={frFR} {...pageProps}>
       <ToastContainer />
       <PFEAuthProvider>
-        <Component {...pageProps} />
+        <ProjectProvider>
+          <Component {...pageProps} />
+        </ProjectProvider>
       </PFEAuthProvider>
     </ClerkProvider>
   );
