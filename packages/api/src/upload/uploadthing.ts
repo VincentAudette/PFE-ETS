@@ -39,6 +39,22 @@ export const pfeEtsFileRouter = {
         throw new Error("Failed to create file");
       }
     }),
+  pdfUploader: f.maxSize("1GB").onUploadComplete(async ({ metadata, file }) => {
+    // This code RUNS ON YOUR SERVER after upload
+    console.log("file url", file.url);
+
+    // const prismaFile = await prisma?.file.create({
+    //   data: {
+    //     key: file.key,
+    //     type: FileType.PDF,
+    //     url: file.url,
+    //   },
+    // });
+
+    // if (prismaFile === null || prismaFile === undefined) {
+    //   throw new Error("Failed to create file");
+    // }
+  }),
 } satisfies FileRouter;
 
 export type PfeEtsFileRouter = typeof pfeEtsFileRouter;
