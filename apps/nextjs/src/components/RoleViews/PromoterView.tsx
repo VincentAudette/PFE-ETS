@@ -13,6 +13,9 @@ import Link from "next/link";
 import { NextRouter, useRouter } from "next/router";
 import { usePFEAuth } from "../../context/PFEAuthContext";
 import InfoAlert from "../Forms/atoms/InfoAlert";
+import ProjectCard from "../ProjectCard";
+import { inferProcedureOutput } from "@trpc/server";
+import { AppRouter } from "@acme/api";
 
 const navigation: NavigationItem[] = [
   {
@@ -73,20 +76,29 @@ export default function PromoterView({
         </div>
       }
     >
-      <div>
-        {router.pathname === "/" && (
-          <div className=" flex h-full min-h-[85vh] flex-col items-center">
-            <p>Vous n&apos;avez pas de PFE en cours.</p>
-            <span>
-              <Link
-                className=" rounded-lg px-3 py-2 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
-                href="/projets/new"
-              >
-                Débuter un nouveau PFE &rarr;
-              </Link>
-            </span>
-          </div>
-        )}
+      <div className="w-full">
+        {router.pathname === "/" &&
+          (userData?.promoter?.projects.length >= 1 ? (
+            <div className="w-full">
+              {userData?.promoter?.projects !== undefined &&
+                userData?.promoter?.projects?.map((project: any) => {
+                  console.log("project", project);
+                  return <ProjectCard key={project.id} project={project} />;
+                })}
+            </div>
+          ) : (
+            <div className=" flex h-full min-h-[85vh] justify-center flex-col sm:gap-5 gap-1 lg:flex-row items-center">
+              <p>Vous n&apos;avez pas de PFE en cours.</p>
+              <span>
+                <Link
+                  className=" rounded-lg px-3 py-2 bg-blue-600 text-white hover:bg-blue-500"
+                  href="/projets/new"
+                >
+                  Débuter un nouveau PFE &rarr;
+                </Link>
+              </span>
+            </div>
+          ))}
         {children}
       </div>
     </SideBarLayout>

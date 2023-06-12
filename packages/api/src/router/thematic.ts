@@ -3,6 +3,9 @@ import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 
 export const thematicRouter = router({
+  all: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.thematic.findMany();
+  }),
   byDepartment: protectedProcedure
     .input(z.nativeEnum(DepartementETS))
     .query(async ({ ctx, input }) => {

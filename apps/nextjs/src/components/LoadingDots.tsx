@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const LoadingDots = ({ darkMode = false }: { darkMode: boolean }) => {
+const LoadingDots = ({ darkMode = false }: { darkMode?: boolean }) => {
   const [dots, setDots] = useState(".");
 
   useEffect(() => {

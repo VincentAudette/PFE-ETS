@@ -30,7 +30,7 @@ export default function SideBarLayout({
   showAfterNav = false,
   afterNav,
   showMobileNav = false,
-  setShowMobileNav = () => {},
+  setShowMobileNav,
 }: {
   navigation: NavigationItem[];
   secondaryNavigation?: SecondaryNavigationItem[];
@@ -45,12 +45,18 @@ export default function SideBarLayout({
   return (
     <div className=" mx-auto flex w-full max-w-5xl justify-between px-4 sm:gap-10 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
       <div className="sm:hidden">
-        <SlideOver title="Menu" show={showMobileNav} setShow={setShowMobileNav}>
-          <VerticalNav
-            navigation={navigation}
-            secondaryNavigation={secondaryNavigation}
-          />
-        </SlideOver>
+        {setShowMobileNav && (
+          <SlideOver
+            title="Menu"
+            show={showMobileNav}
+            setShow={setShowMobileNav}
+          >
+            <VerticalNav
+              navigation={navigation}
+              secondaryNavigation={secondaryNavigation}
+            />
+          </SlideOver>
+        )}
       </div>
       <div className="mt-5 hidden lg:block">
         <VerticalNav

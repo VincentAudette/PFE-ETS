@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
@@ -32,41 +33,44 @@ model Project {
   id                           String                  @id @default(cuid())
   pfeId                        String                  @unique
   title                        String
-  description                  String                  @db.Text
   trimester                    Trimester
   year                         Int
-  numberOfIterations           Int
   promoterId                   Int
-  organizationId               Int?
+  promoter                     Promoter                @relation(fields: [promoterId], references: [id])
+  organizationId               Int
+  organization                 Organization            @relation(fields: [organizationId], references: [id])
   encouragementType            EncouragementType
-  multipleTeams                Boolean
   numberOfTeamsRequested       Int
-  numberOfTeams                Int                     @default(1)
   numberOfStudents             Int
-  isMultidepartment            Boolean
+  isMultiDepartment            Boolean
   acceptsConfidentiality       Boolean
   authorizesCloudComputing     Boolean
   authorizesCloudOutsideQuebec Boolean
   mustRespectRegulations       Boolean
-  pdfVersion                   String?
   submissionDate               DateTime                @default(now())
-  isSelectedDuringSemester     Boolean
-  isAssignedToTeacher          Boolean                 @default(false)
+  description                  String                  @db.Text
+  requiredSkills               String                  @db.Text
   contextProblematic           String                  @db.Text
   expectedResults              String                  @db.Text
   needsConstraints             String                  @db.Text
   objectives                   String                  @db.Text
-  promoter                     Promoter                @relation(fields: [promoterId], references: [id])
-  organization                 Organization?           @relation(fields: [organizationId], references: [id])
+  files                        File[]
+  isMultipleTeams              Boolean?                @default(false)
+  numberOfTeams                Int?                    @default(1)
+  numberOfIterations           Int?                    @default(0)
+  isSelectedDuringSemester     Boolean?
+  isAssignedToTeacher          Boolean?                @default(false)
   group                        Group?
+  otherThematics               String?
+  mainDepartmentId             String
+  departments                  DepartmentOnProject[]
   firstChoices                 StudentChoice[]         @relation("FirstProjectChoice")
   secondChoices                StudentChoice[]         @relation("SecondProjectChoice")
   thirdChoices                 StudentChoice[]         @relation("ThirdProjectChoice")
   fourthChoices                StudentChoice[]         @relation("FourthProjectChoice")
-  signatureImg                 File?
-  departments                  DepartmentOnProject[]
   thematics                    ThematicOnProject[]
-  representatives              ProjectRepresentative[]
+  representatives              RepresentativeOnProject[]
+  teachers                     TeacherOnProject[]
   states                       ProjectState[]
 }
 
@@ -75,7 +79,6 @@ model Group {
   projectId String             @unique
   project   Project            @relation(fields: [projectId], references: [id])
   students  Student[]
-  teachers  TeacherOnProject[]
 }
 
 model StudentChoice {
@@ -101,15 +104,15 @@ model StudentChoice {
 }
 
 model File {
+  key            String        @id
   name           String?
   type           FileType
   url            String
   uploadedAt     DateTime      @default(now())
   organizationId Int?          @unique
-  key            String        @id
-  projectId      String?       @unique
-  project        Project?      @relation(fields: [projectId], references: [id])
   organization   Organization? @relation(fields: [organizationId], references: [id])
+  projectId      String?
+  project        Project?       @relation(fields: [projectId], references: [id])
 }
 
 model Organization {
@@ -134,16 +137,16 @@ model Representative {
   id               Int                     @id @default(autoincrement())
   firstName        String?
   lastName         String?
-  email            String
+  email            String                  @unique
   phone            String?
-  projectRelations ProjectRepresentative[]
+  projectRelations RepresentativeOnProject[]
 }
 
 model Teacher {
   id               Int                @id @default(autoincrement())
   firstName        String?
   lastName         String?
-  email            String
+  email            String            @unique
   phone            String?
   projectRelations TeacherOnProject[]
 }
@@ -154,6 +157,7 @@ model Department {
   thematics        Thematic[]
   adminRelations   AdminDepartment[]
   projectRelations DepartmentOnProject[]
+  students         Student[]            
 }
 
 model Thematic {
@@ -164,6 +168,7 @@ model Thematic {
   projectRelations ThematicOnProject[]
 
   @@index([departmentId], map: "departmentId")
+  @@unique([name, departmentId])
 }
 
 model Student {
@@ -172,6 +177,8 @@ model Student {
   groupId        Int
   lastName       String
   studentChoices StudentChoice[]
+  departmentId   String
+  department     Department     @relation(fields: [departmentId], references: [id])
   group          Group           @relation(fields: [groupId], references: [id])
 }
 
@@ -201,10 +208,8 @@ model TeacherOnProject {
   teacherId Int
   projectId String
   contacted Boolean
-  groupId   Int?
   teacher   Teacher @relation(fields: [teacherId], references: [id])
-  group     Group?  @relation(fields: [groupId], references: [id])
-
+  project   Project @relation(fields: [projectId], references: [id])
   @@id([teacherId, projectId])
 }
 
@@ -235,7 +240,7 @@ model PromoterOrganization {
   @@id([promoterId, organizationId])
 }
 
-model ProjectRepresentative {
+model RepresentativeOnProject {
   projectId        String
   representativeId Int
   project          Project        @relation(fields: [projectId], references: [id])

@@ -24,6 +24,9 @@ export default function TopNav({
 
   const { authProfile, userData, setUserData } = usePFEAuth();
 
+  console.log("authProfile", authProfile);
+  
+
   useEffect(() => {
     if (getUserData !== undefined && authProfile === null) {
       setUserData(getUserData);
@@ -34,7 +37,7 @@ export default function TopNav({
 
   return (
     <>
-      {authProfile === "PROMOTER" && <NavForPromoters />}
+      {(userData?.role === "PROMOTER" || authProfile == "PROMOTER") && <NavForPromoters />}
       <nav className=" h-full w-full">
         <div className="border-b bg-neutral-700 py-3">
           <div className="mx-auto flex h-full max-w-5xl flex-col items-center justify-between px-4 sm:px-12 lg:flex-row xl:max-w-[80rem] 2xl:max-w-[100rem]">

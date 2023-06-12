@@ -1,7 +1,43 @@
-import { z } from "zod";
+import { nativeEnum, z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { EncouragementType, FileType, Trimester } from "@acme/db";
+import {
+  DepartementETS,
+  EncouragementType,
+  Prisma,
+  PrismaPromise,
+  Representative,
+  RepresentativeOnProject,
+  Student,
+  Teacher,
+  TeacherOnProject,
+  Trimester,
+} from "@acme/db";
 export const projectRouter = router({
+  all: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.project.findMany({
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    return await ctx.prisma.project.findUnique({
+      where: { id: input },
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({
@@ -10,74 +46,257 @@ export const projectRouter = router({
         trimester: z.nativeEnum(Trimester),
         year: z.number(),
         promoterId: z.number(),
-        numberOfIterations: z.number(),
         organizationId: z.number().optional(),
         encouragementType: z.nativeEnum(EncouragementType),
-        multipleTeams: z.boolean(),
+        isMultipleTeams: z.boolean(),
         numberOfTeamsRequested: z.number(),
         numberOfStudents: z.number(),
-        isMultidepartment: z.boolean(),
+        isMultiDepartment: z.boolean(),
         acceptsConfidentiality: z.boolean(),
         authorizesCloudComputing: z.boolean(),
         authorizesCloudOutsideQuebec: z.boolean(),
         mustRespectRegulations: z.boolean(),
-        signatureImg: z
-          .object({
-            key: z.string(),
-            type: z.nativeEnum(FileType),
-            url: z.string(),
-          })
+        signatureImg: z.string(),
+        requiredSkills: z.string(),
+        contextProblematic: z.string(),
+        expectedResults: z.string(),
+        needsConstraints: z.string(),
+        objectives: z.string(),
+        thematics: z.array(z.number()).optional(),
+        departments: z.array(z.string()),
+        mainDepartment: z.string(),
+        teachers: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              phone: z.string(),
+            }),
+          )
           .optional(),
-        pdfVersion: z.string().optional(),
-        isAssignedToTeacher: z.boolean(),
-        isSelectedDuringSemester: z.boolean(),
+        representatives: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              phone: z.string(),
+            }),
+          )
+          .optional(),
+        students: z
+          .array(
+            z.object({
+              id: z.string(),
+              firstName: z.string(),
+              lastName: z.string(),
+              email: z.string(),
+              department: z.object({
+                id: z.string(),
+                name: z.string(),
+                type: nativeEnum(DepartementETS),
+              }),
+            }),
+          )
+          .optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return null;
-      //   return await ctx.prisma.project.create({
-      //     data: {
-      //       pfeId: "PFE", //TODO: generate pfeId number from group created before
-      //       title: input.title,
-      //       description: input.description,
-      //       trimester: input.trimester,
-      //       year: input.year,
-      //       numberOfIterations: input.numberOfIterations,
-      //       encouragementType: input.encouragementType,
-      //       multipleTeams: input.multipleTeams,
-      //       numberOfTeamsRequested: input.numberOfTeamsRequested,
-      //       numberOfStudents: input.numberOfStudents,
-      //       isMultidepartment: input.isMultidepartment,
-      //       acceptsConfidentiality: input.acceptsConfidentiality,
-      //       authorizesCloudComputing: input.authorizesCloudComputing,
-      //       authorizesCloudOutsideQuebec: input.authorizesCloudOutsideQuebec,
-      //       mustRespectRegulations: input.mustRespectRegulations,
-      //       isAssignedToTeacher: input.isAssignedToTeacher,
-      //       isSelectedDuringSemester: input.isSelectedDuringSemester,
-      //       promoter: {
-      //         connect: {
-      //           id: input.promoterId,
-      //         },
-      //       },
-      //       organization: input.organizationId
-      //         ? {
-      //             connect: {
-      //               id: input.organizationId,
-      //             },
-      //           }
-      //         : undefined,
-      //       pdfVersion: input.pdfVersion ?? undefined,
-      //       signatureImg: input.signatureImg
-      //         ? {
-      //             create: {
-      //               key: input.signatureImg.key,
-      //               type: input.signatureImg.type,
-      //               url: input.signatureImg.url,
-      //               uploadedAt: new Date(),
-      //             },
-      //           }
-      //         : undefined,
-      //     },
-      //   });
+      const project = await ctx.prisma.project.create({
+        data: {
+          pfeId:
+            "PFE-" +
+            input.promoterId +
+            "-" +
+            input.year +
+            "-" +
+            input.trimester,
+          title: input.title,
+          description: input.description,
+          trimester: input.trimester,
+          year: input.year,
+          encouragementType: input.encouragementType,
+          isMultipleTeams: input.isMultipleTeams,
+          numberOfTeamsRequested: input.numberOfTeamsRequested,
+          numberOfStudents: input.numberOfStudents,
+          isMultiDepartment: input.isMultiDepartment,
+          acceptsConfidentiality: input.acceptsConfidentiality,
+          authorizesCloudComputing: input.authorizesCloudComputing,
+          authorizesCloudOutsideQuebec: input.authorizesCloudOutsideQuebec,
+          mustRespectRegulations: input.mustRespectRegulations,
+          requiredSkills: input.requiredSkills,
+          contextProblematic: input.contextProblematic,
+          expectedResults: input.expectedResults,
+          needsConstraints: input.needsConstraints,
+          objectives: input.objectives,
+          mainDepartmentId: input.mainDepartment,
+          promoter: {
+            connect: {
+              id: input.promoterId,
+            },
+          },
+          organization: {
+            connect: {
+              id: input.organizationId,
+            },
+          },
+          files: {
+            connect: [
+              {
+                key: input.signatureImg,
+              } as Prisma.FileWhereUniqueInput,
+            ],
+          },
+        },
+      });
+
+      // link thematics to project
+      if (input.thematics) {
+        await ctx.prisma.thematicOnProject.createMany({
+          data: input.thematics.map((thematicId) => ({
+            projectId: project.id,
+            thematicId,
+          })),
+        });
+      }
+
+      // Creating the initial project state
+      await ctx.prisma.projectState.create({
+        data: {
+          projectId: project.id,
+          state: "EVALUATION", // Set the initial state to EVALUATION
+        },
+      });
+
+      //link department to project
+      if (
+        input.departments &&
+        input.departments.length > 1 &&
+        input.isMultiDepartment
+      ) {
+        await ctx.prisma.departmentOnProject.createMany({
+          data: input.departments.map((department) => ({
+            projectId: project.id,
+            departmentId: department,
+          })),
+        });
+      } else if (
+        input.departments &&
+        input.departments.length > 0 &&
+        !input.isMultiDepartment &&
+        input.departments[0] !== undefined
+      ) {
+        await ctx.prisma.departmentOnProject.create({
+          data: {
+            projectId: project.id,
+            departmentId: input.departments[0],
+          },
+        });
+      }
+
+      // link teachers to project
+      if (input.teachers) {
+        const upsertTeachers: PrismaPromise<Teacher>[] = [];
+        const createTeachersOnProject: PrismaPromise<TeacherOnProject>[] = [];
+
+        input.teachers.forEach((teacher) => {
+          upsertTeachers.push(
+            ctx.prisma.teacher.upsert({
+              where: { email: teacher.email },
+              update: {},
+              create: {
+                firstName: teacher.firstName,
+                lastName: teacher.lastName,
+                email: teacher.email,
+                phone: teacher.phone,
+              },
+            }),
+          );
+          createTeachersOnProject.push(
+            ctx.prisma.teacherOnProject.create({
+              data: {
+                contacted: false,
+                project: { connect: { id: project.id } },
+                teacher: { connect: { email: teacher.email } },
+              },
+            }),
+          );
+        });
+
+        await ctx.prisma.$transaction([
+          ...upsertTeachers,
+          ...createTeachersOnProject,
+        ]);
+      }
+
+      // link representatives to project
+      if (input.representatives) {
+        const upsertRepresentatives: PrismaPromise<Representative>[] = [];
+        const createRepresentativesOnProject: PrismaPromise<RepresentativeOnProject>[] =
+          [];
+
+        input.representatives.forEach((representative) => {
+          upsertRepresentatives.push(
+            ctx.prisma.representative.upsert({
+              where: { email: representative.email },
+              update: {},
+              create: {
+                firstName: representative.firstName,
+                lastName: representative.lastName,
+                email: representative.email,
+                phone: representative.phone,
+              },
+            }),
+          );
+          createRepresentativesOnProject.push(
+            ctx.prisma.representativeOnProject.create({
+              data: {
+                project: { connect: { id: project.id } },
+                representative: { connect: { email: representative.email } },
+              },
+            }),
+          );
+        });
+
+        await ctx.prisma.$transaction([
+          ...upsertRepresentatives,
+          ...createRepresentativesOnProject,
+        ]);
+      }
+
+      // link students to group
+      if (input.students) {
+        const group = await ctx.prisma.group.create({
+          data: {
+            projectId: project.id,
+          },
+        });
+
+        const upsertStudents: PrismaPromise<Student>[] = input.students.map(
+          (student) =>
+            ctx.prisma.student.upsert({
+              where: { email: student.email },
+              update: { group: { connect: { id: group.id } } },
+              create: {
+                firstName: student.firstName,
+                lastName: student.lastName,
+                email: student.email,
+                group: { connect: { id: group.id } },
+                department: {
+                  connect: {
+                    id: student.department.id,
+                  },
+                },
+              },
+            }),
+        );
+
+        await ctx.prisma.$transaction(upsertStudents);
+      }
+
+      return project;
     }),
 });
