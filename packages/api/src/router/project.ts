@@ -112,7 +112,7 @@ export const projectRouter = router({
 
       const project = await ctx.prisma.project.create({
         data: {
-          pfeId: `PFE-${paddedId}-${input.year}-${input.trimester}`,
+          pfeId: `PFE-${paddedId}`,
           title: input.title,
           description: input.description,
           trimester: input.trimester,

@@ -109,6 +109,7 @@ export default function OrganisationForm({
         name="orgDescription"
         id="orgDescription"
         placeholder=""
+        maxLength={500}
       />
 
       <div className="mt-3 sm:mt-4">

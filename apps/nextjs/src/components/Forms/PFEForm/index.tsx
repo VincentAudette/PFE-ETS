@@ -63,8 +63,6 @@ export default function PFEForm() {
     setSelectedThematics,
   } = useProject();
 
-  console.log("SELECTEDFILE", selectedFile);
-
   if (projectCreationState === ProjectCreationState.SUCCESS) {
     return (
       <div>
