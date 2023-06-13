@@ -4,7 +4,14 @@ import { z } from "zod";
 
 export const userRouter = router({
   updateToPromoterWithOrganisation: protectedProcedure
-    .input(z.object({ clerkId: z.string(), organizationId: z.number() }))
+    .input(
+      z.object({
+        clerkId: z.string(),
+        organizationId: z.number(),
+        firstName: z.string().optional(),
+        lastName: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       // Create the promoter field for the user.
       const newPromoter = await ctx.prisma.promoter.create({
@@ -29,16 +36,15 @@ export const userRouter = router({
       });
 
       // Update the user's role to promoter and associate the promoter.
-      return ctx.prisma.user.update({
+      const updatedUser = await ctx.prisma.user.update({
         where: { clerkId: input.clerkId },
         data: {
           role: Role.PROMOTER,
-          promoter: {
-            connect: {
-              id: newPromoter.id,
-            },
-          },
+          firstName: input.firstName,
+          lastName: input.lastName,
         },
       });
+
+      return updatedUser;
     }),
 });

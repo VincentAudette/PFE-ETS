@@ -12,7 +12,7 @@ import Image from "next/image";
 import LoadingDots from "../../LoadingDots";
 import { toast } from "react-toastify";
 import {
-  departement,
+  department,
   descriptionDuProjet,
   representativePlaceholderObj,
   etudiantPlaceholderObj,
@@ -42,6 +42,7 @@ export default function PFEForm() {
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
 
+
   // Trimester
   const [selectedTrimester, setSelectedTrimester] = useState<SelectOption>(
     trimesters[0] as SelectOption,
@@ -56,32 +57,42 @@ export default function PFEForm() {
   const [selectedEncouragementType, setSelectedEncouragementType] =
     useState<SelectOption>(encouragementTypes[0] as SelectOption);
 
+  // Department(s)
   const [selectedDepartment, setSelectedDepartment] = useState<SelectOption>(
-    departement[0] as SelectOption,
+    department[0] as SelectOption,
   );
+  const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
+  const [otherDepartments, setOtherDepartments] = useState<string[]>([]);
+
+
+  // File
   const [selectedFile, setSelectedFile] = useState<
     { fileUrl: string; fileKey: string }[] | undefined
   >(undefined);
-
-  const [selectedThematics, setSelectedThematics] = useState<Set<number>>(
-    new Set(),
-  );
-
   const { data: uploadedFile, isLoading: isFileLoading } =
     trpc.file.byKey.useQuery(selectedFile?.[0]?.fileKey as string, {
       enabled: selectedFile != undefined && selectedFile[0] != undefined,
     });
+  
+  // Thematics
+  const [selectedThematics, setSelectedThematics] = useState<Set<number>>(
+    new Set(),
+  );
 
-  const { data: thematicsOfDepartment, isLoading: isThematicsLoading } =
+  const { data: allThematics, isLoading: isThematicsLoading } =
     trpc.thematic.all.useQuery();
-  const [isMultiDepartment, setIsMultiDepartment] = useState<boolean>(false);
 
+
+
+    // Project creation mutation
   const createProject = trpc.project.create.useMutation({
     onSuccess: () => {
       toast.success("Projet créé avec succès");
     },
   });
 
+
+  // Handle form submit and error handling for required fields
   const handlePFEFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as PFEFormElement;
@@ -122,6 +133,11 @@ export default function PFEForm() {
       return;
     }
 
+    if(selectedFile == undefined || selectedFile[0] == undefined) {
+      toast.error("Veuillez ajouter une signature");
+      return;
+    } 
+
     const formData = {
       acceptsConfidentiality: target.acceptsConfidentiality.checked,
       authorizesCloudComputing: target.authorizesCloudComputing.checked,
@@ -142,10 +158,16 @@ export default function PFEForm() {
       expectedResults: target.expectedResults.value,
       needsConstraints: target.needsConstraints.value,
       objectives: target.objectives.value,
-      signatureImg: (uploadedFile as { key: string }).key,
+      signatureImg: selectedFile[0].fileKey,
       thematics: Array.from(selectedThematics),
       promoterId: userData?.promoter.id,
       organizationId: selectedOrganization?.id,
+      departments: [selectedDepartment.id, ...otherDepartments],
+      mainDepartment: selectedDepartment.id,
+      teachers,
+      representatives,
+      students,
+      otherDepartments
     };
 
     createProject.mutateAsync(formData);
@@ -154,7 +176,7 @@ export default function PFEForm() {
     setProjObject(projObjectPresets);
     setSelectedFile(undefined);
     setSelectedThematics(new Set());
-    setSelectedDepartment(departement[0] as SelectOption);
+    setSelectedDepartment(department[0] as SelectOption);
     setSelectedTrimester(trimesters[0] as SelectOption);
     setSelectedYear(years()[0] as SelectOption);
     setSelectedEncouragementType(encouragementTypes[0] as SelectOption);
@@ -165,11 +187,12 @@ export default function PFEForm() {
   };
 
   return (
-    <div className="my-5 flex flex-col gap-12 px-4 py-3 text-base sm:px-6">
+    <div className="my-5 mx-auto flex max-w-5xl flex-col gap-12 px-4 py-3 text-base sm:px-6">
       <h1 className="text-center text-2xl font-bold">
         Formulaire de projet de fin d&apos;études
       </h1>
       <form className="flex flex-col gap-12" onSubmit={handlePFEFormSubmit}>
+        <h2 className=" text-base font-bold">1. Informations sur le projet</h2>
         <SimpleInput
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             e.preventDefault();
@@ -191,8 +214,8 @@ export default function PFEForm() {
         />
 
         <SimpleSelect
-          name="departement"
-          options={departement}
+          name="department"
+          options={department}
           selectedState={selectedDepartment}
           setSelectedState={setSelectedDepartment}
           label="Département de quel génie?"
@@ -204,8 +227,11 @@ export default function PFEForm() {
           label="Est-ce que le projet est multi-département?"
           checked={isMultiDepartment}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setIsMultiDepartment(e.target.checked)
-          }
+            {setIsMultiDepartment(e.target.checked);
+            if(!e.target.checked) {
+              setOtherDepartments([])
+            }
+          }}
         />
 
         {isMultiDepartment && (
@@ -213,7 +239,7 @@ export default function PFEForm() {
             id="autres-departements"
             className="flex max-w-3xl flex-wrap gap-12"
           >
-            {departement.map((dep) => {
+            {department.map((dep) => {
               return (
                 dep.type &&
                 dep.name !== selectedDepartment.name && (
@@ -222,6 +248,17 @@ export default function PFEForm() {
                     id={dep.id}
                     name={dep.name}
                     label={dep.name}
+                    checked={otherDepartments.includes(dep.id)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      if (e.target.checked) {
+                        setOtherDepartments([...otherDepartments, dep.id]);
+                      }
+                      if (!e.target.checked) {
+                        setOtherDepartments(
+                          otherDepartments.filter((d) => d !== dep.id)
+                        );
+                      }
+                    }}
                   />
                 )
               );
@@ -254,7 +291,8 @@ export default function PFEForm() {
           setSelectedState={setSelectedEncouragementType}
         />
 
-        <div className="flex flex-col gap-[6.2rem] py-12">
+        <h2 className="pt-5 text-base font-bold">2. Participants au projet</h2>
+        <div className="flex flex-col gap-[6.2rem]">
           <TableWithAddButton
             title="Représentants de l'entreprise"
             description="Est-ce que d'autres personnes de l'entreprise doivent être ajoutées au projet?"
@@ -289,17 +327,19 @@ export default function PFEForm() {
             title={`Étudiants préalablement sélectionnés (Maximum ${
               isMultiDepartment ? 8 : 5
             } étudiants)`}
-            description="Avez-vous déjà sélectionné des étudiants pour votre projet? NOTE :  Les étudiants inscrits dans cette section ont été contactés et sont assurés de vouloir faire partie du projet. De ce fait, ils ne pourront choisir d’autres projets."
+            description="Avez-vous déjà sélectionné des étudiants pour votre projet? NOTE :  Les étudiants inscrits dans cette section ont été contactés et sont assurés de vouloir faire partie du projet. De ce fait, ils ne pourront choisir d’autres projets. Vous devez demander une autorisation au coordonnateur des PFE de votre département pour avoir une équipe de plus de 5 personnes."
             buttonTitle="Nouvel étudiant"
             obj={{
               firstName: "Prénom",
               lastName: "Nom",
               email: "Courriel",
-              departement: "Departement",
+              department: "Departement",
             }}
             placeholderObj={etudiantPlaceholderObj}
             objs={students}
             setObjs={setStudents}
+            selectFields={["department"]}
+            selectOptions={{ department }}
           />
 
           <div className=" flex items-end gap-3">
@@ -327,71 +367,76 @@ export default function PFEForm() {
         </div>
 
         <div>
-          <label
-            htmlFor="thematics"
-            className=" mb-4 block text-sm font-medium text-gray-900"
-          >
-            Thématiques du projet{" "}
-          </label>
-
-          <section className="my-9">
-            {isThematicsLoading ? (
-              <LoadingDots />
-            ) : (
-              thematicsOfDepartment && (
-                <div className="flex flex-wrap gap-2">
-                  {thematicsOfDepartment.map((thematic) => {
-                    const isThematicSelected = selectedThematics.has(
-                      thematic.id,
-                    );
-                    return (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const thematicSet = new Set(selectedThematics);
-                          if (isThematicSelected) {
-                            thematicSet.delete(thematic.id);
-                          } else {
-                            thematicSet.add(thematic.id);
-                          }
-                          setSelectedThematics(thematicSet);
-                        }}
-                        key={thematic.id}
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+          <h2 className="mb-9 text-base font-bold">
+            3. Thématiques et expertises
+          </h2>
+          <section className=" flex flex-col gap-9 lg:flex-row">
+            <div className="lg:w-1/2">
+              <label
+                htmlFor="thematics"
+                className="mb-2 block text-sm font-medium text-gray-900"
+              >
+                Sélectionner parmis la list de thématiques
+              </label>
+              {selectedDepartment.id === "0" ? <div className="text-sm text-gray-700">Vous devez choisir un département pour voir la liste de thématiques</div> : isThematicsLoading ? (
+                <LoadingDots />
+              ) : (
+                allThematics && (
+                  <div className="flex flex-wrap gap-2">
+                    {allThematics.map((thematic) => {
+                      const isThematicSelected = selectedThematics.has(
+                        thematic.id,
+                      );
+                      return ( selectedDepartment.id === thematic.departmentId || otherDepartments.includes(thematic.departmentId))  && (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const thematicSet = new Set(selectedThematics);
+                            if (isThematicSelected) {
+                              thematicSet.delete(thematic.id);
+                            } else {
+                              thematicSet.add(thematic.id);
+                            }
+                            setSelectedThematics(thematicSet);
+                          }}
+                          key={thematic.id}
+                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
                       ${
                         isThematicSelected
                           ? "border border-blue-500 bg-blue-600 text-white "
                           : "border bg-gray-100 text-gray-800 shadow-sm"
                       }
                       `}
-                      >
-                        {thematic.name}
-                      </button>
-                    );
-                  })}
-                </div>
-              )
-            )}
+                        >
+                          {thematic.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )
+              )}
+            </div>
+            <div className="lg:w-1/2">
+              <SimpleTextArea
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                  e.preventDefault();
+                  setProjObject({
+                    ...projObject,
+                    otherThematics: {
+                      ...projObject.otherThematics,
+                      value: e.target.value,
+                    },
+                  });
+                }}
+                value={projObject.otherThematics.value}
+                id="otherThematics"
+                label="Autres thématiques"
+                name="otherThematics"
+                placeholder="Si votre projet contient d'autres thématiques, veuillez les indiquer ici."
+                rows={4}
+              />
+            </div>
           </section>
-
-          <SimpleTextArea
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-              e.preventDefault();
-              setProjObject({
-                ...projObject,
-                otherThematics: {
-                  ...projObject.otherThematics,
-                  value: e.target.value,
-                },
-              });
-            }}
-            value={projObject.otherThematics.value}
-            id="otherThematics"
-            label="Autres thématiques"
-            name="otherThematics"
-            placeholder="Si votre projet contient d'autres thématiques, veuillez les indiquer ici."
-            rows={2}
-          />
         </div>
 
         <SimpleTextArea
@@ -415,7 +460,7 @@ export default function PFEForm() {
         />
 
         <div className="flex flex-col gap-3">
-          <h2 className="mt-3 text-base font-bold">Description du projet</h2>
+          <h2 className="mt-3 text-base font-bold">4. Description du projet</h2>
 
           <ul className="flex list-disc flex-col gap-2 text-sm text-gray-800">
             {descriptionDuProjet.map((listItem) => (
@@ -443,6 +488,10 @@ export default function PFEForm() {
             />
           );
         })}
+
+        <h2 className="mt-3 text-base font-bold">
+          5. Consentements et conformités
+        </h2>
         <div className="flex flex-col gap-8">
           {checkBoxesAtEndOfForm.map(({ id, name, notes }) => (
             <div key={id} className="group relative">
@@ -464,7 +513,7 @@ export default function PFEForm() {
           ))}
         </div>
 
-        <div className="border p-9">
+        <div className="rounded-md border p-9 shadow-sm">
           <h2 className="my-3 text-base font-bold">Attestation</h2>
           <div className="flex flex-col gap-4">
             {attestations.map((attestation) => (

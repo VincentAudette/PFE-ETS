@@ -13,12 +13,16 @@ export interface SelectOption {
 }
 
 export default function SimpleSelect({
+  withLabel = true,
+  maxWidth = null,
   label,
   options,
   name,
   selectedState,
   setSelectedState,
 }: {
+  withLabel?: boolean;
+  maxWidth?: string | null;
   label: string;
   options: SelectOption[];
   name: string;
@@ -26,6 +30,9 @@ export default function SimpleSelect({
   setSelectedState?: React.Dispatch<React.SetStateAction<SelectOption>>;
 }) {
   const [selected, setSelected] = useState(options[0]);
+
+  const textColor =
+    selectedState === options[0] ? "text-gray-400" : "text-gray-900";
 
   return (
     <Listbox
@@ -41,11 +48,17 @@ export default function SimpleSelect({
     >
       {({ open }) => (
         <div className="w-full">
-          <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
-            {label}
-          </Listbox.Label>
-          <div className="relative mt-2">
-            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6">
+          {withLabel && (
+            <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
+              {label}
+            </Listbox.Label>
+          )}
+          <div className="relative">
+            <Listbox.Button
+              className={`relative ${
+                maxWidth !== null ? maxWidth : "w-full"
+              } cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm ${textColor} shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6`}
+            >
               <span className="block truncate">
                 {selectedState?.name ?? selected?.name}
               </span>

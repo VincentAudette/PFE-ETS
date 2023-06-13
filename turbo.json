@@ -9,6 +9,11 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "db-seed": {
+      "inputs": ["prisma/schema.prisma"],
+      "dependsOn": ["db-push"],
+      "cache": false
+    },
     "db-pull": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false

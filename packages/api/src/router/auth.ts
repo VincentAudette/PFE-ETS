@@ -10,7 +10,17 @@ export const authRouter = router({
       where: { clerkId: input },
       include: {
         promoter: {
-          include: { organizations: true },
+          include: {
+            organizations: true,
+            projects: {
+              include: {
+                organization: true,
+                files: true,
+                thematics: true,
+                states: true,
+              },
+            },
+          },
         },
       },
     });
