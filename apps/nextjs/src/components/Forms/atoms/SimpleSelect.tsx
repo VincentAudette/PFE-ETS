@@ -1,6 +1,10 @@
 import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import {
+  CheckIcon,
+  ChevronUpDownIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/20/solid";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -20,6 +24,7 @@ export default function SimpleSelect({
   name,
   selectedState,
   setSelectedState,
+  validationError = false,
 }: {
   withLabel?: boolean;
   maxWidth?: string | null;
@@ -28,11 +33,18 @@ export default function SimpleSelect({
   name: string;
   selectedState?: SelectOption;
   setSelectedState?: React.Dispatch<React.SetStateAction<SelectOption>>;
+  validationError?: boolean;
 }) {
   const [selected, setSelected] = useState(options[0]);
 
   const textColor =
-    selectedState === options[0] ? "text-gray-400" : "text-gray-900";
+    selectedState === options[0]
+      ? validationError
+        ? "text-red-300"
+        : "text-gray-400"
+      : validationError
+      ? "text-red-900"
+      : "text-gray-900";
 
   return (
     <Listbox
@@ -57,14 +69,18 @@ export default function SimpleSelect({
             <Listbox.Button
               className={`relative ${
                 maxWidth !== null ? maxWidth : "w-full"
-              } cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm ${textColor} shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6`}
+              } cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm ${textColor} shadow-sm ring-1 ring-inset ${
+                validationError ? "ring-red-300" : "ring-gray-300"
+              }  focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6`}
             >
               <span className="block truncate">
                 {selectedState?.name ?? selected?.name}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
-                  className="h-5 w-5 text-gray-400"
+                  className={`h-5 w-5 ${
+                    validationError ? "text-red-500" : "text-gray-400"
+                  } `}
                   aria-hidden="true"
                 />
               </span>
@@ -116,6 +132,19 @@ export default function SimpleSelect({
                 ))}
               </Listbox.Options>
             </Transition>
+            {validationError && (
+              <>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-7 pb-7">
+                  <ExclamationCircleIcon
+                    className="h-5 w-5 text-red-500"
+                    aria-hidden="true"
+                  />
+                </div>
+                <p className="mt-2 text-sm text-red-600">
+                  Ce champs est obligatoire
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}

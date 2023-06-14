@@ -4,7 +4,7 @@ export interface InputWithLabelProps {
   type?: string;
   label?: string;
   name: string;
-  value?: string;
+  value?: string | number;
   id?: string;
   defaultValue?: string;
   placeholder: string;
@@ -33,7 +33,7 @@ export default function SimpleInput({
           {label}
         </label>
       )}
-      <div className="relative mt-2 rounded-md">
+      <div className="relative mt-2 min-w-[10rem] rounded-md">
         <input
           onChange={onChange}
           value={value}

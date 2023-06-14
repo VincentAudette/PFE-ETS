@@ -34,7 +34,32 @@ export const projectRouter = router({
         },
         organization: true,
         files: true,
-        thematics: true,
+        thematics: {
+          include: {
+            thematic: true,
+          },
+        },
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
+        representatives: {
+          include: {
+            representative: true,
+          },
+        },
+        departments: true,
+        states: true,
+        group: {
+          include: {
+            students: {
+              include: {
+                department: true,
+              },
+            },
+          },
+        },
       },
     });
   }),
@@ -105,15 +130,14 @@ export const projectRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // get the total number of projects
+      const totalProjects = await ctx.prisma.project.count();
+      // make the id padded with zeros up to 3 digits
+      const paddedId = String(totalProjects + 1).padStart(3, "0");
+
       const project = await ctx.prisma.project.create({
         data: {
-          pfeId:
-            "PFE-" +
-            input.promoterId +
-            "-" +
-            input.year +
-            "-" +
-            input.trimester,
+          pfeId: `PFE-${paddedId}`,
           title: input.title,
           description: input.description,
           trimester: input.trimester,

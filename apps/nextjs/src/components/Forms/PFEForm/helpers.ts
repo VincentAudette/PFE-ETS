@@ -105,12 +105,12 @@ export const encouragementTypes: SelectOption[] = [
   },
   {
     id: "2",
-    name: "À la demande",
+    name: "Sur demande",
     type: "UPON_REQUEST",
   },
   {
     id: "3",
-    name: "Pas d'encadrement",
+    name: "Aucun encadrement",
     type: "NO_ENCOURAGEMENT",
   },
 ];
@@ -202,7 +202,7 @@ export const descriptionDuProjet = [
 
 export const years = (): SelectOption[] => {
   const currentYear = new Date().getFullYear();
-  const years = [];
+  const years = [{ id: "annee-0", name: "Choisir une année" }];
   for (let i = 0; i < 3; i++) {
     years.push({ id: `annee-${currentYear + i}`, name: currentYear + i + "" });
   }
@@ -233,11 +233,13 @@ export type FieldKey =
   | "contextProblematic"
   | "expectedResults"
   | "needsConstraints"
-  | "objectives";
+  | "objectives"
+  | "numberOfStudents"
+  | "numberOfTeams";
 
-export type ProjObject = Record<FieldKey, Field>;
+export type PfeFormInputFields = Record<FieldKey, Field>;
 
-export const projObjectPresets: ProjObject = {
+export const pfeFormInputFields: PfeFormInputFields = {
   projectTitle: { value: "", error: "", label: "titre du projet" },
   otherThematics: { value: "" },
   requiredSkills: { value: "", error: "", label: "expertises requises" },
@@ -254,4 +256,19 @@ export const projObjectPresets: ProjObject = {
   },
   needsConstraints: { value: "", error: "", label: "besoins et contraintes" },
   objectives: { value: "", error: "", label: "objectifs du projet" },
+  numberOfStudents: { value: "", error: "", label: "nombre d'étudiants" },
+  numberOfTeams: { value: "", error: "", label: "nombre d'équipes" },
+};
+
+export type SelectKeys =
+  | "department"
+  | "trimester"
+  | "year"
+  | "encouragementType";
+
+export const selectValidationDefault: Record<SelectKeys, boolean> = {
+  department: false,
+  trimester: false,
+  year: false,
+  encouragementType: false,
 };

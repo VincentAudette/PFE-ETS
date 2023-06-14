@@ -63,7 +63,7 @@ export default function TableWithAddButton({
   };
 
   return (
-    <div className="w-full  px-4 sm:px-6 lg:px-8">
+    <div className="w-full  sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h2 className="text-base font-semibold leading-6 text-gray-900">
@@ -120,8 +120,8 @@ export default function TableWithAddButton({
       </div>
       {objs.length >= 1 && (
         <div className="mt-10 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-visible sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 lg:overflow-visible">
+            <div className="inline-block min-w-full border py-2 align-middle sm:rounded-lg">
               <table className="min-w-full table-auto divide-y divide-gray-300">
                 <thead>
                   <tr>

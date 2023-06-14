@@ -11,17 +11,26 @@ const statuses = {
 
 const trimesters = {
   WINTER: {
-    class: "text-blue-400 bg-blue-400/10 ring-blue-400/20",
+    class: "text-blue-700 bg-blue-400/10 ring-blue-400/20",
     displayName: "Hiver",
   },
   SUMMER: {
     class: "text-yellow-700 bg-yellow-400/10 ring-yellow-400/20",
     displayName: "Été",
   },
-  AUTUMN: {
-    class: "text-orange-400 bg-orange-400/10 ring-orange-400/20",
+  AUTOMNE: {
+    class: "text-orange-700 bg-orange-400/10 ring-orange-400/20",
     displayName: "Automne",
   },
+};
+
+export const departments: Record<string, string> = {
+  ele: "ÉLÉ",
+  log_ti: "LOG/TI",
+  ctn: "CTN",
+  gol: "GOL",
+  gpa: "GPA",
+  mec: "MEC",
 };
 
 function classNames(...classes: string[]) {
@@ -49,30 +58,33 @@ const ProjectCard: React.FC<{
             </div>
             <h2 className="min-w-0 text-sm font-semibold leading-6 text-black">
               <Link href={`projects/${project.pfeId}`} className="flex gap-x-2">
-                <span className="truncate">{project.organization.name}</span>
+                <span className="">{project.organization.name}</span>
                 <span className="text-gray-400">/</span>
-                <span>{project.pfeId}</span>
+                <span className="min-w-max">{project.pfeId}</span>
                 <span className="text-stone-600">-</span>
-                <span className="whitespace-nowrap">{project.title}</span>
+                <span className="truncate whitespace-nowrap">
+                  {project.title}
+                </span>
                 <span className="absolute inset-0" />
               </Link>
             </h2>
           </div>
-          <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-gray-400">
-            <p className="truncate">{project.description}</p>
+          <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-gray-600">
+            <p className="truncate">{departments[project.mainDepartmentId]}</p>
             <span className="text-stone-300">&middot;</span>
             <p className="whitespace-nowrap">INSERT STATUS</p>
+            <span className="text-stone-300">&middot;</span>
+            <p className="whitespace-nowrap uppercase">
+              {" "}
+              {
+                trimesters[project.trimester as keyof typeof trimesters]
+                  .displayName
+              }{" "}
+              {project.year}
+            </p>
           </div>
         </div>
-        <div
-          className={classNames(
-            trimesters[project.trimester as keyof typeof trimesters].class,
-            "flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset",
-          )}
-        >
-          {trimesters[project.trimester as keyof typeof trimesters].displayName}{" "}
-          {project.year}
-        </div>
+        {/* <div className="flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset ring-stone-400/30"></div> */}
         <ChevronRightIcon
           className="h-5 w-5 flex-none text-gray-400"
           aria-hidden="true"
