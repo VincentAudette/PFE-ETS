@@ -56,6 +56,8 @@ interface ProjectContext {
   yearOptions: SelectOption[];
   selectedThematics: Set<number>;
   setSelectedThematics: Dispatch<SetStateAction<Set<number>>>;
+  projectId: string | undefined;
+  setProjectId: Dispatch<SetStateAction<string | undefined>>;
 }
 
 const ProjectContext = React.createContext<ProjectContext | undefined>(
@@ -117,11 +119,14 @@ function ProjectProvider({ children }: { children: React.ReactNode }) {
     new Set(),
   );
 
+  const [projectId, setProjectId] = useState<string | undefined>();
+
   // Project creation mutation
   const createProject = trpc.project.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Projet créé avec succès");
       setProjectCreationState(ProjectCreationState.SUCCESS);
+      setProjectId(data.id);
       resetForm();
     },
   });
@@ -327,6 +332,8 @@ function ProjectProvider({ children }: { children: React.ReactNode }) {
     setSelectedYear,
     selectedThematics,
     setSelectedThematics,
+    projectId,
+    setProjectId,
   };
 
   return (

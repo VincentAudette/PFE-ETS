@@ -24,12 +24,13 @@ const trimesters = {
   },
 };
 
-const departments: Record<string, string> = {
+export const departments: Record<string, string> = {
   ele: "ÉLÉ",
   log_ti: "LOG/TI",
   ctn: "CTN",
   gol: "GOL",
   gpa: "GPA",
+  mec: "MEC",
 };
 
 function classNames(...classes: string[]) {

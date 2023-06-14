@@ -14,8 +14,6 @@ import { NextRouter, useRouter } from "next/router";
 import { usePFEAuth } from "../../context/PFEAuthContext";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 import ProjectCard from "../ProjectCard";
-import { inferProcedureOutput } from "@trpc/server";
-import { AppRouter } from "@acme/api";
 
 const navigation: NavigationItem[] = [
   {

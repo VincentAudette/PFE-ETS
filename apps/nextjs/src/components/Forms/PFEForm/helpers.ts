@@ -105,12 +105,12 @@ export const encouragementTypes: SelectOption[] = [
   },
   {
     id: "2",
-    name: "À la demande",
+    name: "Sur demande",
     type: "UPON_REQUEST",
   },
   {
     id: "3",
-    name: "Pas d'encadrement",
+    name: "Aucun encadrement",
     type: "NO_ENCOURAGEMENT",
   },
 ];

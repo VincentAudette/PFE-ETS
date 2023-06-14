@@ -34,7 +34,32 @@ export const projectRouter = router({
         },
         organization: true,
         files: true,
-        thematics: true,
+        thematics: {
+          include: {
+            thematic: true,
+          },
+        },
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
+        representatives: {
+          include: {
+            representative: true,
+          },
+        },
+        departments: true,
+        states: true,
+        group: {
+          include: {
+            students: {
+              include: {
+                department: true,
+              },
+            },
+          },
+        },
       },
     });
   }),

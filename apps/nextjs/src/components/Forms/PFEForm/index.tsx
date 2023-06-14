@@ -26,6 +26,7 @@ import {
   useProject,
 } from "../../../context/ProjectContext";
 import LoadingPFE from "../../LoadingPFE";
+import ProjectView from "../../ProjectView";
 
 export default function PFEForm() {
   const { data: allThematics, isLoading: isThematicsLoading } =
@@ -61,15 +62,12 @@ export default function PFEForm() {
     setSelectedYear,
     selectedThematics,
     setSelectedThematics,
+    projectId,
   } = useProject();
 
-  if (projectCreationState === ProjectCreationState.SUCCESS) {
-    return (
-      <div>
-        <h1>Success</h1>
-        <div>TODO: Create project success view</div>
-      </div>
-    );
+  // if (projectCreationState === ProjectCreationState.SUCCESS && projectId) {
+  if (projectId) {
+    return <ProjectView projectId={projectId} />;
   }
 
   return (
@@ -296,12 +294,12 @@ export default function PFEForm() {
               <div className="lg:w-1/2">
                 <label
                   htmlFor="thematics"
-                  className="mb-2 block text-sm font-medium text-gray-900"
+                  className="mb-2 block text-sm font-medium text-stone-900"
                 >
                   Sélectionner parmis la list de thématiques
                 </label>
                 {selectedDepartment.id === "0" ? (
-                  <div className="py-3 text-sm text-gray-400">
+                  <div className="py-3 text-sm text-stone-400">
                     Vous devez choisir un département pour voir la liste de
                     thématiques
                   </div>
@@ -335,7 +333,7 @@ export default function PFEForm() {
                       ${
                         isThematicSelected
                           ? "border border-blue-500 bg-blue-600 text-white "
-                          : "border bg-gray-100 text-gray-800 shadow-sm"
+                          : "border bg-stone-100 text-stone-800 shadow-sm"
                       }
                       `}
                             >
@@ -396,7 +394,7 @@ export default function PFEForm() {
               4. Description du projet
             </h2>
 
-            <ul className="flex list-disc flex-col gap-2 text-sm text-gray-800">
+            <ul className="flex list-disc flex-col gap-2 text-sm text-stone-800">
               {descriptionDuProjet.map((listItem) => (
                 <li key={listItem.substring(0, 10)}>{listItem}</li>
               ))}
@@ -441,7 +439,7 @@ export default function PFEForm() {
                           key={note.substring(0, 10)}
                           className="mt-3 flex flex-col gap-2 px-7"
                         >
-                          <span className="text-sm text-gray-500">{note}</span>
+                          <span className="text-sm text-stone-500">{note}</span>
                         </div>
                       );
                     })}
@@ -476,11 +474,11 @@ export default function PFEForm() {
                 </div>
               ) : selectedFile != undefined && isFileLoading ? (
                 <div className="h-22 flex w-64 items-center justify-center border">
-                  <ArrowPathIcon className="h-8 w-8 animate-spin text-gray-400" />
+                  <ArrowPathIcon className="h-8 w-8 animate-spin text-stone-400" />
                 </div>
               ) : (
                 <div className="h-22 flex w-64 items-center justify-center border">
-                  <Signature className="h-[4rem] w-32 text-gray-400" />
+                  <Signature className="h-[4rem] w-32 text-stone-400" />
                 </div>
               )}
 

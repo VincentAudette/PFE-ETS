@@ -95,6 +95,9 @@ importers:
       '@uploadthing/react':
         specifier: ^3.0.5
         version: 3.0.5(react-dropzone@14.2.3)(react@18.2.0)(uploadthing@3.0.5)
+      moment:
+        specifier: ^2.29.4
+        version: 2.29.4
       next:
         specifier: ^13.1.6
         version: 13.1.6(react-dom@18.2.0)(react@18.2.0)
@@ -2948,6 +2951,10 @@ packages:
   /minipass@6.0.2:
     resolution: {integrity: sha512-MzWSV5nYVT7mVyWCwn2o7JH13w2TBRmmSqSRCKzTw+lmft9X4z+3wjvs06Tzijo5z4W/kahUCDpRXTF+ZrmF/w==}
     engines: {node: '>=16 || 14 >=14.17'}
+    dev: false
+
+  /moment@2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
   /ms@2.1.2:
