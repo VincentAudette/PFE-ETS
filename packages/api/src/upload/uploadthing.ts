@@ -1,7 +1,7 @@
 /** server/uploadthing.ts */
 import { createUploadthing, type FileRouter } from "uploadthing/next-legacy";
 const f = createUploadthing();
-
+import { prisma } from "@acme/db";
 import { getAuth } from "@clerk/nextjs/server";
 import { FileType } from "@acme/db";
 
@@ -34,6 +34,7 @@ export const pfeEtsFileRouter = {
           url: file.url,
         },
       });
+      console.log("prismaFile", prismaFile);
 
       if (prismaFile === null || prismaFile === undefined) {
         throw new Error("Failed to create file");
