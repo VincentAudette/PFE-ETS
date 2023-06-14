@@ -57,7 +57,7 @@ const ProjectCard: React.FC<{
               <div className="h-2 w-2 rounded-full bg-current" />
             </div>
             <h2 className="min-w-0 text-sm font-semibold leading-6 text-black">
-              <Link href={`projects/${project.pfeId}`} className="flex gap-x-2">
+              <Link href={`projets/${project.id}`} className="flex gap-x-2">
                 <span className="">{project.organization.name}</span>
                 <span className="text-gray-400">/</span>
                 <span className="min-w-max">{project.pfeId}</span>

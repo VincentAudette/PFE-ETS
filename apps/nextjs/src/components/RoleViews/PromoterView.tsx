@@ -15,7 +15,7 @@ import { usePFEAuth } from "../../context/PFEAuthContext";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 import ProjectCard from "../ProjectCard";
 
-const navigation: NavigationItem[] = [
+const promoterNavigation: NavigationItem[] = [
   {
     name: "Tableau de bord",
     href: "/",
@@ -51,8 +51,18 @@ export default function PromoterView({
   console.log("userData", userData);
   console.log("routerAspath", router.asPath);
 
-  navigation.forEach((navItem) => {
+  promoterNavigation.forEach((navItem) => {
     navItem.current = navItem.href === router.asPath;
+    switch (navItem.name) {
+      case "Tableau de bord":
+        navItem.count = userData?.promoter?.projects.length.toString();
+        break;
+      case "Équipes":
+        // navItem.count = userData?.promoter?.teams.length.toString();
+        break;
+      default:
+        break;
+    }
   });
 
   // if (userData.role === "UNASSIGNED") {
@@ -61,7 +71,7 @@ export default function PromoterView({
 
   return (
     <SideBarLayout
-      navigation={navigation}
+      navigation={promoterNavigation}
       secondaryNavigation={secondaryNavigation}
       showAfterNav={router.asPath === "/projets/new"}
       afterNav={
