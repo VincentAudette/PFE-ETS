@@ -19,16 +19,18 @@ export default function ProjectPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <TopNav
-          pages={[
-            { name: "Projets", href: "/", current: false },
-            {
-              name: "Projet",
-              href: `/projet/${router.query.id as string}`,
-              current: true,
-            },
-          ]}
-        />
+        <div className=" print:hidden">
+          <TopNav
+            pages={[
+              { name: "Projets", href: "/", current: false },
+              {
+                name: "Projet",
+                href: `/projet/${router.query.id as string}`,
+                current: true,
+              },
+            ]}
+          />
+        </div>
 
         <ProjectView projectId={router.query.id as string} />
       </main>
