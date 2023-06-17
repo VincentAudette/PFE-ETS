@@ -14,8 +14,6 @@ import { departments } from "./ProjectCard";
 import PersonDetails from "./PersonDetails";
 import moment from "moment";
 import "moment/locale/fr";
-import { inferProcedureOutput } from "@trpc/server";
-import { AppRouter } from "@acme/api";
 import Image from "next/image";
 import { trpc } from "../utils/trpc";
 import LoadingPFE from "./LoadingPFE";
