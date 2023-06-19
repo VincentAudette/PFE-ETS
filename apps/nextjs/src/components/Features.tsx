@@ -53,15 +53,17 @@ export function Features() {
         {features.map((feature) => (
           <li
             key={feature.name}
-            className="rounded-2xl border border-gray-200 p-8"
+            className="rounded-2xl border border-neutral-200 p-8"
           >
             <div className="flex gap-2">
               {feature.roles?.map((role) => (
                 <RoleBadge key={role + feature.name} role={role as Role} />
               ))}
             </div>
-            <h3 className="mt-6 font-semibold text-gray-900">{feature.name}</h3>
-            <p className="mt-2 text-gray-700">{feature.description}</p>
+            <h3 className="mt-6 font-semibold text-neutral-900">
+              {feature.name}
+            </h3>
+            <p className="mt-2 text-neutral-700">{feature.description}</p>
             <div className="h-3" />
           </li>
         ))}

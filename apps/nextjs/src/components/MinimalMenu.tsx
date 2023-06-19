@@ -10,7 +10,7 @@ function classNames(...classes: any[]) {
 export default function MinimalMenu() {
   const { setAuthProfile } = usePFEAuth();
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative z-[45] inline-block text-left">
       <div>
         <Menu.Button className="flex items-center rounded-full text-neutral-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-neutral-500">
           <span className="sr-only">Open options</span>
@@ -34,7 +34,9 @@ export default function MinimalMenu() {
                 <button
                   onClick={() => setAuthProfile("DEVELOPER")}
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active
+                      ? "bg-neutral-100 text-neutral-900"
+                      : "text-neutral-700",
                     "block w-full px-4 py-2 text-sm",
                   )}
                 >
@@ -47,7 +49,9 @@ export default function MinimalMenu() {
                 <button
                   onClick={() => setAuthProfile("STUDENT")}
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active
+                      ? "bg-neutral-100 text-neutral-900"
+                      : "text-neutral-700",
                     "block w-full px-4 py-2 text-sm",
                   )}
                 >
@@ -60,7 +64,9 @@ export default function MinimalMenu() {
                 <button
                   onClick={() => setAuthProfile("PROMOTER")}
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active
+                      ? "bg-neutral-100 text-neutral-900"
+                      : "text-neutral-700",
                     "block w-full px-4 py-2 text-sm",
                   )}
                 >
@@ -73,7 +79,9 @@ export default function MinimalMenu() {
                 <button
                   onClick={() => setAuthProfile("ADMIN")}
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    active
+                      ? "bg-neutral-100 text-neutral-900"
+                      : "text-neutral-700",
                     "block w-full px-4 py-2 text-sm",
                   )}
                 >

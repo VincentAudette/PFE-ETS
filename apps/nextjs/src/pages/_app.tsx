@@ -15,7 +15,9 @@ const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
       <ToastContainer />
       <PFEAuthProvider>
         <ProjectProvider>
-          <Component {...pageProps} />
+          <div className="">
+            <Component {...pageProps} />
+          </div>
         </ProjectProvider>
       </PFEAuthProvider>
     </ClerkProvider>

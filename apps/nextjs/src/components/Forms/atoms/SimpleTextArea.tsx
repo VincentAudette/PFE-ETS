@@ -32,7 +32,7 @@ export default function SimpleTextArea({
     <div>
       <label
         htmlFor={id}
-        className="block text-sm font-medium leading-6 text-gray-900"
+        className="block text-sm font-medium leading-6 text-neutral-900"
       >
         {label}
       </label>
@@ -52,7 +52,7 @@ export default function SimpleTextArea({
           className={
             validationError || valueExceedsMaxLength
               ? "block w-full rounded-md border-0 py-1.5 pr-10 text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500 sm:text-sm sm:leading-6"
-              : "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 "
+              : "block w-full rounded-md border-0 py-1.5 text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 "
           }
           placeholder={placeholder}
         />
@@ -78,7 +78,7 @@ export default function SimpleTextArea({
             className={
               valueExceedsMaxLength
                 ? "mt-2 text-sm text-red-600"
-                : "mt-2 text-sm text-gray-500"
+                : "mt-2 text-sm text-neutral-500"
             }
             id={id + "-description"}
           >

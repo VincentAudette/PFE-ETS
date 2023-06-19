@@ -30,8 +30,8 @@ export default function RoleBadge({
     roleDisplayName = "Étudiant";
   } else if (role === "UNREGISTERED") {
     color = darkMode
-      ? "bg-gray-400/10 text-gray-400 ring-gray-400/20"
-      : "bg-gray-50 text-gray-700 ring-gray-700/10";
+      ? "bg-neutral-400/10 text-neutral-400 ring-neutral-400/20"
+      : "bg-neutral-50 text-neutral-700 ring-neutral-700/10";
     roleDisplayName = "Non inscrit";
   }
 
