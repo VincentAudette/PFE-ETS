@@ -18,7 +18,7 @@ export default function LoadingPFE() {
         width={300}
       />
       <div className="h-4" />
-      <h1 className=" text-xl text-stone-500">Chargement...</h1>
+      <h1 className=" text-xl text-neutral-500">Chargement...</h1>
     </div>
   );
 }

@@ -16,7 +16,8 @@ import moment from "moment";
 import "moment/locale/fr";
 import Image from "next/image";
 import { trpc } from "../utils/trpc";
-import LoadingPFE from "./LoadingPFE";
+import ProjectLoading from "./ProjectLoading";
+import ProjectOptionsButton from "./ProjectOptionsButton";
 
 interface TeachOnProj extends TeacherOnProject {
   teacher: Teacher;
@@ -42,7 +43,7 @@ const encandrementsMap = new Map<EncouragementType, string>([
   ["NO_ENCOURAGEMENT", "Aucun encadrement"],
 ]);
 
-const projectStatusMap = new Map<ProjectStatus, string>([
+export const projectStatusMap = new Map<ProjectStatus, string>([
   ["DRAFT", "Brouillon"],
   ["EVALUATION", "Évaluation"],
   ["APPROBATION", "Approbation"],
@@ -64,10 +65,16 @@ const projectStatusMap = new Map<ProjectStatus, string>([
   ["COMPLETE", "Complet"],
   ["NEXT_PHASE", "Prochaine phase"],
   ["ENDED", "Terminé"],
-  ["REPROPOSAL", "Nouvelle proposition]"],
+  ["REPROPOSAL", "Nouvelle proposition"],
 ]);
 
-export default function ProjectView({ projectId }: { projectId: string }) {
+export default function ProjectView({
+  projectId,
+  onPage = false,
+}: {
+  projectId: string;
+  onPage?: boolean;
+}) {
   const { data: project, isLoading: isProjectLoading } =
     trpc.project.get.useQuery(projectId, {
       enabled: !!projectId,
@@ -88,20 +95,26 @@ export default function ProjectView({ projectId }: { projectId: string }) {
   //   departments[project?.mainDepartmentId]
   // }`;
   if (isProjectLoading) {
-    return <LoadingPFE />;
+    return <ProjectLoading />;
   }
 
   return (
-    <div className=" mx-auto mt-10 mb-32 max-w-2xl">
+    <div className=" mx-auto mt-10 mb-32 max-w-2xl px-5">
+      <div className="flex">
+        <div className="grow" />
+        {project && (
+          <ProjectOptionsButton onPage={onPage} projectId={project?.id} />
+        )}
+      </div>
       <div className="flex gap-2 text-xl font-bold">
         <span>{project?.organization.name}</span>
-        <span className=" text-stone-500">/</span>
+        <span className=" text-neutral-500">/</span>
         <span>{project?.pfeId}</span>
       </div>
       <h1 className="leading-20 mt-3 text-3xl font-semibold">
         {project?.title}
       </h1>
-      <div className="my-10 flex justify-around divide-x overflow-x-scroll border-y bg-stone-50 py-5 shadow-sm ">
+      <div className="my-10 flex justify-around divide-x overflow-x-scroll border-y bg-neutral-50 py-5 shadow-sm ">
         {[
           {
             title: "Trimèstre",
@@ -122,23 +135,23 @@ export default function ProjectView({ projectId }: { projectId: string }) {
           },
           {
             title: "Statut",
-            value: projectStatusMap.get(firstState?.state || "DRAFT"),
+            value: projectStatusMap.get(firstState?.state as ProjectStatus),
           },
         ].map(({ title, value }, i) => (
           <div key={title} className={`${i > 0 ? "pl-3" : ""} min-w-max`}>
-            <p className="text-sm text-stone-500">{title}</p>
-            <p className="py-2 text-lg text-stone-800">{value}</p>
+            <p className="text-sm text-neutral-500">{title}</p>
+            <p className="py-2 text-lg text-neutral-800">{value}</p>
             {/* {subtext !== null && (
-                <p className="text-xs text-stone-600">{subtext}</p>
+                <p className="text-xs text-neutral-600">{subtext}</p>
               )} */}
           </div>
         ))}
       </div>
-      <p className="text-sm text-stone-500">Thématiques</p>
-      <ul className="flex flex-wrap gap-2 py-2 text-sm text-stone-800">
+      <p className="text-sm text-neutral-500">Thématiques</p>
+      <ul className="flex flex-wrap gap-2 py-2 text-sm text-neutral-800">
         {project?.thematics?.map(({ thematic }) => (
           <li
-            className="inline-flex items-center  rounded-full  border bg-stone-100 px-2.5 py-0.5 font-medium  shadow-sm"
+            className="inline-flex items-center  rounded-full  border bg-neutral-100 px-2.5 py-0.5 font-medium  shadow-sm"
             key={thematic.id}
           >
             {thematic.name}
@@ -146,14 +159,14 @@ export default function ProjectView({ projectId }: { projectId: string }) {
         ))}
         {project?.otherThematics && (
           <li className="mt-4">
-            <span className="text-stone-500">Autres thématiques : </span>
+            <span className="text-neutral-500">Autres thématiques : </span>
             <span className=" font-medium ">{project?.otherThematics}</span>
           </li>
         )}
       </ul>
       <div className="h-5" />
-      <p className="text-sm text-stone-500">Expertises requises</p>
-      <p className="flex flex-wrap gap-2 py-2 text-lg text-stone-800">
+      <p className="text-sm text-neutral-500">Expertises requises</p>
+      <p className="flex flex-wrap gap-2 py-2 text-lg text-neutral-800">
         {project?.requiredSkills}
       </p>
       <hr className="my-10" />
@@ -168,7 +181,7 @@ export default function ProjectView({ projectId }: { projectId: string }) {
           { title: "Résultats attendus", value: project?.expectedResults },
         ].map(({ title, value }) => (
           <li key={title}>
-            <p className="text-sm text-stone-500">{title}</p>
+            <p className="text-sm text-neutral-500">{title}</p>
             <p className="mt-2 text-lg">{value}</p>
           </li>
         ))}
@@ -181,7 +194,7 @@ export default function ProjectView({ projectId }: { projectId: string }) {
         <h2 className=" text-xl font-bold">Encadrement</h2>
         {project?.teachers && (
           <div>
-            <ul role="list" className="divide-y divide-stone-100">
+            <ul role="list" className="divide-y divide-neutral-100">
               <PersonDetails
                 name={promoterFirstLastName}
                 role={`Promoteur`}
@@ -283,10 +296,10 @@ export default function ProjectView({ projectId }: { projectId: string }) {
               </div>
             )}
             <div className="pl-5">
-              <span className="text-sm font-bold text-stone-800">
+              <span className="text-sm font-bold text-neutral-800">
                 {title} :{" "}
               </span>
-              <span className=" text-sm text-stone-800">{value}</span>
+              <span className=" text-sm text-neutral-800">{value}</span>
             </div>
           </div>
         ))}
@@ -295,7 +308,7 @@ export default function ProjectView({ projectId }: { projectId: string }) {
       <div className="flex flex-col justify-between sm:flex-row">
         {signatureFile?.url && (
           <div>
-            <p className="text-sm text-stone-500">Signature</p>
+            <p className="text-sm text-neutral-500">Signature</p>
             <div className="h-22 relative flex w-64 items-center justify-center border-b">
               <Image
                 src={signatureFile?.url}
@@ -311,7 +324,7 @@ export default function ProjectView({ projectId }: { projectId: string }) {
           </div>
         )}
         <div className="mt-20 flex max-w-max flex-col border-b sm:mt-0">
-          <p className="text-sm text-stone-500">Date</p>
+          <p className="text-sm text-neutral-500">Date</p>
           <div className="grow" />
           <p className="mt-8 pb-8 text-base sm:mt-0">
             {moment(firstState?.timestamp)

@@ -41,10 +41,10 @@ export default function SimpleSelect({
     selectedState === options[0]
       ? validationError
         ? "text-red-300"
-        : "text-gray-400"
+        : "text-neutral-400"
       : validationError
       ? "text-red-900"
-      : "text-gray-900";
+      : "text-neutral-900";
 
   return (
     <Listbox
@@ -61,7 +61,7 @@ export default function SimpleSelect({
       {({ open }) => (
         <div className="w-full">
           {withLabel && (
-            <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
+            <Listbox.Label className="block text-sm font-medium leading-6 text-neutral-900">
               {label}
             </Listbox.Label>
           )}
@@ -70,7 +70,7 @@ export default function SimpleSelect({
               className={`relative ${
                 maxWidth !== null ? maxWidth : "w-full"
               } cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-sm ${textColor} shadow-sm ring-1 ring-inset ${
-                validationError ? "ring-red-300" : "ring-gray-300"
+                validationError ? "ring-red-300" : "ring-neutral-300"
               }  focus:outline-none focus:ring-2 focus:ring-blue-600 sm:leading-6`}
             >
               <span className="block truncate">
@@ -79,7 +79,7 @@ export default function SimpleSelect({
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
                   className={`h-5 w-5 ${
-                    validationError ? "text-red-500" : "text-gray-400"
+                    validationError ? "text-red-500" : "text-neutral-400"
                   } `}
                   aria-hidden="true"
                 />
@@ -99,7 +99,7 @@ export default function SimpleSelect({
                     key={option.id}
                     className={({ active }) =>
                       classNames(
-                        active ? "bg-blue-600 text-white" : "text-gray-900",
+                        active ? "bg-blue-600 text-white" : "text-neutral-900",
                         "relative cursor-default select-none py-2 pl-3 pr-9",
                       )
                     }

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function AuthLayout({ children, titre }: any) {
   return (
-    <main className="flex h-screen flex-col items-center bg-neutral-50 ">
+    <main className="flex h-screen flex-col items-center bg-white ">
       <div className="my-auto flex flex-col items-center justify-center gap-4">
         <Link
           href="/"

@@ -11,13 +11,22 @@ export const authRouter = router({
       include: {
         promoter: {
           include: {
-            organizations: true,
+            organizations: {
+              include: {
+                organization: true,
+              },
+            },
             projects: {
               include: {
                 organization: true,
                 files: true,
                 thematics: true,
                 states: true,
+                departments: {
+                  include: {
+                    department: true,
+                  },
+                },
               },
             },
           },
