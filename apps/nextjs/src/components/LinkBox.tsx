@@ -115,7 +115,7 @@ export const ItemSquare = ({
       className={
         className
           ? className
-          : "flex h-[3.5rem] w-[3.5rem] flex-col items-center justify-center bg-stone-700/25 hover:bg-stone-100/50 hover:text-red-600 "
+          : "flex h-[3.5rem] w-[3.5rem] flex-col items-center justify-center bg-neutral-700/25 hover:bg-neutral-100/50 hover:text-red-600 "
       }
     >
       <IconSvg className="h-8 w-8" />

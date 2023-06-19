@@ -43,7 +43,7 @@ export default function SideBarLayout({
   setShowMobileNav?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
-    <div className=" mx-auto flex w-full max-w-5xl justify-between px-4 sm:gap-10 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
+    <div className="mx-auto flex h-[88vh] w-full max-w-[1800px] justify-between border-b bg-white px-4 sm:gap-10 sm:px-12 ">
       <div className="sm:hidden">
         {setShowMobileNav && (
           <SlideOver
@@ -58,7 +58,7 @@ export default function SideBarLayout({
           </SlideOver>
         )}
       </div>
-      <div className="mt-5 hidden lg:block">
+      <div className={`mt-5 hidden ${showRightSide ? "w-1/6" : ""} lg:block`}>
         <VerticalNav
           navigation={navigation}
           secondaryNavigation={secondaryNavigation}
@@ -66,12 +66,23 @@ export default function SideBarLayout({
         {showAfterNav && <div className="mt-3">{afterNav}</div>}
       </div>
       {/* <div className="ml-20 h-full w-[1px] rounded-full bg-neutral-200"></div> */}
-      <div className="container flex w-full flex-col items-center justify-center gap-12 md:min-w-[48rem] xl:min-w-[52rem] ">
-        <div className="flex h-max w-full justify-center overflow-y-scroll border-x p-4 text-2xl">
+      <div
+        className={`container flex ${
+          showRightSide ? "w-full sm:w-3/6" : "w-full"
+        } flex-col items-center justify-start gap-12  `}
+      >
+        <div className="flex w-full grow justify-center overflow-y-scroll border-x">
           {children}
         </div>
       </div>
-      {showRightSide && <div className="mt-3"> {rightSide}</div>}
+      {showRightSide && (
+        <div
+          className={`hidden sm:block ${showRightSide ? "w-3/6" : "w-full"}`}
+        >
+          {" "}
+          {rightSide}
+        </div>
+      )}
     </div>
   );
 }

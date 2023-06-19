@@ -3,13 +3,13 @@ export default function CheckBoxInput({
   label,
   name,
   checked,
-  onChange
+  onChange,
 }: {
   id: string;
   label: string;
   name: string;
-  checked?:boolean;
-  onChange?:React.ChangeEventHandler<HTMLInputElement>;
+  checked?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }) {
   return (
     <div className="relative flex items-start">
@@ -20,12 +20,12 @@ export default function CheckBoxInput({
           name={name}
           type="checkbox"
           checked={checked} // Pass checked prop here
-          onChange={onChange} 
-          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+          onChange={onChange}
+          className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-600"
         />
       </div>
       <div className="ml-3 text-sm leading-6">
-        <label htmlFor={name} className="font-medium text-gray-900">
+        <label htmlFor={name} className="font-medium text-neutral-900">
           {label}
         </label>
       </div>

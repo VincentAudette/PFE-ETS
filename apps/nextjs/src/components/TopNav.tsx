@@ -24,9 +24,6 @@ export default function TopNav({
 
   const { authProfile, userData, setUserData } = usePFEAuth();
 
-  console.log("authProfile", authProfile);
-  
-
   useEffect(() => {
     if (getUserData !== undefined && authProfile === null) {
       setUserData(getUserData);
@@ -37,15 +34,17 @@ export default function TopNav({
 
   return (
     <>
-      {(userData?.role === "PROMOTER" || authProfile == "PROMOTER") && <NavForPromoters />}
-      <nav className=" h-full w-full">
-        <div className="border-b bg-neutral-700 py-3">
-          <div className="mx-auto flex h-full max-w-5xl flex-col items-center justify-between px-4 sm:px-12 lg:flex-row xl:max-w-[80rem] 2xl:max-w-[100rem]">
+      {(userData?.role === "PROMOTER" || authProfile == "PROMOTER") && (
+        <NavForPromoters />
+      )}
+      <nav className=" z-[45] h-full w-full">
+        <div className="border-b bg-neutral-700 py-1">
+          <div className="mx-auto flex h-full max-w-[1800px] flex-col items-center justify-between px-4 sm:px-12 lg:flex-row ">
             <div className="flex items-center gap-3">
               <div className="group relative">
                 {isSignedIn ? (
                   <div>
-                    <PFELogoSmall className="h-12 w-12" />
+                    <PFELogoSmall className="h-[2.8rem] w-auto" />
                   </div>
                 ) : (
                   <>
@@ -59,8 +58,8 @@ export default function TopNav({
                 )}
               </div>
               <h1
-                className="lead max-w-[10rem] text-base font-semibold
-              text-stone-300 lg:leading-[1.2rem]"
+                className="lead text-base font-semibold
+              text-white lg:leading-[1.2rem]"
               >
                 Projet de fin d&apos;études à l&apos;ÉTS
               </h1>

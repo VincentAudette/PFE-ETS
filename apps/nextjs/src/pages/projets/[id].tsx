@@ -32,7 +32,7 @@ export default function ProjectPage() {
           />
         </div>
 
-        <ProjectView projectId={router.query.id as string} />
+        <ProjectView onPage={true} projectId={router.query.id as string} />
       </main>
     </>
   );

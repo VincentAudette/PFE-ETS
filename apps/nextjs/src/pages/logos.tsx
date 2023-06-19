@@ -25,7 +25,7 @@ export default function Home() {
             },
           ]}
         />
-        <div className="flex flex-col gap-6 text-center">
+        <div className="flex flex-col gap-6 py-12 text-center">
           <h1 className=" text-3xl font-black lg:text-5xl">
             Projet de fin d&apos;études Logo et utilisations
           </h1>

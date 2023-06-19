@@ -27,6 +27,7 @@ import {
 } from "../../../context/ProjectContext";
 import LoadingPFE from "../../LoadingPFE";
 import ProjectView from "../../ProjectView";
+import { usePFEAuth } from "../../../context/PFEAuthContext";
 
 export default function PFEForm() {
   const { data: allThematics, isLoading: isThematicsLoading } =
@@ -65,6 +66,8 @@ export default function PFEForm() {
     projectId,
   } = useProject();
 
+  const { userData, selectedOrganization } = usePFEAuth();
+
   // if (projectCreationState === ProjectCreationState.SUCCESS && projectId) {
   if (projectId) {
     return <ProjectView projectId={projectId} />;
@@ -73,11 +76,16 @@ export default function PFEForm() {
   return (
     <>
       {projectCreationState === ProjectCreationState.LOADING && <LoadingPFE />}
-      <div className="my-5 mx-auto flex max-w-5xl flex-col gap-12 px-4 py-3 text-base sm:px-6">
-        <h1 className="text-center text-2xl font-bold">
-          Formulaire de projet de fin d&apos;études
+      <div className="my-5 mx-auto flex h-[300rem] max-w-5xl grow flex-col gap-12 px-4 py-3 text-base sm:px-6">
+        <h1 className="sticky top-0 z-30 w-full border-b bg-white py-3 text-center text-xl font-bold">
+          Formulaire de projet de fin d&apos;études par {userData?.firstName}{" "}
+          {userData?.lastName} pour {selectedOrganization?.name}
         </h1>
-        <form className="flex flex-col gap-12" onSubmit={handlePFEFormSubmit}>
+        <form
+          autoComplete="off"
+          className="flex flex-col gap-12"
+          onSubmit={handlePFEFormSubmit}
+        >
           <h2 className=" text-base font-bold">
             1. Informations sur le projet
           </h2>
@@ -95,6 +103,7 @@ export default function PFEForm() {
             value={inputFields.projectTitle.value}
             validationError={inputFields.projectTitle.error}
             type="text"
+            autoComplete="off"
             name="projectTitle"
             id="projectTitle"
             label="Titre du projet (Le titre doit refléter qu’il s’agit d’un projet de conception d’un système, d’un composant, d’un procédé ou d’un processus.)"
@@ -294,12 +303,12 @@ export default function PFEForm() {
               <div className="lg:w-1/2">
                 <label
                   htmlFor="thematics"
-                  className="mb-2 block text-sm font-medium text-stone-900"
+                  className="mb-2 block text-sm font-medium text-neutral-900"
                 >
                   Sélectionner parmis la list de thématiques
                 </label>
                 {selectedDepartment.id === "0" ? (
-                  <div className="py-3 text-sm text-stone-400">
+                  <div className="py-3 text-sm text-neutral-500">
                     Vous devez choisir un département pour voir la liste de
                     thématiques
                   </div>
@@ -333,7 +342,7 @@ export default function PFEForm() {
                       ${
                         isThematicSelected
                           ? "border border-blue-500 bg-blue-600 text-white "
-                          : "border bg-stone-100 text-stone-800 shadow-sm"
+                          : "border bg-neutral-100 text-neutral-800 shadow-sm"
                       }
                       `}
                             >
@@ -394,7 +403,7 @@ export default function PFEForm() {
               4. Description du projet
             </h2>
 
-            <ul className="flex list-disc flex-col gap-2 text-sm text-stone-800">
+            <ul className="flex list-inside list-disc flex-col gap-2 text-sm text-neutral-800">
               {descriptionDuProjet.map((listItem) => (
                 <li key={listItem.substring(0, 10)}>{listItem}</li>
               ))}
@@ -439,7 +448,9 @@ export default function PFEForm() {
                           key={note.substring(0, 10)}
                           className="mt-3 flex flex-col gap-2 px-7"
                         >
-                          <span className="text-sm text-stone-500">{note}</span>
+                          <span className="text-sm text-neutral-600">
+                            {note}
+                          </span>
                         </div>
                       );
                     })}
@@ -474,11 +485,11 @@ export default function PFEForm() {
                 </div>
               ) : selectedFile != undefined && isFileLoading ? (
                 <div className="h-22 flex w-64 items-center justify-center border">
-                  <ArrowPathIcon className="h-8 w-8 animate-spin text-stone-400" />
+                  <ArrowPathIcon className="h-8 w-8 animate-spin text-neutral-400" />
                 </div>
               ) : (
                 <div className="h-22 flex w-64 items-center justify-center border">
-                  <Signature className="h-[4rem] w-32 text-stone-400" />
+                  <Signature className="h-[4rem] w-32 text-neutral-400" />
                 </div>
               )}
 
