@@ -19,33 +19,30 @@ export default async function handler(
 
     const pdf = await generate({ template, inputs });
 
-    // Create the BlobServiceClient object which will be used to create a container client
     const blobServiceClient = BlobServiceClient.fromConnectionString(
       process.env.AZURE_CONNECTION_STRING ?? "",
     );
 
-    // Get a reference to a container
     const containerClient = blobServiceClient.getContainerClient("pdf-blob");
 
-    // Create a unique name for the blob
     const blobName = `TestUpload${Date.now()}`;
 
-    // Get a block blob client
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    // Upload data to the blob
     const uploadBlobResponse = await blockBlobClient.upload(
       pdf,
       pdf.byteLength,
     );
 
+    /* Save to local
     // Node.js
     const pdfFileName = "test4.pdf";
     fs.writeFileSync(path.join(__dirname, pdfFileName), pdf);
+    */
 
     res.status(200);
     res.json({
-      data: `PDF generated at: ${__dirname} with name ${pdfFileName}.`,
+      data: `File uploaded to Blob Storage with name: ${blobName}.`,
     });
     res.end();
   } else {
