@@ -4,6 +4,7 @@ import { authRouter } from "./auth";
 import { userRouter } from "./user";
 import { organizationRouter } from "./organization";
 import { fileRouter } from "./file";
+import { groupRouter } from "./group";
 import { projectRouter } from "./project";
 import { promoterRouter } from "./promoter";
 import { thematicRouter } from "./thematic";
@@ -14,6 +15,7 @@ export const appRouter = router({
   user: userRouter,
   organization: organizationRouter,
   file: fileRouter,
+  group: groupRouter,
   project: projectRouter,
   promoter: promoterRouter,
   thematic: thematicRouter,
