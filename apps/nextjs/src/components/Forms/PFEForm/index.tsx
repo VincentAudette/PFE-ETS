@@ -232,7 +232,7 @@ export default function PFEForm() {
               title={`Étudiants préalablement sélectionnés (Maximum ${
                 isMultiDepartment ? 8 : 5
               } étudiants)`}
-              description="Avez-vous déjà sélectionné des étudiants pour votre projet? NOTE :  Les étudiants inscrits dans cette section ont été contactés et sont assurés de vouloir faire partie du projet. De ce fait, ils ne pourront choisir d’autres projets. Vous devez demander une autorisation au coordonnateur des PFE de votre département pour avoir une équipe de plus de 5 personnes."
+              description="Avez-vous choisi des étudiants pour votre projet ? Ceux inscrits ici sont engagés et ne peuvent pas choisir d'autres projets. Pour une équipe de plus de cinq personnes, demandez une autorisation au coordonnateur des PFE de votre département."
               buttonTitle="Nouvel étudiant"
               obj={{
                 firstName: "Prénom",
@@ -305,7 +305,7 @@ export default function PFEForm() {
                   htmlFor="thematics"
                   className="mb-2 block text-sm font-medium text-neutral-900"
                 >
-                  Sélectionner parmis la list de thématiques
+                  Sélectionner parmis la liste de thématiques
                 </label>
                 {selectedDepartment.id === "0" ? (
                   <div className="py-3 text-sm text-neutral-500">
@@ -371,7 +371,7 @@ export default function PFEForm() {
                   id="otherThematics"
                   label="Autres thématiques"
                   name="otherThematics"
-                  placeholder="Si votre projet contient d'autres thématiques, veuillez les indiquer ici."
+                  placeholder="Si d'autres thématiques sont présentes dans votre projet, indiquez-les ici."
                   rows={4}
                 />
               </div>

@@ -129,7 +129,7 @@ export default function PromoterView({
           <InfoAlert
             textXs={true}
             dimmed={true}
-            text=" En vue d’alléger ce texte, on n’y emploie généralement que le masculin pour désigner les femmes et les hommes."
+            text="Dans un souci de concision, ce texte utilise généralement le genre masculin pour désigner aussi bien les femmes que les hommes."
           />
         </div>
       }
