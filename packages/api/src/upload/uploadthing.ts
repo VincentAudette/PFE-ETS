@@ -39,7 +39,7 @@ export const pfeEtsFileRouter = {
         throw new Error("Failed to create file");
       }
     }),
-  pdfUploader: f.maxSize("1GB").onUploadComplete(async ({ metadata, file }) => {
+  pdfUploader: f.maxSize("1GB").onUploadComplete(async ({ file }) => {
     // This code RUNS ON YOUR SERVER after upload
     console.log("file url", file.url);
 
