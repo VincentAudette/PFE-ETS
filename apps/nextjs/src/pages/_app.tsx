@@ -8,6 +8,7 @@ import { PFEAuthProvider } from "../context/PFEAuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProjectProvider } from "../context/ProjectContext";
+import { Analytics } from "@vercel/analytics/react";
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return (
@@ -17,6 +18,7 @@ const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
         <ProjectProvider>
           <div className="">
             <Component {...pageProps} />
+            <Analytics />
           </div>
         </ProjectProvider>
       </PFEAuthProvider>

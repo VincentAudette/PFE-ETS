@@ -17,8 +17,17 @@ export default function Home() {
     clerkId as string,
     {
       enabled: !!isSignedIn,
+      retry: (failureCount, error: any) => {
+        // retry 3 times if data is null or undefined
+        return failureCount <= 3 && error?.response?.data == null;
+      },
+      // add this line if you want to add a delay between retries
+      // this is an example of an exponential backoff delay
+      retryDelay: (attemptIndex) => Math.min(attemptIndex * 1000, 3000),
     },
   );
+
+  console.log("getUserData is =>", getUserData);
 
   const { userData, authProfile } = usePFEAuth();
   const activeRole = authProfile !== null ? authProfile : getUserData?.role;
