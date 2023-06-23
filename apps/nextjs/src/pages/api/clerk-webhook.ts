@@ -15,7 +15,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const payload = await buffer(req);
+  const payload = await buffer(req.body);
   const payloadString = payload.toString();
 
   const wh = new Webhook(secret);
@@ -26,7 +26,12 @@ export default async function handler(
       "svix-timestamp": (req.headers["svix-timestamp"] as string) || "",
       "svix-signature": (req.headers["svix-signature"] as string) || "",
     });
-    const data = req.body.data;
+    const data = req?.body?.data;
+
+    if (!data) {
+      res.status(400).json({ error: "No data in body", body: req.body, msg });
+      return;
+    }
 
     await prisma.user
       .create({
@@ -48,6 +53,6 @@ export default async function handler(
       });
   } catch (err) {
     console.log("Error: ", err);
-    res.status(400).json({ error: "Invalid webhook signature" });
+    res.status(400).json({ error: "Invalid webhook signature", msg });
   }
 }
