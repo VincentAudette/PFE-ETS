@@ -5,7 +5,6 @@ import {
   EncouragementType,
   Prisma,
   PrismaPromise,
-  ProjectStatus,
   Representative,
   RepresentativeOnProject,
   Student,
@@ -31,7 +30,7 @@ export const projectRouter = router({
       where: {
         states: {
           some: {
-            state: "ENROLLMENT" as ProjectStatus,
+            state: "ENROLMENT",
           },
         },
       },

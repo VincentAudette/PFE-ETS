@@ -2,30 +2,45 @@ import { useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
 
-const people = [
-  { id: 1, name: "Leslie Alexander" },
-  // More users...
-];
-
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+interface Option {
+  id: string;
+  name: string;
+}
+
+/**
+ * LISTE PFE:
+ * pfes: Option[]  = [
+ *  { id: "1", name: "PFE 1" },
+ * { id: "2", name: "PFE 2" },
+ *
+ * ]
+ */
+
+export default function ComboBox({
+  label,
+  options,
+}: {
+  label: string;
+  options: Option[];
+}) {
   const [query, setQuery] = useState("");
   const [selectedPerson, setSelectedPerson] = useState(null);
 
-  const filteredPeople =
+  const filteredOptions =
     query === ""
-      ? people
-      : people.filter((person) => {
-          return person.name.toLowerCase().includes(query.toLowerCase());
+      ? options
+      : options.filter((option) => {
+          return option.name.toLowerCase().includes(query.toLowerCase());
         });
 
   return (
     <Combobox as="div" value={selectedPerson} onChange={setSelectedPerson}>
       <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">
-        Assigned to
+        {label}
       </Combobox.Label>
       <div className="relative mt-2">
         <Combobox.Input
@@ -40,12 +55,12 @@ export default function Example() {
           />
         </Combobox.Button>
 
-        {filteredPeople.length > 0 && (
+        {filteredOptions.length > 0 && (
           <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {filteredPeople.map((person) => (
+            {filteredOptions.map((option) => (
               <Combobox.Option
-                key={person.id}
-                value={person}
+                key={option.id}
+                value={option}
                 className={({ active }) =>
                   classNames(
                     "relative cursor-default select-none py-2 pl-8 pr-4",
@@ -61,7 +76,7 @@ export default function Example() {
                         selected && "font-semibold",
                       )}
                     >
-                      {person.name}
+                      {option.name}
                     </span>
 
                     {selected && (
