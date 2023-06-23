@@ -181,16 +181,18 @@ export default function PromoterView({
               </ul>
             </div>
           ) : (
-            <div className=" mx-auto flex h-full flex-col items-center justify-center gap-1 sm:gap-5 lg:flex-row">
-              <p>Vous n&apos;avez pas de PFE en cours.</p>
-              <span>
-                <Link
-                  className=" rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500"
-                  href="/projets/new"
-                >
-                  Débuter un nouveau PFE &rarr;
-                </Link>
-              </span>
+            <div className=" mx-auto">
+              <div className=" mx-auto flex h-full flex-col items-center justify-center gap-1 sm:gap-5 lg:flex-row">
+                <p>Vous n&apos;avez pas de PFE en cours.</p>
+                <span>
+                  <Link
+                    className=" rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500"
+                    href="/projets/new"
+                  >
+                    Débuter un nouveau PFE &rarr;
+                  </Link>
+                </span>
+              </div>
             </div>
           ))}
         {children}

@@ -1,20 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Role, prisma } from "../../../../../packages/db/index";
 import { IncomingHttpHeaders } from "http";
-import { Webhook } from "svix";
+import {
+  Webhook,
+  WebhookRequiredHeaders,
+  WebhookUnbrandedRequiredHeaders,
+} from "svix";
 import { buffer } from "micro";
 
 export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-type WebhookUnbrandedRequiredHeaders = {
-  "webhook-id": string;
-  "webhook-timestamp": string;
-  "webhook-signature": string;
-  [key: string]: string | string[] | undefined;
 };
 
 let headers: IncomingHttpHeaders;
@@ -26,10 +23,27 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const payload = (await buffer(req)).toString();
-  const requiredHeaders: WebhookUnbrandedRequiredHeaders = {
-    "webhook-id": headers["webhook-id"] as string,
-    "webhook-timestamp": headers["webhook-timestamp"] as string,
-    "webhook-signature": headers["webhook-signature"] as string,
+  const requiredHeaders:
+    | WebhookRequiredHeaders
+    | WebhookUnbrandedRequiredHeaders = {
+    "svix-id": headers.hasOwnProperty("svix-id")
+      ? (headers["svix-id"] as string)
+      : "",
+    "svix-timestamp": headers.hasOwnProperty("svix-timestamp")
+      ? (headers["svix-timestamp"] as string)
+      : "",
+    "svix-signature": headers.hasOwnProperty("svix-signature")
+      ? (headers["svix-signature"] as string)
+      : "",
+    "webhook-id": headers.hasOwnProperty("webhook-id")
+      ? (headers["webhook-id"] as string)
+      : "",
+    "webhook-timestamp": headers.hasOwnProperty("webhook-timestamp")
+      ? (headers["webhook-timestamp"] as string)
+      : "",
+    "webhook-signature": headers.hasOwnProperty("webhook-signature")
+      ? (headers["webhook-signature"] as string)
+      : "",
     ...headers,
   };
 
