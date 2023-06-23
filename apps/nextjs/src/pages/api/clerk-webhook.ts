@@ -35,20 +35,13 @@ export default async function handler(
       })
       .then(() => {
         console.log("User added");
-        res.status(200);
+        res.status(200).json({ status: "User added" }); // Added json response
       })
       .catch((error: any) => {
         console.error(error);
-        res.status(500);
-      })
-      .finally(() => {
-        res.end();
+        res.status(500).json({ error: "There was an error" }); // Added json response
       });
   } catch (err) {
-    res.status(400).json({});
+    res.status(400).json({ error: "Invalid webhook signature" });
   }
-
-  // Do something with the message...
-
-  res.json({});
 }
