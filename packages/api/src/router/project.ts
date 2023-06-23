@@ -5,6 +5,7 @@ import {
   EncouragementType,
   Prisma,
   PrismaPromise,
+  ProjectStatus,
   Representative,
   RepresentativeOnProject,
   Student,
@@ -15,6 +16,25 @@ import {
 export const projectRouter = router({
   all: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.project.findMany({
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
+  getProjectInEnrollment: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.project.findMany({
+      where: {
+        states: {
+          some: {
+            state: "ENROLLMENT" as ProjectStatus,
+          },
+        },
+      },
       include: {
         promoter: {
           include: { user: true },
