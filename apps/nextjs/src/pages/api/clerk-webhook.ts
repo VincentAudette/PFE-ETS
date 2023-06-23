@@ -23,6 +23,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const payload = (await buffer(req)).toString();
+  headers = req.headers;
   const requiredHeaders:
     | WebhookRequiredHeaders
     | WebhookUnbrandedRequiredHeaders = {
