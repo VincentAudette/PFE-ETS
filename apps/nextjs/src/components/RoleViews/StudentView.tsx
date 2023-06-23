@@ -51,16 +51,16 @@ interface StudentChoicesFormElement extends HTMLFormElement {
 
 export default function StudentView() {
   const [selectedPfe1, setSelectedPfe1] = useState<Option | undefined>(
-    options[0],
+    undefined,
   );
   const [selectedPfe2, setSelectedPfe2] = useState<Option | undefined>(
-    options[0],
+    undefined,
   );
   const [selectedPfe3, setSelectedPfe3] = useState<Option | undefined>(
-    options[0],
+    undefined,
   );
   const [selectedPfe4, setSelectedPfe4] = useState<Option | undefined>(
-    options[0],
+    undefined,
   );
   const [pdfView, setPdfViewed] = useState<string | null>(null);
 
