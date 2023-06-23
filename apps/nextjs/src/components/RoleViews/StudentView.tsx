@@ -4,8 +4,10 @@ import CheckBoxInput from "../Forms/atoms/CheckBoxInput";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 import InputWithIcon from "../Forms/atoms/InputWithIcon";
 import SimpleSelect from "../Forms/atoms/SimpleSelect";
+import ComboBox, { Option } from "../Forms/atoms/ComboBox";
+import { useState } from "react";
 
-const options = [
+const options: Option[] = [
   {
     id: "0",
     name: "Sélectionnez une option",
@@ -47,15 +49,28 @@ interface StudentChoicesFormElement extends HTMLFormElement {
 }
 
 export default function StudentView() {
+  const [selectedPfe1, setSelectedPfe1] = useState<Option | undefined>(
+    options[0],
+  );
+  const [selectedPfe2, setSelectedPfe2] = useState<Option | undefined>(
+    options[0],
+  );
+  const [selectedPfe3, setSelectedPfe3] = useState<Option | undefined>(
+    options[0],
+  );
+  const [selectedPfe4, setSelectedPfe4] = useState<Option | undefined>(
+    options[0],
+  );
+
   const handleSelectionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as StudentChoicesFormElement;
     const formValues: IFormValues = {
       groupePreference: target.groupePreference.value,
-      pfeChoice1: target["pfeChoice1[name]"].value,
-      pfeChoice2: target["pfeChoice2[name]"].value,
-      pfeChoice3: target["pfeChoice3[name]"].value,
-      pfeChoice4: target["pfeChoice4[name]"].value,
+      pfeChoice1: selectedPfe1?.id as string,
+      pfeChoice2: selectedPfe2?.id as string,
+      pfeChoice3: selectedPfe3?.id as string,
+      pfeChoice4: selectedPfe4?.id as string,
       isPreApprovedInPfe: target.isPreApprovedInPfe.checked,
       isHealthProfile: target.isHealthProfile.checked,
       isEnerngyProfile: target.isEnerngyProfile.checked,
@@ -70,14 +85,33 @@ export default function StudentView() {
       <InfoAlert text="Si votre PFE vous a déjà été attribué, alors choisissez le meme PFE pour vos 3 premiers choix et ajouter un autre PFE pour votre 4eme choix. Si votre groupe contient au moins 3 personnes, alors choisissez le meme PFE pour vos 4 choix." />
       <div className="h-3" />
       <form className=" flex flex-col gap-4" onSubmit={handleSelectionSubmit}>
-        {[1, 2, 3, 4].map((_, i) => (
-          <SimpleSelect
+        {[
+          {
+            selectedPfe: selectedPfe1,
+            setSelectedPfe: setSelectedPfe1,
+          },
+          {
+            selectedPfe: selectedPfe2,
+            setSelectedPfe: setSelectedPfe2,
+          },
+          {
+            selectedPfe: selectedPfe3,
+            setSelectedPfe: setSelectedPfe3,
+          },
+          {
+            selectedPfe: selectedPfe4,
+            setSelectedPfe: setSelectedPfe4,
+          },
+        ].map((pfe, i) => (
+          <ComboBox
             key={"pfe_choice_" + (i + 1)}
             name={"pfeChoice" + (i + 1)}
             options={options}
             label={`${i + 1}. Quel est votre ${
               ["PREMIER", "DEUXIÈME", "TROISIÈME", "QUATRIÈME"][i]
             } choix de projet?`}
+            selectedOption={pfe.selectedPfe}
+            setSelectedOption={pfe.setSelectedPfe}
           />
         ))}
         <InputWithIcon
