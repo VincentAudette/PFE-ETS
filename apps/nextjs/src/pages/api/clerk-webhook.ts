@@ -15,16 +15,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const payload = (await buffer(req)).toString();
+  const payload = await buffer(req);
+  const payloadString = payload.toString();
 
   const wh = new Webhook(secret);
   let msg;
   try {
-    console.log("Secret: ", secret);
-    console.log("Headers: ", req.headers);
-    console.log("Payload: ", payload);
-
-    msg = wh.verify(payload, req.headers as any);
+    msg = wh.verify(payloadString, {
+      "svix-id": (req.headers["svix-id"] as string) || "",
+      "svix-timestamp": (req.headers["svix-timestamp"] as string) || "",
+      "svix-signature": (req.headers["svix-signature"] as string) || "",
+    });
     const data = req.body.data;
 
     await prisma.user
@@ -46,6 +47,7 @@ export default async function handler(
         res.status(500).json({ error: "There was an error" }); // Added json response
       });
   } catch (err) {
+    console.log("Error: ", err);
     res.status(400).json({ error: "Invalid webhook signature" });
   }
 }
