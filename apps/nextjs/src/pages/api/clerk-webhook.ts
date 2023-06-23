@@ -17,7 +17,7 @@ export default async function handler(
   const wh = new Webhook(secret);
   let msg;
   try {
-    msg = wh.verify(JSON.stringify(req.body.data), {
+    msg = wh.verify(JSON.stringify(req.body), {
       "svix-id": (req.headers["svix-id"] as string) || "",
       "svix-timestamp": (req.headers["svix-timestamp"] as string) || "",
       "svix-signature": (req.headers["svix-signature"] as string) || "",
