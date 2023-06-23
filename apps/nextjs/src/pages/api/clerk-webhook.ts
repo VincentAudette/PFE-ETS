@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Role, prisma } from "../../../../../packages/db/index";
 import { Webhook } from "svix";
-import { buffer } from "micro";
 
 export const config = {
   api: {
@@ -15,13 +14,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const payload = await buffer(req.body);
-  const payloadString = payload.toString();
-
   const wh = new Webhook(secret);
   let msg;
   try {
-    msg = wh.verify(payloadString, {
+    msg = wh.verify(JSON.stringify(req.body.data), {
       "svix-id": (req.headers["svix-id"] as string) || "",
       "svix-timestamp": (req.headers["svix-timestamp"] as string) || "",
       "svix-signature": (req.headers["svix-signature"] as string) || "",
