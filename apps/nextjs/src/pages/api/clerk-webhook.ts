@@ -20,6 +20,10 @@ export default async function handler(
   const wh = new Webhook(secret);
   let msg;
   try {
+    console.log("Secret: ", secret);
+    console.log("Headers: ", req.headers);
+    console.log("Payload: ", payload);
+
     msg = wh.verify(payload, req.headers as any);
     const data = req.body.data;
 
