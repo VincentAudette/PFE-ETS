@@ -9,12 +9,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Post {
-  id      String @id @default(cuid())
-  title   String
-  content String @db.Text
-}
-
 model User {
   clerkId   String     @id @unique
   firstName String?
@@ -117,7 +111,7 @@ model File {
 
 model Organization {
   id          Int                    @id @default(autoincrement())
-  name        String
+  name        String               @db.VarChar(500)
   description String?
   projects    Project[]
   logo        File?

@@ -38,7 +38,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center bg-neutral-50">
+      <main className="flex min-h-screen flex-col items-center ">
         <TopNav />
         {activeRole === "STUDENT" && <StudentView />}
         {activeRole === "PROMOTER" && <PromoterView />}

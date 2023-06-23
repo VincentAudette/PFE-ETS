@@ -21,4 +21,48 @@ export const promoterRouter = router({
 
       return association;
     }),
+  allProjects: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.promoter.findUnique({
+      where: {
+        userId: ctx.auth.userId,
+      },
+      include: {
+        projects: {
+          include: {
+            promoter: {
+              include: { user: true },
+            },
+            organization: true,
+            files: true,
+            thematics: {
+              include: {
+                thematic: true,
+              },
+            },
+            teachers: {
+              include: {
+                teacher: true,
+              },
+            },
+            representatives: {
+              include: {
+                representative: true,
+              },
+            },
+            departments: true,
+            states: true,
+            group: {
+              include: {
+                students: {
+                  include: {
+                    department: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }),
 });

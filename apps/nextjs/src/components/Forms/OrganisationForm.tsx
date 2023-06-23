@@ -79,11 +79,11 @@ export default function OrganisationForm({
           />
         ) : selectedFile != undefined && isFileLoading ? (
           <div className="flex h-32 w-32 items-center justify-center border">
-            <ArrowPathIcon className="h-12 w-12 animate-spin text-gray-400" />
+            <ArrowPathIcon className="h-12 w-12 animate-spin text-neutral-400" />
           </div>
         ) : (
           <div className="flex h-32 w-32 items-center justify-center border">
-            <PhotoIcon className="h-12 w-12 text-gray-400" />
+            <PhotoIcon className="h-12 w-12 text-neutral-400" />
           </div>
         )}
 
@@ -109,6 +109,7 @@ export default function OrganisationForm({
         name="orgDescription"
         id="orgDescription"
         placeholder=""
+        maxLength={500}
       />
 
       <div className="mt-3 sm:mt-4">

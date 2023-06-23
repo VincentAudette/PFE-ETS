@@ -59,7 +59,7 @@ export default function RecommandationsLogo() {
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-black sm:text-4xl">
             Guide d&apos;utilisation
           </h2>
-          <p className="mt-6 max-w-3xl text-center text-lg leading-7 text-gray-600">
+          <p className="mt-6 max-w-3xl text-center text-lg leading-7 text-neutral-600">
             Ceci peut s&apos;avérer pertinent lors de la présentation de
             l&apos;engagement de votre entreprise dans le cadre du Projet de fin
             d&apos;études de nos étudiants.
@@ -71,12 +71,12 @@ export default function RecommandationsLogo() {
             <h3 className=" text-2xl font-semibold lg:mb-0 lg:w-1/3">
               Astuces pour une utilisation <br /> parfaite du logo
             </h3>
-            <dl className=" col-span-2 grid grid-cols-1 gap-x-8 gap-y-10 text-base leading-7 text-gray-600 sm:grid-cols-2 lg:w-2/3 lg:gap-y-16">
+            <dl className=" col-span-2 grid grid-cols-1 gap-x-8 gap-y-10 text-base leading-7 text-neutral-600 sm:grid-cols-2 lg:w-2/3 lg:gap-y-16">
               {recommendationsLogo.map(
                 (recommendation) =>
                   recommendation.bon && (
                     <div key={recommendation.nom} className="relative pl-9">
-                      <dt className="font-semibold text-gray-900">
+                      <dt className="font-semibold text-neutral-900">
                         <CheckIcon
                           className="absolute left-0 top-1 h-5 w-5 text-green-500"
                           aria-hidden="true"
@@ -97,12 +97,12 @@ export default function RecommandationsLogo() {
               À éviter! Les pièges d&apos;une <br />
               mauvaise utilisation du logo
             </h3>
-            <dl className=" col-span-2 col-start-2 grid grid-cols-1 gap-x-8 gap-y-10 text-base leading-7 text-gray-600 sm:grid-cols-2 lg:w-2/3 lg:gap-y-16">
+            <dl className=" col-span-2 col-start-2 grid grid-cols-1 gap-x-8 gap-y-10 text-base leading-7 text-neutral-600 sm:grid-cols-2 lg:w-2/3 lg:gap-y-16">
               {recommendationsLogo.map(
                 (recommendation) =>
                   !recommendation.bon && (
                     <div key={recommendation.nom} className="relative pl-9">
-                      <dt className="font-semibold text-gray-900">
+                      <dt className="font-semibold text-neutral-900">
                         <XMarkIcon
                           className="absolute left-0 top-1 h-5 w-5 text-red-500"
                           aria-hidden="true"

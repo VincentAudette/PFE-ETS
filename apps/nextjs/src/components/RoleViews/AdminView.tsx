@@ -1,5 +1,3 @@
-import { Post } from "@acme/db";
-import ProjectCard from "../ProjectCard";
 import SideBarLayout, {
   NavigationItem,
   SecondaryNavigationItem,

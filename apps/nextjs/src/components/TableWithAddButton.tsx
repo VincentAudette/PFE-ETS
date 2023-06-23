@@ -63,13 +63,13 @@ export default function TableWithAddButton({
   };
 
   return (
-    <div className="w-full  px-4 sm:px-6 lg:px-8">
+    <div className="w-full  sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h2 className="text-base font-semibold leading-6 text-gray-900">
+          <h2 className="text-base font-semibold leading-6 text-neutral-900">
             {title}
           </h2>
-          <p className="mt-2  text-sm text-gray-700">{description}</p>
+          <p className="mt-2  text-sm text-neutral-700">{description}</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           {objs.length < 1 ? (
@@ -86,7 +86,7 @@ export default function TableWithAddButton({
                   setEditingId(newObj.id);
                   setIsNewObj(true);
                 }}
-                className=" rounded-l-md bg-gray-50 px-3 py-2 hover:bg-gray-200"
+                className=" rounded-l-md bg-white px-3 py-2 hover:bg-neutral-100"
               >
                 OUI
               </button>
@@ -120,16 +120,16 @@ export default function TableWithAddButton({
       </div>
       {objs.length >= 1 && (
         <div className="mt-10 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-visible sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-              <table className="min-w-full table-auto divide-y divide-gray-300">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 lg:overflow-visible">
+            <div className="inline-block min-w-full border py-2 align-middle sm:rounded-lg">
+              <table className="min-w-full table-auto divide-y divide-neutral-300">
                 <thead>
                   <tr>
                     {Object.keys(obj).map((key: any) => (
                       <th
                         key={key}
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-neutral-900 sm:pl-6 lg:pl-8"
                       >
                         {obj[key]}
                       </th>
@@ -139,7 +139,7 @@ export default function TableWithAddButton({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y  divide-gray-200 bg-white">
+                <tbody className="divide-y  divide-neutral-200 bg-white">
                   {objs.map((object, i) => (
                     <tr key={object.id}>
                       {Object.keys(obj).map((key: string, i: number) => (
@@ -147,8 +147,8 @@ export default function TableWithAddButton({
                           key={key}
                           className={
                             i === 0 || i === 1
-                              ? "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8"
-                              : "whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                              ? "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-neutral-900 sm:pl-6 lg:pl-8"
+                              : "whitespace-nowrap px-3 py-4 text-sm text-neutral-500"
                           }
                         >
                           {editingId === object.id ? (
@@ -210,10 +210,10 @@ export default function TableWithAddButton({
                                 }
                                 cancelEdit();
                               }}
-                              className=" group ml-2 rounded-md p-1 text-stone-600 hover:bg-stone-200 hover:text-stone-900"
+                              className=" group ml-2 rounded-md p-1 text-neutral-600 hover:bg-neutral-200 hover:text-neutral-900"
                             >
                               <NoSymbolIcon className="h-4 w-4" />
-                              <div className="absolute z-50 m-1 hidden rounded-md border-t bg-stone-700 px-2 py-1 text-xs text-stone-50 shadow-md shadow-stone-400/20 group-hover:block">
+                              <div className="absolute z-50 m-1 hidden rounded-md border-t bg-neutral-700 px-2 py-1 text-xs text-neutral-50 shadow-md shadow-neutral-400/20 group-hover:block">
                                 Canceller
                               </div>
                             </button>
@@ -237,10 +237,10 @@ export default function TableWithAddButton({
                                 e.preventDefault();
                                 handleDelete(object.id);
                               }}
-                              className="group ml-2 rounded-md p-1 text-gray-500 hover:bg-red-200 hover:text-red-600"
+                              className="group ml-2 rounded-md p-1 text-neutral-500 hover:bg-red-200 hover:text-red-600"
                             >
                               <XMarkIcon className="h-4 w-4" />
-                              <div className="absolute m-1 hidden rounded-md border-t bg-red-700 px-2 py-1 text-xs text-stone-50 shadow-md shadow-stone-400/20 group-hover:block">
+                              <div className="absolute m-1 hidden rounded-md border-t bg-red-700 px-2 py-1 text-xs text-neutral-50 shadow-md shadow-neutral-400/20 group-hover:block">
                                 Supprimer
                               </div>
                             </button>

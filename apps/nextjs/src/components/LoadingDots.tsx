@@ -23,7 +23,7 @@ const LoadingDots = ({ darkMode = false }: { darkMode?: boolean }) => {
   }, []);
 
   return (
-    <div className={darkMode ? "text-stone-50" : "text-stone-900"}>
+    <div className={darkMode ? "text-neutral-50" : "text-neutral-900"}>
       Chargement{dots}
     </div>
   );
