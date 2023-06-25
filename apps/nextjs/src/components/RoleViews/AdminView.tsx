@@ -25,7 +25,7 @@ const navigation: NavigationItem[] = [
   { name: "Équipes", href: "/groups/list", icon: UsersIcon, current: false },
   {
     name: "Projets",
-    href: "#",
+    href: "/projets/list",
     icon: FolderIcon,
     count: "12",
     current: false,
