@@ -54,8 +54,19 @@ import SideBarLayout, {
   
     // In your map function
     useEffect(() => {
-      if (userData?.promoter?.projects?.length > 0) {
-        const newFilteredProjects = userData.promoter.projects.filter(
+      const projectsArray = []
+      userData.admin.departments.forEach(department => {
+        console.log("foreach");
+        console.log(department);
+        department.department.projectRelations.forEach(projectRelations => {
+          projectsArray.push(projectRelations.project);
+        });
+      });
+      console.log("FINISH");
+      console.log(projectsArray);
+
+      if (userData?.admins?.departments?.length > 0) {        
+        const newFilteredProjects = projectsArray.filter(
           (project_x: any) => {
             const filterStatus =
               filterSelections.status.length === 0 ||
@@ -87,7 +98,7 @@ import SideBarLayout, {
         <div className="flex h-auto w-full grow overflow-y-scroll">
           {router.pathname === "/" &&
           // Si on a des projets
-            (userData?.promoter?.projects.length >= 1 ? (
+            (projectsArray.length >= 1 ? (
               <div className=" flex  w-full flex-col ">
                 <div className="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-4">
                   <h1 className="text-sm font-bold">Projets</h1>
@@ -127,7 +138,6 @@ import SideBarLayout, {
                 </ul>
               </div>
             ) : ( 
-              // Si on a aucun PFE
               <div className=" mx-auto">
                 <div className=" mx-auto flex h-full flex-col items-center justify-center gap-1 sm:gap-5 lg:flex-row">
                   <p>Vous n&apos;avez pas de PFE en cours.</p>
