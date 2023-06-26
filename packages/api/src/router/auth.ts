@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { ALL } from "dns";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
@@ -31,6 +32,23 @@ export const authRouter = router({
             },
           },
         },
+        admin: {
+          include: {
+            departments: {
+              include: {
+                department: {
+                  include: {
+                    projectRelations: {
+                      include: {
+                        project: true
+                      }
+                    }
+                  }
+                }
+              },
+            },
+          }
+        }
       },
     });
 
