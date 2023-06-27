@@ -8,6 +8,8 @@ type PFEAuthContextType = {
   setUserData: Dispatch<SetStateAction<any>>;
   selectedOrganization: any | null;
   setSelectedOrganization: Dispatch<SetStateAction<any | null>>;
+  registrationUserData: any | null;
+  setRegistrationUserData: Dispatch<SetStateAction<any | null>>;
 };
 
 const PFEAuthContext = React.createContext<PFEAuthContextType | undefined>(
@@ -18,6 +20,7 @@ function PFEAuthProvider({ children }: { children: React.ReactNode }) {
   const [authProfile, setAuthProfile] = useState<Role | null>(null);
   const [userData, setUserData] = useState<any | null>(null);
   const [selectedOrganization, setSelectedOrganization] = useState<any>(null);
+  const [registrationUserData, setRegistrationUserData] = useState<any>(null);
 
   const value = {
     authProfile,
@@ -26,6 +29,8 @@ function PFEAuthProvider({ children }: { children: React.ReactNode }) {
     setUserData,
     selectedOrganization,
     setSelectedOrganization,
+    registrationUserData,
+    setRegistrationUserData,
   };
 
   return (

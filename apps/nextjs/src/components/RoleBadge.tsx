@@ -37,7 +37,7 @@ export default function RoleBadge({
 
   return (
     <span
-      className={`inline-flex items-center rounded-md  px-2 py-1 text-xs font-medium ring-1 ring-inset ${color}`}
+      className={`inline-flex max-w-max items-center rounded-md  px-2 py-1 text-xs font-medium ring-1 ring-inset ${color}`}
     >
       {roleDisplayName}
     </span>

@@ -6,6 +6,9 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import Button from "./Forms/atoms/button";
 import Modal from "./Forms/atoms/Modal";
 import OrganisationForm from "./Forms/OrganisationForm";
+import SplitInfoFormContainer from "./Forms/atoms/SplitInfoFormContainer";
+import LoadingDots from "./LoadingDots";
+import { PlayIcon } from "@heroicons/react/24/solid";
 
 export interface IFormOrganizationValues {
   orgName: string;
@@ -61,29 +64,45 @@ export default function SelectOrCreateOrganization({
   return (
     <>
       <form
-        className=" mb-2 flex flex-col gap-4"
+        className=" mb-2 flex flex-col lg:gap-4"
         onSubmit={handleSelectionSubmit ?? undefined}
       >
-        <div className=" flex w-full max-w-xl items-end gap-3 rounded-lg">
-          <SelectWithImage
-            name="orgChoice"
-            label="Choisissez votre organisation"
-            options={organizations}
-            {...{ selected, setSelected }}
-          />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setOrganisationModalOpen(true);
-            }}
-            className="group relative flex h-9 w-9 items-center justify-center rounded-md bg-neutral-300 text-neutral-500 hover:scale-105 hover:bg-blue-600 hover:text-white"
-          >
-            <PlusIcon className="h-5 w-5" />
-            <div className="absolute top-10 mx-2 hidden rounded-md border-t bg-neutral-700 px-2 py-1 text-xs text-neutral-50 shadow-md shadow-neutral-400/20 group-hover:block">
-              Ajouter un organisation
-            </div>
-          </button>
-        </div>
+        <SplitInfoFormContainer
+          id="Organisation"
+          title="Choisissez votre organisation dans la liste"
+          description="Si elle n'est pas présente, utilisez le bouton '+' à droite pour ajouter une nouvelle organisation."
+        >
+          <div className="flex w-full items-center gap-1">
+            {isLoadingOrgs ? (
+              <div className="grow">
+                <LoadingDots />
+              </div>
+            ) : (
+              <>
+                <SelectWithImage
+                  name="orgChoice"
+                  options={organizations}
+                  {...{ selected, setSelected }}
+                />
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOrganisationModalOpen(true);
+                  }}
+                  className="group relative flex h-9 w-10 grow items-center justify-center rounded-md bg-neutral-300 text-black hover:scale-105 hover:bg-blue-600 hover:text-white"
+                >
+                  <PlusIcon className="h-5 w-5" />
+                  <div className="absolute top-10 mx-2 hidden rounded-md bg-neutral-700 px-2 py-1 text-xs text-neutral-50 shadow-md group-hover:block">
+                    <div className="relative flex items-center justify-center">
+                      <PlayIcon className=" absolute -top-4 h-5 w-5 rotate-[270deg] text-neutral-700" />
+                      <p>Ajouter une organisation</p>
+                    </div>
+                  </div>
+                </button>
+              </>
+            )}
+          </div>
+        </SplitInfoFormContainer>
 
         {handleSelectionSubmit && (
           <div className=" self-end">
