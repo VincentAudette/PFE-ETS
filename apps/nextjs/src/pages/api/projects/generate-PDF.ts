@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { generate } from "@pdfme/generator";
-import { prisma } from "../../../../../../packages/db/index";
+import { Project, prisma, FileType } from "../../../../../../packages/db/index";
 import { template, generateInputs } from "./generate-PDF-Helper";
 import { BlobServiceClient } from "@azure/storage-blob";
 import fs from "fs";
@@ -25,7 +25,7 @@ export default async function handler(
 
     const containerClient = blobServiceClient.getContainerClient("pdf-blob");
 
-    const blobName = `TestUpload${Date.now()}`;
+    const blobName = generateBlobName(project);
 
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
@@ -34,22 +34,34 @@ export default async function handler(
       pdf.byteLength,
     );
 
+    const createdFile = await prisma.file.create({
+      data: {
+        key: blobName,
+        name: null,
+        type: FileType.PDF, // Assuming you have a function to determine the file type
+        url: `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${blobName}`,
+        //organizationId: project.organizationId,
+        projectId: project.id,
+      },
+    });
+
     /* Save to local
     // Node.js
     const pdfFileName = "test4.pdf";
     fs.writeFileSync(path.join(__dirname, pdfFileName), pdf);
     */
 
-    res.status(200);
-    res.json({
-      data: `File uploaded to Blob Storage with name: ${blobName}.`,
+    res.status(200).json({
+      message: `File uploaded to Blob Storage with name: ${blobName}.`,
+      file: createdFile,
     });
-    res.end();
   } else {
-    res.status(500);
-    res.json({
+    res.status(500).json({
       error: "The given project ID does not exist.",
     });
-    res.end();
   }
+}
+
+function generateBlobName(project: Project) {
+  return `${project.pfeId}-${Date.now()}-PDF.pdf`;
 }
