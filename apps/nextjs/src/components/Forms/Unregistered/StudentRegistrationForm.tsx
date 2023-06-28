@@ -5,6 +5,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { usePFEAuth } from "../../../context/PFEAuthContext";
 import InputWithIcon from "../atoms/InputWithIcon";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/router";
 
 type StudentFieldKeys =
   | "firstName"
@@ -65,6 +66,7 @@ export default function StudentRegistrationForm({
   const [isEmailValidating, setIsEmailValidating] = useState(false);
   const { userData, registrationUserData, setRegistrationUserData } =
     usePFEAuth();
+  const router = useRouter();
 
   const handleStudentEmailValidation = (
     e: React.FormEvent<HTMLFormElement>,
@@ -76,7 +78,6 @@ export default function StudentRegistrationForm({
     const formValues = {
       courriel: target.courriel?.value,
     };
-    console.log(formValues);
 
     const lowerCaseEmail = formValues.courriel.toLowerCase();
 
@@ -128,12 +129,13 @@ export default function StudentRegistrationForm({
       setIsEmailValidating(false);
       setEmailIsValid(true);
       setStep(3);
+      router.push("/register/complete");
     }, 1500);
   };
 
   if (isEmailValidating) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 py-5">
         <ArrowPathIcon className="h-6 w-6 animate-spin" />
         <p className="text-lg">Validation du courriel en cours...</p>
       </div>
@@ -142,7 +144,7 @@ export default function StudentRegistrationForm({
 
   return (
     <>
-      <form onSubmit={handleStudentEmailValidation}>
+      <form className="py-5" onSubmit={handleStudentEmailValidation}>
         <InputWithIcon
           Icon={EnvelopeIcon}
           validationError={
@@ -152,7 +154,7 @@ export default function StudentRegistrationForm({
           name="courriel"
           placeholder="Votre courriel ÉTS"
         />
-        <div className="flex">
+        <div className="flex py-2">
           <div className="grow" />
           <Button type="submit" text="Valider courriel" />
         </div>

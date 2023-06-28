@@ -1,7 +1,7 @@
 import { trpc } from "../utils/trpc";
-import { File, Organization } from "@acme/db";
+import { File } from "@acme/db";
 import SelectWithImage from "./Forms/atoms/SelectWithImage";
-import { Dispatch, FormEventHandler, SetStateAction, useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import Button from "./Forms/atoms/button";
 import Modal from "./Forms/atoms/Modal";
@@ -9,6 +9,7 @@ import OrganisationForm from "./Forms/OrganisationForm";
 import SplitInfoFormContainer from "./Forms/atoms/SplitInfoFormContainer";
 import LoadingDots from "./LoadingDots";
 import { PlayIcon } from "@heroicons/react/24/solid";
+import { usePFEAuth } from "../context/PFEAuthContext";
 
 export interface IFormOrganizationValues {
   orgName: string;
@@ -45,19 +46,14 @@ export const organizationObjetDefault: {
 
 export default function SelectOrCreateOrganization({
   handleSelectionSubmit,
-  selected,
-  setSelected,
   buttonText,
 }: {
   handleSelectionSubmit?: FormEventHandler<HTMLFormElement>;
-  selected: (Organization & { logo: File | null }) | null;
-  setSelected: Dispatch<
-    SetStateAction<(Organization & { logo: File | null }) | null>
-  >;
   buttonText?: string;
 }) {
   const { data: organizations, isLoading: isLoadingOrgs } =
     trpc.organization.all.useQuery();
+  const { setSelectedOrganization, selectedOrganization } = usePFEAuth();
 
   const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
 
@@ -82,7 +78,10 @@ export default function SelectOrCreateOrganization({
                 <SelectWithImage
                   name="orgChoice"
                   options={organizations}
-                  {...{ selected, setSelected }}
+                  {...{
+                    selected: selectedOrganization,
+                    setSelected: setSelectedOrganization,
+                  }}
                 />
                 <button
                   onClick={(e) => {

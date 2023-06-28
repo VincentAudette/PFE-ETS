@@ -1,22 +1,19 @@
-import { File, Organization } from "@acme/db";
 import RoleBadge from "../../RoleBadge";
 import Image from "next/image";
-import { RadioCardsWithImageOption } from "../../Forms/atoms/RadioCardsWithImage";
 import Button from "../../Forms/atoms/button";
+import { usePFEAuth } from "../../../context/PFEAuthContext";
 
 export default function ReviewSection({
-  registrationUserData,
-  typeOfProfile,
-  selectedOrganization,
-  selectedPromoterEtsOption,
   handleProfileCreation,
 }: {
-  registrationUserData: any;
-  typeOfProfile: "PROMOTER" | "STUDENT" | "PROMOTER_ETS" | null;
-  selectedOrganization: (Organization & { logo: File | null }) | null;
-  selectedPromoterEtsOption: RadioCardsWithImageOption;
   handleProfileCreation: () => void;
 }) {
+  const {
+    selectedPromoterEtsOption,
+    typeOfProfile,
+    selectedOrganization,
+    registrationUserData,
+  } = usePFEAuth();
   return (
     <div className="rounded-md bg-gray-100 p-5 shadow-md">
       <h2 className="mb-4 text-2xl font-semibold">Revue</h2>
@@ -53,11 +50,11 @@ export default function ReviewSection({
         </h3>
         <div className="grid grid-cols-2 gap-2 text-gray-700">
           <div>Prénom:</div>
-          <div className="font-medium">{registrationUserData.firstName}</div>
+          <div className="font-medium">{registrationUserData?.firstName}</div>
           <div>Nom:</div>
-          <div className="font-medium">{registrationUserData.lastName}</div>
+          <div className="font-medium">{registrationUserData?.lastName}</div>
           <div>Courriel:</div>
-          <div className="font-medium">{registrationUserData.email}</div>
+          <div className="font-medium">{registrationUserData?.email}</div>
           {(typeOfProfile === "PROMOTER" ||
             typeOfProfile === "PROMOTER_ETS") && (
             <>
@@ -106,30 +103,31 @@ export default function ReviewSection({
             </div>
           )}
 
-        {typeOfProfile === "PROMOTER_ETS" && (
-          <div>
-            <h3 className="mt-4 mb-2 text-lg font-semibold">Organisation</h3>
-            <div className="grid grid-cols-2 gap-2 text-gray-700">
-              <div>Nom:</div>
-              <div className="font-medium">
-                {selectedPromoterEtsOption.title}
-              </div>
-              <div>Logo:</div>
-              <div>
-                <Image
-                  alt={`${selectedPromoterEtsOption.title} logo`}
-                  src={selectedPromoterEtsOption.src || ""}
-                  width={96}
-                  height={96}
-                />
-              </div>
-              <div>Description:</div>
-              <div className="font-medium">
-                {selectedPromoterEtsOption.description}
+        {typeOfProfile === "PROMOTER_ETS" &&
+          selectedPromoterEtsOption !== null && (
+            <div>
+              <h3 className="mt-4 mb-2 text-lg font-semibold">Organisation</h3>
+              <div className="grid grid-cols-2 gap-2 text-gray-700">
+                <div>Nom:</div>
+                <div className="font-medium">
+                  {selectedPromoterEtsOption.title}
+                </div>
+                <div>Logo:</div>
+                <div>
+                  <Image
+                    alt={`${selectedPromoterEtsOption.title} logo`}
+                    src={selectedPromoterEtsOption.src || ""}
+                    width={96}
+                    height={96}
+                  />
+                </div>
+                <div>Description:</div>
+                <div className="font-medium">
+                  {selectedPromoterEtsOption.description}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
       <div className="mt-4" />
       <div className="flex">

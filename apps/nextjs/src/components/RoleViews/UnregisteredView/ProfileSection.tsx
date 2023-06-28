@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import RoleBadge from "../../RoleBadge";
+import Link from "next/link";
 
 const ProfileSection = ({
   setTypeOfProfile,
@@ -33,19 +34,27 @@ const ProfileSection = ({
          <div className="grow" />
         <div className="flex min-w-max flex-col gap-2">
           {["PROMOTER", "PROMOTER_ETS"].map((type: any) => (
-            <button
+            <Link
               key={type}
-              onClick={() => {
-                setTypeOfProfile(type);
-                setCurrentStep(2);
-              }}
-              className="rounded-md bg-gray-200 p-2 text-black shadow-sm hover:bg-blue-600 hover:text-white
-                            hover:shadow-md hover:shadow-blue-200"
+              href={
+                type === "PROMOTER"
+                  ? "/register/promoter-externe"
+                  : "/register/promoter-ets"
+              }
+              className="rounded-md bg-gray-200 p-2 text-center text-black shadow-sm hover:bg-blue-600
+              hover:text-white hover:shadow-md hover:shadow-blue-200"
             >
-              {type === "PROMOTER"
-                ? "Promoteur Externe"
-                : "Promoteur Affilié à l'ÉTS"}
-            </button>
+              <button
+                onClick={() => {
+                  setTypeOfProfile(type);
+                  setCurrentStep(2);
+                }}
+              >
+                {type === "PROMOTER"
+                  ? "Promoteur Externe"
+                  : "Promoteur Affilié à l'ÉTS"}
+              </button>
+            </Link>
           ))}
         </div>
       </section>
@@ -67,15 +76,12 @@ const ProfileSection = ({
         <div className="h-8 lg:hidden" />
         <div className="grow" />
         <div className="flex">
-          <button
-            onClick={() => {
-              setTypeOfProfile("STUDENT");
-              setCurrentStep(2);
-            }}
-            className="grow rounded-md bg-gray-200 p-2 text-black shadow-sm hover:bg-blue-600 hover:text-white hover:shadow-md hover:shadow-blue-200"
+          <Link
+            href="/register/student"
+            className="grow rounded-md bg-gray-200 p-2 text-center text-black shadow-sm hover:bg-blue-600 hover:text-white hover:shadow-md hover:shadow-blue-200"
           >
             Étudiant inscrit au PFE
-          </button>
+          </Link>
         </div>
       </section>
     </div>

@@ -21,9 +21,11 @@ export default function RadioCardsWithImage({
   setSelectedOption,
 }: {
   title: string;
-  options: RadioCardsWithImageOption[];
-  selectedOption: RadioCardsWithImageOption;
-  setSelectedOption: Dispatch<SetStateAction<RadioCardsWithImageOption>>;
+  options: RadioCardsWithImageOption[] | undefined;
+  selectedOption: RadioCardsWithImageOption | null;
+  setSelectedOption:
+    | Dispatch<SetStateAction<RadioCardsWithImageOption | null>>
+    | undefined;
 }) {
   return (
     <RadioGroup
@@ -36,7 +38,7 @@ export default function RadioCardsWithImage({
       </RadioGroup.Label>
 
       <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
-        {options.map((option) => (
+        {options?.map((option) => (
           <RadioGroup.Option
             key={option.id}
             value={option}

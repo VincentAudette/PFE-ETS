@@ -8,8 +8,8 @@ import StudentView from "../components/RoleViews/StudentView";
 import PromoterView from "../components/RoleViews/PromoterView";
 import AdminView from "../components/RoleViews/AdminView";
 import DeveloperView from "../components/RoleViews/DeveloperView";
-import UnregisteredView from "../components/RoleViews/UnregisteredView";
 import LoadingPFE from "../components/LoadingPFE";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
@@ -27,10 +27,15 @@ export default function Home() {
     },
   );
 
-  console.log("getUserData is =>", getUserData);
-
   const { userData, authProfile } = usePFEAuth();
   const activeRole = authProfile !== null ? authProfile : getUserData?.role;
+  const router = useRouter();
+
+
+  if(activeRole === "UNREGISTERED"){
+    router.push("/register");
+  }
+
 
   return (
     <>
@@ -51,7 +56,7 @@ export default function Home() {
         {activeRole === "PROMOTER" && <PromoterView />}
         {activeRole === "ADMIN" && <AdminView />}
         {activeRole === "DEVELOPER" && <DeveloperView />}
-        {activeRole === "UNREGISTERED" && <UnregisteredView />}
+        
         {userData === null && (
           <div className="max-w-7xl">
             <WelcomeSection />

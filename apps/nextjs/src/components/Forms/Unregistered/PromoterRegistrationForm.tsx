@@ -1,69 +1,40 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { File, Organization } from "@acme/db";
 import { usePFEAuth } from "../../../context/PFEAuthContext";
 import SelectOrCreateOrganization from "../../SelectOrCreateOrganization";
-import LoadingPFE from "../../LoadingPFE";
 import SimpleInput from "../atoms/SimpleInput";
-import Button from "../atoms/button";
 import SplitInfoFormContainer from "../atoms/SplitInfoFormContainer";
 import H2TopHeaderWithBottomLine from "../atoms/H2TopHeaderWithBottomLine";
 import RadioCardsWithImage, {
   RadioCardsWithImageOption,
 } from "../atoms/RadioCardsWithImage";
-
-export const promoterEtsOptions: RadioCardsWithImageOption[] = [
-  {
-    id: 1,
-    title: "École de technologie supérieure",
-    description: "Enseignant, rechercheur, étudiant ou employé.",
-    src: "/ETS.jpg",
-  },
-  {
-    id: 2,
-    title: "Club étudiant",
-    description: "Si vous représentez un club étudiant de l'ÉTS.",
-    src: "/Clubs-Etudiants.jpg",
-  },
-  {
-    id: 3,
-    title: "CENTECH",
-    description: "Si vous êtes un entrepreneur du CENTECH.",
-    src: "/CEN-TECH.jpg",
-  },
-];
+import Link from "next/link";
+import { useEffect } from "react";
+import PhoneInput from "../atoms/PhoneInput";
 
 export default function PromoterRegistrationForm({
   title,
-  typeOfProfile,
-  selectedOrganization,
-  setSelectedOrganization,
-  setStep,
-  selectedPromoterEtsOption,
-  setSelectedPromoterEtsOption,
-  onChangePhoneNumber,
+  promoterEtsOptions,
 }: {
   title: string;
-  typeOfProfile: "PROMOTER" | "PROMOTER_ETS";
-  selectedOrganization: (Organization & { logo: File | null }) | null;
-  setSelectedOrganization: Dispatch<
-    SetStateAction<(Organization & { logo: File | null }) | null>
-  >;
-  setStep: Dispatch<SetStateAction<number>>;
-  selectedPromoterEtsOption: RadioCardsWithImageOption;
-  setSelectedPromoterEtsOption: Dispatch<
-    SetStateAction<RadioCardsWithImageOption>
-  >;
-  onChangePhoneNumber: (e: React.ChangeEvent<HTMLInputElement>) => void;
+
+  promoterEtsOptions?: RadioCardsWithImageOption[];
 }) {
-  const { userData, registrationUserData, setRegistrationUserData } =
+  const { selectedPromoterEtsOption, setSelectedPromoterEtsOption } =
     usePFEAuth();
+  const {
+    userData,
+    handleOnChangePhoneNumber,
+    registrationUserData,
+    setRegistrationUserData,
+    typeOfProfile,
+    selectedOrganization,
+  } = usePFEAuth();
 
   useEffect(() => {
     if (
       userData &&
-      registrationUserData.firstName === undefined &&
-      registrationUserData.lastName === undefined &&
-      registrationUserData.email === undefined
+      !registrationUserData?.firstName &&
+      !registrationUserData?.lastName &&
+      !registrationUserData?.email
     ) {
       setRegistrationUserData({
         ...registrationUserData,
@@ -74,15 +45,11 @@ export default function PromoterRegistrationForm({
     }
   }, [userData, registrationUserData]);
 
-  console.log("userData", userData);
-  console.log("registrationUserData", registrationUserData);
-
   return (
     <div className="px-4 md:px-0">
       <H2TopHeaderWithBottomLine>{title}</H2TopHeaderWithBottomLine>
       <div className="flex w-full flex-col items-end gap-4">
         <div className=" flex w-full  flex-col  gap-4 divide-y ">
-          {/* {!userData.firstName && !userData.lastName && ( */}
           <SplitInfoFormContainer
             id="FirstLastName"
             title="Vos informations"
@@ -140,21 +107,15 @@ export default function PromoterRegistrationForm({
             title="Votre numéro de téléphone"
             description="Vous pouvez optionnellement nous renseigner votre numéro de téléphone"
           >
-            <SimpleInput
+            <PhoneInput
               name="phone"
               label="Numéro de téléphone (optionnel)"
-              placeholder="Votre numéro de téléphone"
               value={registrationUserData?.phone}
-              onChange={onChangePhoneNumber}
+              onChange={handleOnChangePhoneNumber}
             />
           </SplitInfoFormContainer>
 
-          {typeOfProfile === "PROMOTER" && (
-            <SelectOrCreateOrganization
-              selected={selectedOrganization}
-              setSelected={setSelectedOrganization}
-            />
-          )}
+          {typeOfProfile === "PROMOTER" && <SelectOrCreateOrganization />}
 
           {typeOfProfile === "PROMOTER_ETS" && (
             <RadioCardsWithImage
@@ -165,7 +126,12 @@ export default function PromoterRegistrationForm({
             />
           )}
         </div>
-        <Button onClick={() => setStep(3)} text="Prochaine étape &rarr;" />
+        <Link
+          href="/register/complete"
+          className="max-h-min rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+        >
+          Prochaine étape &rarr;
+        </Link>
       </div>
     </div>
   );

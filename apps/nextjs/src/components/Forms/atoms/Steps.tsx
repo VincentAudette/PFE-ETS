@@ -1,5 +1,6 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
-import { Dispatch, SetStateAction } from "react";
+import { usePFEAuth } from "../../../context/PFEAuthContext";
+import { useRouter } from "next/router";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -11,19 +12,10 @@ interface Step {
   description: string;
 }
 
-export default function Steps({
-  steps,
-  setCurrentStep,
-  currentStep,
-  setProfileType,
-}: {
-  steps?: Step[];
-  currentStep: number;
-  setCurrentStep: Dispatch<SetStateAction<number>>;
-  setProfileType: Dispatch<
-    SetStateAction<"PROMOTER" | "STUDENT" | "PROMOTER_ETS" | null>
-  >;
-}) {
+export default function Steps({ steps }: { steps?: Step[] }) {
+  const router = useRouter();
+  const { currentStep, setCurrentStep, setTypeOfProfile, typeOfProfile } =
+    usePFEAuth();
   return (
     <div className=" overflow-hidden rounded-lg lg:border lg:border-gray-200">
       <nav className="mx-auto max-w-7xl px-4 sm:px-0" aria-label="Progress">
@@ -48,7 +40,24 @@ export default function Steps({
                       onClick={() => {
                         setCurrentStep(step.id);
                         if (step.id === 1) {
-                          setProfileType(null);
+                          setTypeOfProfile(null);
+                          router.push("/register");
+                        }
+                        if (step.id === 2) {
+                          switch (typeOfProfile) {
+                            case "STUDENT":
+                              router.push("/register/student");
+                              break;
+                            case "PROMOTER":
+                              router.push("/register/promoter-externe");
+                              break;
+                            case "PROMOTER_ETS":
+                              router.push("/register/promoter-ets");
+                              break;
+                            default:
+                              router.push("/register");
+                              break;
+                          }
                         }
                       }}
                       className="group"
@@ -110,7 +119,9 @@ export default function Steps({
                     </button>
                   ) : (
                     <button
-                      onClick={() => setCurrentStep(step.id)}
+                      onClick={() => {
+                        setCurrentStep(step.id);
+                      }}
                       className="group"
                     >
                       <span

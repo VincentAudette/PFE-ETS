@@ -1,7 +1,6 @@
 import AuthShowcase from "./AuthShowcase";
 import PFELogo from "./SVG/PFELogo";
 import LinkBox from "./LinkBox";
-import Breadcrumb from "./Breadcrumb";
 import { useRouter } from "next/router";
 import PFELogoSmall from "./SVG/PFELogoSmall";
 import { usePFEAuth } from "../context/PFEAuthContext";
@@ -67,11 +66,11 @@ export default function TopNav({
             <AuthShowcase {...{ isSignedIn, activeRole }} />
           </div>
         </div>
-        {router.asPath !== "/" && (
+        {/* {router.asPath !== "/" && (
           <div className="fixed bottom-4 z-50 mx-auto mt-3 px-4 sm:left-10 sm:h-24 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
             <Breadcrumb pages={pages} />
           </div>
-        )}
+        )} */}
       </nav>
     </>
   );
