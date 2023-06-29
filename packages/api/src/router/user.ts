@@ -10,6 +10,8 @@ export const userRouter = router({
         organizationId: z.number(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
+        phone: z.string().optional(),
+        email: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -21,6 +23,7 @@ export const userRouter = router({
               clerkId: input.clerkId,
             },
           },
+          hasBeenNotified: false,
         },
         include: {
           user: true,
@@ -42,6 +45,8 @@ export const userRouter = router({
           role: Role.PROMOTER,
           firstName: input.firstName,
           lastName: input.lastName,
+          phone: input.phone,
+          email: input.email,
         },
       });
 

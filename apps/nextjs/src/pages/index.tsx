@@ -31,11 +31,11 @@ export default function Home() {
   const activeRole = authProfile !== null ? authProfile : getUserData?.role;
   const router = useRouter();
 
-
-  if(activeRole === "UNREGISTERED"){
+  if (activeRole === "UNREGISTERED") {
     router.push("/register");
+  } else if (activeRole == "STUDENT") {
+    router.push("/student");
   }
-
 
   return (
     <>
@@ -52,11 +52,10 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center">
         {isSignedIn && isLoading && <LoadingPFE />}
         <TopNav />
-        {activeRole === "STUDENT" && <StudentView />}
         {activeRole === "PROMOTER" && <PromoterView />}
         {activeRole === "ADMIN" && <AdminView />}
         {activeRole === "DEVELOPER" && <DeveloperView />}
-        
+
         {userData === null && (
           <div className="max-w-7xl">
             <WelcomeSection />

@@ -2,18 +2,104 @@ import RoleBadge from "../../RoleBadge";
 import Image from "next/image";
 import Button from "../../Forms/atoms/button";
 import { usePFEAuth } from "../../../context/PFEAuthContext";
+import {
+  createPromoter,
+  createStudent,
+} from "../../../utils/registration-helpers";
+import { useAuth } from "@clerk/nextjs";
+import { trpc } from "../../../utils/trpc";
+import { toast } from "react-toastify";
+import H2TopHeaderWithBottomLine from "../../Forms/atoms/H2TopHeaderWithBottomLine";
+import { useRouter } from "next/router";
 
-export default function ReviewSection({
-  handleProfileCreation,
-}: {
-  handleProfileCreation: () => void;
-}) {
+export default function ReviewSection() {
+  const { userId: clerkId } = useAuth();
   const {
     selectedPromoterEtsOption,
     typeOfProfile,
     selectedOrganization,
     registrationUserData,
   } = usePFEAuth();
+
+  const router = useRouter();
+  const updateToPromoterWithOrg =
+    trpc.user.updateToPromoterWithOrganisation.useMutation();
+  const createOrUpdateStudent = trpc.student.createOrUpdate.useMutation();
+
+  const handleCreation = async () => {
+    if (!clerkId) return;
+    switch (typeOfProfile) {
+      case "PROMOTER":
+        try {
+          await createPromoter(
+            clerkId,
+            {
+              firstName: registrationUserData?.firstName as string,
+              lastName: registrationUserData?.lastName as string,
+              email: registrationUserData?.email as string,
+              phone: registrationUserData?.phone as string,
+            },
+            updateToPromoterWithOrg,
+            "PROMOTER",
+            selectedOrganization,
+          );
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+        break;
+      case "PROMOTER_ETS":
+        if (selectedPromoterEtsOption === null) {
+          toast.error("Veuillez un option d'association avec l'ÉTS.");
+          return;
+        }
+        try {
+          await createPromoter(
+            clerkId,
+            {
+              firstName: registrationUserData?.firstName as string,
+              lastName: registrationUserData?.lastName as string,
+              email: registrationUserData?.email as string,
+              phone: registrationUserData?.phone as string,
+            },
+            updateToPromoterWithOrg,
+            "PROMOTER_ETS",
+            {
+              id: selectedPromoterEtsOption?.id, //FIXME: change the id for the org to the correct one
+              name: selectedPromoterEtsOption?.title as string,
+            },
+          );
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+        break;
+      case "STUDENT":
+        try {
+          const userCreationRes = await createStudent(
+            clerkId,
+            {
+              firstName: registrationUserData?.firstName as string,
+              lastName: registrationUserData?.lastName as string,
+              email: registrationUserData?.email as string,
+            },
+            createOrUpdateStudent,
+            "ele",
+          );
+          if (userCreationRes.success) {
+            toast.success(userCreationRes.message);
+            router.push("/student");
+          }
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+        break;
+      default:
+        console.log("typeOfProfile is not defined.", typeOfProfile);
+
+        toast.error("Le profil n'est pas spécifié, retourner à l'étape 1.");
+        break;
+    }
+  };
+
   return (
     <div className="rounded-md bg-gray-100 p-5 shadow-md">
       <h2 className="mb-4 text-2xl font-semibold">Revue</h2>
@@ -21,7 +107,7 @@ export default function ReviewSection({
         Veuillez vérifier les informations suivantes avant de continuer.
       </p>
       <div className="rounded-md border border-gray-200 bg-white p-4">
-        <h3 className="mb-2 text-lg font-semibold">Type de compte</h3>
+        <H2TopHeaderWithBottomLine>Type de compte</H2TopHeaderWithBottomLine>
         <div className="grid grid-cols-2 gap-2 text-gray-700">
           <div>Profile:</div>
           <div className="font-medium">
@@ -45,9 +131,9 @@ export default function ReviewSection({
       </div>
       <div className="my-4" />
       <div className="rounded-md border border-gray-200 bg-white p-4">
-        <h3 className="mb-2 text-lg font-semibold">
+        <H2TopHeaderWithBottomLine>
           Informations personnelles
-        </h3>
+        </H2TopHeaderWithBottomLine>
         <div className="grid grid-cols-2 gap-2 text-gray-700">
           <div>Prénom:</div>
           <div className="font-medium">{registrationUserData?.firstName}</div>
@@ -81,14 +167,17 @@ export default function ReviewSection({
         {typeOfProfile === "PROMOTER" &&
           selectedOrganization &&
           !selectedOrganization.name.includes("Selectionner") && (
-            <div>
-              <h3 className="mt-4 mb-2 text-lg font-semibold">Organisation</h3>
+            <div className="mt-5">
+              <H2TopHeaderWithBottomLine>
+                Organisation
+              </H2TopHeaderWithBottomLine>
               <div className="grid grid-cols-2 gap-2 text-gray-700">
                 <div>Nom:</div>
                 <div className="font-medium">{selectedOrganization.name}</div>
                 <div>Logo:</div>
                 <div>
                   <Image
+                    className="rounded-md border shadow-sm"
                     alt={`${selectedOrganization.name} logo`}
                     src={selectedOrganization.logo?.url || ""}
                     width={96}
@@ -105,8 +194,10 @@ export default function ReviewSection({
 
         {typeOfProfile === "PROMOTER_ETS" &&
           selectedPromoterEtsOption !== null && (
-            <div>
-              <h3 className="mt-4 mb-2 text-lg font-semibold">Organisation</h3>
+            <div className="mt-5">
+              <H2TopHeaderWithBottomLine>
+                Organisation
+              </H2TopHeaderWithBottomLine>
               <div className="grid grid-cols-2 gap-2 text-gray-700">
                 <div>Nom:</div>
                 <div className="font-medium">
@@ -115,6 +206,7 @@ export default function ReviewSection({
                 <div>Logo:</div>
                 <div>
                   <Image
+                    className="rounded-md border shadow-sm"
                     alt={`${selectedPromoterEtsOption.title} logo`}
                     src={selectedPromoterEtsOption.src || ""}
                     width={96}
@@ -135,7 +227,7 @@ export default function ReviewSection({
           className="grow"
           text="Confirmer la création de compte"
           type="button"
-          onClick={handleProfileCreation}
+          onClick={handleCreation}
         />
       </div>
     </div>

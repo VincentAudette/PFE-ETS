@@ -51,10 +51,6 @@ export default function CompleteRegistration() {
     );
   }
 
-  const handleProfileCreation = () => {
-    // setUserData(data);
-  };
-
   return (
     <>
       <Head>
@@ -70,7 +66,7 @@ export default function CompleteRegistration() {
       <main className="flex min-h-screen flex-col items-center ">
         <TopNav />
         <StepsLayout>
-          <ReviewSection handleProfileCreation={handleProfileCreation} />
+          <ReviewSection />
         </StepsLayout>
       </main>
     </>

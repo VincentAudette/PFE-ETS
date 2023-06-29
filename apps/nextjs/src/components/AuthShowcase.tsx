@@ -38,7 +38,7 @@ export default function AuthShowcase({ isSignedIn }: any) {
           <Link href="/sign-in">
             <button
               type="button"
-              className="min-w-max  rounded-md px-3 py-2 text-[0.6rem] font-semibold text-neutral-200 hover:text-white hover:underline lg:text-sm"
+              className="min-w-max  rounded-md px-3 py-2 text-sm font-semibold text-neutral-200 hover:text-white hover:underline lg:text-sm"
             >
               Se connecter
             </button>
@@ -46,7 +46,7 @@ export default function AuthShowcase({ isSignedIn }: any) {
           <Link href="/sign-up">
             <button
               type="button"
-              className="min-w-max rounded-md bg-white px-3 py-2 text-[0.6rem] font-semibold text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50 lg:text-sm"
+              className="min-w-max rounded-md bg-white px-3 py-2 text-sm font-semibold text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 hover:bg-neutral-50 lg:text-sm"
             >
               Créer un compte
             </button>

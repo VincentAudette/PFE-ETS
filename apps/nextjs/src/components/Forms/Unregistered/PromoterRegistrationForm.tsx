@@ -18,8 +18,6 @@ export default function PromoterRegistrationForm({
 
   promoterEtsOptions?: RadioCardsWithImageOption[];
 }) {
-  const { selectedPromoterEtsOption, setSelectedPromoterEtsOption } =
-    usePFEAuth();
   const {
     userData,
     handleOnChangePhoneNumber,
@@ -27,6 +25,8 @@ export default function PromoterRegistrationForm({
     setRegistrationUserData,
     typeOfProfile,
     selectedOrganization,
+    selectedPromoterEtsOption,
+    setSelectedPromoterEtsOption,
   } = usePFEAuth();
 
   useEffect(() => {
