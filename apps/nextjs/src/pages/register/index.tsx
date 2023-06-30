@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import UnregisteredView from "../../components/RoleViews/UnregisteredView";
 import LoadingPFE from "../../components/LoadingPFE";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
@@ -25,7 +26,16 @@ export default function Home() {
     }
   });
 
+  const router = useRouter();
   const activeRole = authProfile !== null ? authProfile : userData?.role;
+
+  if (activeRole !== "UNREGISTERED") {
+    if (activeRole === "STUDENT") {
+      router.push("/student");
+    } else if (activeRole === "PROMOTER") {
+      router.push("/promoter");
+    }
+  }
 
   return (
     <>

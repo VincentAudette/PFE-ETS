@@ -77,7 +77,7 @@ export default function PFEForm() {
     <>
       {projectCreationState === ProjectCreationState.LOADING && <LoadingPFE />}
       <div className="my-5 mx-auto flex h-[300rem] max-w-5xl grow flex-col gap-12 px-4 py-3 text-base sm:px-6">
-        <h1 className="sticky top-0 z-30 w-full border-b bg-white py-3 text-center text-xl font-bold">
+        <h1 className="sticky top-0 z-30 w-full rounded-b-md border-b bg-white py-3 text-center text-xl font-bold drop-shadow-sm">
           Formulaire de projet de fin d&apos;études par {userData?.firstName}{" "}
           {userData?.lastName} pour {selectedOrganization?.name}
         </h1>

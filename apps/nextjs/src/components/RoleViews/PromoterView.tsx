@@ -15,10 +15,8 @@ import { usePFEAuth } from "../../context/PFEAuthContext";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 import ProjectCard from "../ProjectCard";
 import { useEffect, useState } from "react";
-import Filters, { FilterByRole } from "../Filters";
+import Filters from "../Filters";
 import ProjectView from "../ProjectView";
-import { Project } from "@acme/db";
-import { inferRouterOutputs } from "@trpc/server";
 import Button from "../Forms/atoms/button";
 
 const promoterNavigation: NavigationItem[] = [
@@ -32,7 +30,7 @@ const promoterNavigation: NavigationItem[] = [
   { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
   {
     name: "Nouveau PFE",
-    href: "promoter/project/new",
+    href: "/promoter/project/new",
     icon: PlusCircleIcon,
     current: false,
   },
@@ -49,9 +47,6 @@ export default function PromoterView({
   children?: React.ReactNode;
 }) {
   const router: NextRouter = useRouter();
-
-  console.log("router.asPath", router.asPath);
-
   const { userData } = usePFEAuth();
 
   promoterNavigation.forEach((navItem) => {
@@ -82,8 +77,6 @@ export default function PromoterView({
       organization: [],
     });
   };
-
-  console.log("filterSelections", filterSelections);
 
   // Initialize state
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -123,7 +116,7 @@ export default function PromoterView({
     <SideBarLayout
       navigation={promoterNavigation}
       secondaryNavigation={secondaryNavigation}
-      showAfterNav={router.asPath === "promoter/projects/new"}
+      showAfterNav={router.asPath === "/promoter/project/new"}
       afterNav={
         <div className="hyphenate max-w-[18rem]">
           <InfoAlert
@@ -142,7 +135,7 @@ export default function PromoterView({
         )
       }
     >
-      <div className="flex h-auto w-full grow overflow-y-scroll">
+      <div className="flex w-full grow">
         {router.pathname === "/promoter" &&
           (userData?.promoter?.projects.length >= 1 ? (
             <div className=" flex  w-full flex-col ">
@@ -187,7 +180,7 @@ export default function PromoterView({
                 <span>
                   <Link
                     className=" rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500"
-                    href="/promoter/projects/new"
+                    href="/promoter/project/new"
                   >
                     Débuter un nouveau PFE &rarr;
                   </Link>
