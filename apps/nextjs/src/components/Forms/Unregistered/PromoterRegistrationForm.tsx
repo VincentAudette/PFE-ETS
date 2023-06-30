@@ -15,7 +15,6 @@ export default function PromoterRegistrationForm({
   promoterEtsOptions,
 }: {
   title: string;
-
   promoterEtsOptions?: RadioCardsWithImageOption[];
 }) {
   const {
@@ -24,7 +23,6 @@ export default function PromoterRegistrationForm({
     registrationUserData,
     setRegistrationUserData,
     typeOfProfile,
-    selectedOrganization,
     selectedPromoterEtsOption,
     setSelectedPromoterEtsOption,
   } = usePFEAuth();

@@ -11,6 +11,8 @@ type PFEAuthContextType = {
   selectedOrganization: any | null;
   setSelectedOrganization: Dispatch<SetStateAction<any | null>>;
   registrationUserData: any | null;
+  preSubmitOrganization: any | null;
+  setPreSubmitOrganization: Dispatch<SetStateAction<any | null>>;
   setRegistrationUserData: Dispatch<SetStateAction<any | null>>;
   currentStep: number;
   setCurrentStep: Dispatch<SetStateAction<number>>;
@@ -38,6 +40,7 @@ function PFEAuthProvider({ children }: { children: React.ReactNode }) {
   const [authProfile, setAuthProfile] = useState<Role | null>(null);
   const [userData, setUserData] = useState<any | null>(null);
   const [selectedOrganization, setSelectedOrganization] = useState<any>(null);
+  const [preSubmitOrganization, setPreSubmitOrganization] = useState<any>(null);
   const [registrationUserData, setRegistrationUserData] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [typeOfProfile, setTypeOfProfile] = useState<
@@ -75,6 +78,8 @@ function PFEAuthProvider({ children }: { children: React.ReactNode }) {
     handleOnChangePhoneNumber,
     selectedPromoterEtsOption,
     setSelectedPromoterEtsOption,
+    preSubmitOrganization,
+    setPreSubmitOrganization,
   };
 
   return (

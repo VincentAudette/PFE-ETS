@@ -109,12 +109,14 @@ model File {
 }
 
 model Organization {
-  id          Int                    @id @default(autoincrement())
-  name        String               @db.VarChar(500)
-  description String?
+  id          Int                  @id @default(autoincrement())
+  name        String               
+  description String?              @db.VarChar(500)
   projects    Project[]
   logo        File?
+  isETS       Boolean             @default(false)
   promoters   PromoterOrganization[]
+  @@index([isETS])
 }
 
 model Promoter {

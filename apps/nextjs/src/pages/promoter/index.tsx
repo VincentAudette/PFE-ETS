@@ -6,6 +6,7 @@ import { usePFEAuth } from "../../context/PFEAuthContext";
 import StudentView from "../../components/RoleViews/StudentView";
 import LoadingPFE from "../../components/LoadingPFE";
 import Unauthorized from "../../components/Unauthorized";
+import PromoterView from "../../components/RoleViews/PromoterView";
 
 export default function StudentHome() {
   const { isSignedIn, userId: clerkId } = useAuth();
@@ -26,7 +27,7 @@ export default function StudentHome() {
   const { userData, authProfile } = usePFEAuth();
   const activeRole = authProfile !== null ? authProfile : getUserData?.role;
 
-  if (activeRole !== "STUDENT") {
+  if (activeRole !== "PROMOTER") {
     return (
       <Unauthorized isLoading={isLoading} isSignedIn={isSignedIn ?? false} />
     );
@@ -48,8 +49,7 @@ export default function StudentHome() {
       <main className="flex min-h-screen flex-col items-center">
         {isSignedIn && isLoading && <LoadingPFE />}
         <TopNav />
-        <div className="h-12" />
-        <StudentView />
+        <PromoterView />
       </main>
     </>
   );

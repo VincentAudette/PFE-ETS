@@ -17,7 +17,7 @@ export default function ReviewSection() {
   const {
     selectedPromoterEtsOption,
     typeOfProfile,
-    selectedOrganization,
+    preSubmitOrganization,
     registrationUserData,
   } = usePFEAuth();
 
@@ -28,75 +28,60 @@ export default function ReviewSection() {
 
   const handleCreation = async () => {
     if (!clerkId) return;
-    switch (typeOfProfile) {
-      case "PROMOTER":
-        try {
-          await createPromoter(
-            clerkId,
-            {
-              firstName: registrationUserData?.firstName as string,
-              lastName: registrationUserData?.lastName as string,
-              email: registrationUserData?.email as string,
-              phone: registrationUserData?.phone as string,
-            },
-            updateToPromoterWithOrg,
-            "PROMOTER",
-            selectedOrganization,
-          );
-        } catch (e: any) {
-          toast.error(e.message);
-        }
-        break;
-      case "PROMOTER_ETS":
-        if (selectedPromoterEtsOption === null) {
-          toast.error("Veuillez un option d'association avec l'ÉTS.");
-          return;
-        }
-        try {
-          await createPromoter(
-            clerkId,
-            {
-              firstName: registrationUserData?.firstName as string,
-              lastName: registrationUserData?.lastName as string,
-              email: registrationUserData?.email as string,
-              phone: registrationUserData?.phone as string,
-            },
-            updateToPromoterWithOrg,
-            "PROMOTER_ETS",
-            {
-              id: selectedPromoterEtsOption?.id, //FIXME: change the id for the org to the correct one
-              name: selectedPromoterEtsOption?.title as string,
-            },
-          );
-        } catch (e: any) {
-          toast.error(e.message);
-        }
-        break;
-      case "STUDENT":
-        try {
-          const userCreationRes = await createStudent(
-            clerkId,
-            {
-              firstName: registrationUserData?.firstName as string,
-              lastName: registrationUserData?.lastName as string,
-              email: registrationUserData?.email as string,
-            },
-            createOrUpdateStudent,
-            "ele",
-          );
-          if (userCreationRes.success) {
-            toast.success(userCreationRes.message);
-            router.push("/student");
-          }
-        } catch (e: any) {
-          toast.error(e.message);
-        }
-        break;
-      default:
-        console.log("typeOfProfile is not defined.", typeOfProfile);
+    if (typeOfProfile?.includes("PROMOTER")) {
+      if (
+        (typeOfProfile === "PROMOTER_ETS" &&
+          selectedPromoterEtsOption === null) ||
+        (typeOfProfile === "PROMOTER" && preSubmitOrganization === null)
+      ) {
+        toast.error(
+          "Veuillez sélectionner un option d'association avec l'ÉTS.",
+        );
+        return;
+      }
 
-        toast.error("Le profil n'est pas spécifié, retourner à l'étape 1.");
-        break;
+      try {
+        const res = await createPromoter(
+          clerkId,
+          {
+            firstName: registrationUserData?.firstName as string,
+            lastName: registrationUserData?.lastName as string,
+            email: registrationUserData?.email as string,
+            phone: registrationUserData?.phone as string,
+          },
+          updateToPromoterWithOrg,
+          typeOfProfile == "PROMOTER"
+            ? preSubmitOrganization
+            : selectedPromoterEtsOption,
+        );
+        if (res.success) {
+          toast.success(res.message);
+          router.push("/promoter");
+        }
+      } catch (e: any) {
+        toast.error(e.message);
+      }
+    } else if (typeOfProfile === "STUDENT") {
+      try {
+        const userCreationRes = await createStudent(
+          clerkId,
+          {
+            firstName: registrationUserData?.firstName as string,
+            lastName: registrationUserData?.lastName as string,
+            email: registrationUserData?.email as string,
+          },
+          createOrUpdateStudent,
+          "ele",
+        );
+        if (userCreationRes.success) {
+          toast.success(userCreationRes.message);
+          router.push("/student");
+        }
+      } catch (e: any) {
+        toast.error(e.message);
+      }
+    } else {
+      toast.error("Le profil n'est pas spécifié, retourner à l'étape 1.");
     }
   };
 
@@ -165,28 +150,28 @@ export default function ReviewSection() {
         </div>
 
         {typeOfProfile === "PROMOTER" &&
-          selectedOrganization &&
-          !selectedOrganization.name.includes("Selectionner") && (
+          preSubmitOrganization &&
+          !preSubmitOrganization.name.includes("Selectionner") && (
             <div className="mt-5">
               <H2TopHeaderWithBottomLine>
                 Organisation
               </H2TopHeaderWithBottomLine>
               <div className="grid grid-cols-2 gap-2 text-gray-700">
                 <div>Nom:</div>
-                <div className="font-medium">{selectedOrganization.name}</div>
+                <div className="font-medium">{preSubmitOrganization.name}</div>
                 <div>Logo:</div>
                 <div>
                   <Image
                     className="rounded-md border shadow-sm"
-                    alt={`${selectedOrganization.name} logo`}
-                    src={selectedOrganization.logo?.url || ""}
+                    alt={`${preSubmitOrganization.name} logo`}
+                    src={preSubmitOrganization.logo?.url || ""}
                     width={96}
                     height={96}
                   />
                 </div>
                 <div>Description:</div>
                 <div className="font-medium">
-                  {selectedOrganization.description}
+                  {preSubmitOrganization.description}
                 </div>
               </div>
             </div>

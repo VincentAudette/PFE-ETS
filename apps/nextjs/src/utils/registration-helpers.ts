@@ -19,7 +19,7 @@ Do the following in the component:
  * @param type External or internal promoter
  * @param organization Organization data needed to pass to the mutation, the id is the most important.
  */
-export const createPromoter = async (
+export const createPromoter = (
   userClerkId: string,
   promoter: {
     firstName: string;
@@ -28,24 +28,19 @@ export const createPromoter = async (
     phone: string;
   },
   trpc: any,
-  type: "PROMOTER" | "PROMOTER_ETS", // Pretty sure this is not needed anymore.
   organization: {
     id: number;
     name: string;
   },
-) => {
-  if (!promoter.firstName && !promoter.lastName) {
-    throw new Error("Veuillez renseigner votre prénom et votre nom de famille");
-  }
-
-  let organizationId = organization?.id;
-
-  if (type === "PROMOTER_ETS") {
-    organizationId = 1;
+): Promise<{ success: boolean; message: string }> => {
+  if (!promoter.firstName || !promoter.lastName) {
+    return Promise.reject(
+      new Error("Veuillez renseigner votre prénom et votre nom de famille"),
+    );
   }
 
   if (organization?.id !== -1) {
-    trpc
+    return trpc
       .mutateAsync({
         clerkId: userClerkId,
         organizationId: organization.id,
@@ -58,9 +53,12 @@ export const createPromoter = async (
           success: true,
           message: "Votre profil a été mis à jour avec succès",
         };
+      })
+      .catch((err: any) => {
+        return Promise.reject(err); // you may want to normalize the error object here
       });
   } else {
-    throw new Error("Veuillez choisir une organisation");
+    return Promise.reject(new Error("Veuillez choisir une organisation"));
   }
 };
 

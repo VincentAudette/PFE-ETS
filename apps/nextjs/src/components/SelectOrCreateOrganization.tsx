@@ -27,11 +27,13 @@ export const organizationObjetDefault: {
   id: number;
   name: string;
   description: string | null;
+  isETS: boolean;
 } & {
   logo: File;
 } = {
   id: -1,
   name: "Selectionner un organisation",
+  isETS: false,
   description: "",
   logo: {
     url: "",
@@ -53,8 +55,7 @@ export default function SelectOrCreateOrganization({
 }) {
   const { data: organizations, isLoading: isLoadingOrgs } =
     trpc.organization.all.useQuery();
-  const { setSelectedOrganization, selectedOrganization } = usePFEAuth();
-
+  const { preSubmitOrganization, setPreSubmitOrganization } = usePFEAuth();
   const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
 
   return (
@@ -79,8 +80,8 @@ export default function SelectOrCreateOrganization({
                   name="orgChoice"
                   options={organizations}
                   {...{
-                    selected: selectedOrganization,
-                    setSelected: setSelectedOrganization,
+                    selected: preSubmitOrganization,
+                    setSelected: setPreSubmitOrganization,
                   }}
                 />
                 <button
