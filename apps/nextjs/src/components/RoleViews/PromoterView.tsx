@@ -32,7 +32,7 @@ const promoterNavigation: NavigationItem[] = [
   { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
   {
     name: "Nouveau PFE",
-    href: "promoter/project/new",
+    href: "/promoter/project/new",
     icon: PlusCircleIcon,
     current: false,
   },
@@ -187,7 +187,7 @@ export default function PromoterView({
                 <span>
                   <Link
                     className=" rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500"
-                    href="/promoter/projects/new"
+                    href="/promoter/project/new"
                   >
                     Débuter un nouveau PFE &rarr;
                   </Link>
