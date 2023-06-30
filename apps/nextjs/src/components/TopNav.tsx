@@ -1,7 +1,6 @@
 import AuthShowcase from "./AuthShowcase";
 import PFELogo from "./SVG/PFELogo";
 import LinkBox from "./LinkBox";
-import Breadcrumb from "./Breadcrumb";
 import { useRouter } from "next/router";
 import PFELogoSmall from "./SVG/PFELogoSmall";
 import { usePFEAuth } from "../context/PFEAuthContext";
@@ -39,7 +38,11 @@ export default function TopNav({
       )}
       <nav className=" z-[45] h-full w-full">
         <div className="border-b bg-neutral-700 py-1">
-          <div className="mx-auto flex h-full max-w-[1800px] flex-col items-center justify-between px-4 sm:px-12 lg:flex-row ">
+          <div
+            className={`mx-auto flex h-full ${
+              isSignedIn ? "max-w-[1800px]" : "max-w-[1180px] py-3"
+            } flex-col items-center justify-between px-4 sm:px-12 lg:flex-row `}
+          >
             <div className="flex items-center gap-3">
               <div className="group relative">
                 {isSignedIn ? (
@@ -50,7 +53,7 @@ export default function TopNav({
                   <>
                     <LinkBox className="absolute hidden flex-col group-hover:flex" />
                     <PFELogo
-                      className=" h-28 w-28"
+                      className="h-36 w-36"
                       rectColor="group-hover:text-neutral-100 text-[#EF3E45]"
                       textColor="group-hover:text-neutral-300 text-white"
                     />
@@ -58,20 +61,21 @@ export default function TopNav({
                 )}
               </div>
               <h1
-                className="lead text-base font-semibold
-              text-white lg:leading-[1.2rem]"
+                className="lead max-w-xs text-base
+              font-semibold text-white lg:leading-[1.2rem]"
               >
-                Projet de fin d&apos;études à l&apos;ÉTS
+                Projet de fin d&apos;études à <br />
+                l&apos;École de Technologie Supérieure
               </h1>
             </div>
             <AuthShowcase {...{ isSignedIn, activeRole }} />
           </div>
         </div>
-        {router.asPath !== "/" && (
+        {/* {router.asPath !== "/" && (
           <div className="fixed bottom-4 z-50 mx-auto mt-3 px-4 sm:left-10 sm:h-24 sm:px-12 xl:max-w-[80rem] 2xl:max-w-[100rem]">
             <Breadcrumb pages={pages} />
           </div>
-        )}
+        )} */}
       </nav>
     </>
   );

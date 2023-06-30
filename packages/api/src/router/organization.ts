@@ -4,6 +4,15 @@ import { z } from "zod";
 export const organizationRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.organization.findMany({
+      where: { isETS: false },
+      include: {
+        logo: true,
+      },
+    });
+  }),
+  getAllETS: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.organization.findMany({
+      where: { isETS: true },
       include: {
         logo: true,
       },

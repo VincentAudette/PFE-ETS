@@ -24,7 +24,7 @@ import Button from "../Forms/atoms/button";
 const promoterNavigation: NavigationItem[] = [
   {
     name: "Tableau de bord",
-    href: "/",
+    href: "/promoter",
     icon: HomeIcon,
     count: "5",
     current: true,
@@ -32,7 +32,7 @@ const promoterNavigation: NavigationItem[] = [
   { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
   {
     name: "Nouveau PFE",
-    href: "/projets/new",
+    href: "promoter/project/new",
     icon: PlusCircleIcon,
     current: false,
   },
@@ -123,7 +123,7 @@ export default function PromoterView({
     <SideBarLayout
       navigation={promoterNavigation}
       secondaryNavigation={secondaryNavigation}
-      showAfterNav={router.asPath === "/projets/new"}
+      showAfterNav={router.asPath === "promoter/projects/new"}
       afterNav={
         <div className="hyphenate max-w-[18rem]">
           <InfoAlert
@@ -143,7 +143,7 @@ export default function PromoterView({
       }
     >
       <div className="flex h-auto w-full grow overflow-y-scroll">
-        {router.pathname === "/" &&
+        {router.pathname === "/promoter" &&
           (userData?.promoter?.projects.length >= 1 ? (
             <div className=" flex  w-full flex-col ">
               <div className="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-4">
@@ -187,7 +187,7 @@ export default function PromoterView({
                 <span>
                   <Link
                     className=" rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500"
-                    href="/projets/new"
+                    href="/promoter/projects/new"
                   >
                     Débuter un nouveau PFE &rarr;
                   </Link>

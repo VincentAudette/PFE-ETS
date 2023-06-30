@@ -33,7 +33,7 @@ export default function TableWithAddButton({
   selectOptions?: any;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [tempValues, setTempValues] = useState<TempValues>({});
+  const [tempValues, setTempValues] = useState<TempValues | null>(null);
   const [isNewObj, setIsNewObj] = useState(false);
 
   const handleInputChange = (key: string, value: any) => {
@@ -42,7 +42,7 @@ export default function TableWithAddButton({
 
   const cancelEdit = () => {
     setEditingId(null);
-    setTempValues({});
+    setTempValues(null);
   };
 
   const saveEdit = (object: any) => {
@@ -159,7 +159,8 @@ export default function TableWithAddButton({
                                 name={key}
                                 options={selectOptions[key]}
                                 selectedState={
-                                  tempValues[key] || selectOptions[key][0]
+                                  (tempValues && tempValues[key]) ||
+                                  selectOptions[key][0]
                                 }
                                 setSelectedState={(value) =>
                                   handleInputChange(key, value)
@@ -173,7 +174,7 @@ export default function TableWithAddButton({
                                 withLabel={false}
                                 value={
                                   editingId === object.id
-                                    ? tempValues[key] || ""
+                                    ? (tempValues && tempValues[key]) || ""
                                     : object[key]
                                 }
                                 onChange={(e) =>
