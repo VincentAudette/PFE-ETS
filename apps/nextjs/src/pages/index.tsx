@@ -4,10 +4,6 @@ import TopNav from "../components/TopNav";
 import { useAuth } from "@clerk/nextjs";
 import WelcomeSection from "../components/WelcomeSection";
 import { usePFEAuth } from "../context/PFEAuthContext";
-import StudentView from "../components/RoleViews/StudentView";
-import PromoterView from "../components/RoleViews/PromoterView";
-import AdminView from "../components/RoleViews/AdminView";
-import DeveloperView from "../components/RoleViews/DeveloperView";
 import LoadingPFE from "../components/LoadingPFE";
 import { useRouter } from "next/router";
 
@@ -35,6 +31,12 @@ export default function Home() {
     router.push("/register");
   } else if (activeRole == "STUDENT") {
     router.push("/student");
+  } else if (activeRole == "PROMOTER") {
+    router.push("/promoter");
+  } else if (activeRole == "ADMIN") {
+    router.push("/admin");
+  } else if (activeRole == "DEVELOPER") {
+    router.push("/developer");
   }
 
   return (
@@ -52,15 +54,9 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center">
         {isSignedIn && isLoading && <LoadingPFE />}
         <TopNav />
-        {activeRole === "PROMOTER" && <PromoterView />}
-        {activeRole === "ADMIN" && <AdminView />}
-        {activeRole === "DEVELOPER" && <DeveloperView />}
-
-        {userData === null && (
-          <div className="max-w-7xl">
-            <WelcomeSection />
-          </div>
-        )}
+        <div className="max-w-7xl">
+          <WelcomeSection />
+        </div>
       </main>
     </>
   );

@@ -1,7 +1,6 @@
 import AuthShowcase from "./AuthShowcase";
 import PFELogo from "./SVG/PFELogo";
 import LinkBox from "./LinkBox";
-import { useRouter } from "next/router";
 import PFELogoSmall from "./SVG/PFELogoSmall";
 import { usePFEAuth } from "../context/PFEAuthContext";
 import { useEffect } from "react";
@@ -19,7 +18,6 @@ export default function TopNav({
   const { data: getUserData } = trpc.auth.getUser.useQuery(clerkId as string, {
     enabled: !!isSignedIn,
   });
-  const router = useRouter();
 
   const { authProfile, userData, setUserData } = usePFEAuth();
 
