@@ -15,7 +15,7 @@ export default function PhoneInput({
   withLabel?: boolean;
   onChange: (
     value: string,
-    data: CountryData | {},
+    data: CountryData | any,
     event: React.ChangeEvent<HTMLInputElement>,
     formattedValue: string,
   ) => void;

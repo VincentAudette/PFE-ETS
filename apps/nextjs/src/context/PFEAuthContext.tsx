@@ -22,7 +22,7 @@ type PFEAuthContextType = {
   >;
   handleOnChangePhoneNumber: (
     value: string,
-    data: CountryData | {},
+    data: CountryData | any,
     event: React.ChangeEvent<HTMLInputElement>,
     formattedValue: string,
   ) => void;
@@ -52,7 +52,7 @@ function PFEAuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleOnChangePhoneNumber = (
     value: string,
-    data: CountryData | {},
+    data: CountryData | any,
     event: React.ChangeEvent<HTMLInputElement>,
     formattedValue: string,
   ) => {
