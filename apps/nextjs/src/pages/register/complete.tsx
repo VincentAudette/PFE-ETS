@@ -4,28 +4,14 @@ import { usePFEAuth } from "../../context/PFEAuthContext";
 import Link from "next/link";
 import ReviewSection from "../../components/RoleViews/UnregisteredView/ReviewSection";
 import StepsLayout from "../../components/RoleViews/UnregisteredView/StepsLayout";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function CompleteRegistration() {
-  const {
-    userData,
-    authProfile,
-    registrationUserData,
-    selectedOrganization,
-    selectedPromoterEtsOption,
-    setCurrentStep,
-  } = usePFEAuth();
-
-  const router = useRouter();
+  const { userData, setCurrentStep } = usePFEAuth();
 
   useEffect(() => {
     setCurrentStep(3);
   }, []);
-
-  console.log("registrationUserData", registrationUserData);
-  console.log("selectedOrganization", selectedOrganization);
-  console.log("selectedPromoterEtsOption", selectedPromoterEtsOption);
 
   if (userData === null) {
     return (
