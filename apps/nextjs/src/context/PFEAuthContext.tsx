@@ -1,19 +1,42 @@
-import { Role } from "@acme/db";
+import { File, Organization, Role } from "@acme/db";
 import React, { useState, useContext, Dispatch, SetStateAction } from "react";
 import { RadioCardsWithImageOption } from "../components/Forms/atoms/RadioCardsWithImage";
 import { CountryData } from "react-phone-input-2";
+import { inferProcedureOutput } from "@trpc/server";
+import { AppRouter } from "@acme/api";
 
-type PFEAuthContextType = {
+type RegistrationUserData = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  department?: string;
+  codePermanent?: string;
+  phone?: string;
+};
+
+export type PFEAuthContextType = {
   authProfile: Role | null;
   setAuthProfile: Dispatch<SetStateAction<Role | null>>;
-  userData: any;
-  setUserData: Dispatch<SetStateAction<any>>;
-  selectedOrganization: any | null;
-  setSelectedOrganization: Dispatch<SetStateAction<any | null>>;
-  registrationUserData: any | null;
-  preSubmitOrganization: any | null;
-  setPreSubmitOrganization: Dispatch<SetStateAction<any | null>>;
-  setRegistrationUserData: Dispatch<SetStateAction<any | null>>;
+  userData: inferProcedureOutput<AppRouter["auth"]["getUser"]> | null;
+  setUserData: Dispatch<
+    SetStateAction<inferProcedureOutput<AppRouter["auth"]["getUser"]> | null>
+  >;
+  selectedOrganization:
+    | inferProcedureOutput<AppRouter["organization"]["getByIds"]>[number]
+    | null;
+  setSelectedOrganization: Dispatch<
+    SetStateAction<
+      inferProcedureOutput<AppRouter["organization"]["getByIds"]>[number] | null
+    >
+  >;
+  preSubmitOrganization: (Organization & { logo: File | null }) | null;
+  setPreSubmitOrganization: Dispatch<
+    SetStateAction<(Organization & { logo: File | null }) | null>
+  > | null;
+  registrationUserData: RegistrationUserData | null;
+  setRegistrationUserData: Dispatch<
+    SetStateAction<RegistrationUserData | null>
+  >;
   currentStep: number;
   setCurrentStep: Dispatch<SetStateAction<number>>;
   typeOfProfile: "PROMOTER" | "STUDENT" | "PROMOTER_ETS" | null;
@@ -32,17 +55,27 @@ type PFEAuthContextType = {
   >;
 };
 
-const PFEAuthContext = React.createContext<PFEAuthContextType | undefined>(
-  undefined,
-);
+export const PFEAuthContext = React.createContext<
+  PFEAuthContextType | undefined
+>(undefined);
 
 function PFEAuthProvider({ children }: { children: React.ReactNode }) {
   const [authProfile, setAuthProfile] = useState<Role | null>(null);
-  const [userData, setUserData] = useState<any | null>(null);
-  const [selectedOrganization, setSelectedOrganization] = useState<any>(null);
-  const [preSubmitOrganization, setPreSubmitOrganization] = useState<any>(null);
-  const [registrationUserData, setRegistrationUserData] = useState<any>(null);
+
+  const [userData, setUserData] =
+    useState<PFEAuthContextType["userData"]>(null);
+
+  const [selectedOrganization, setSelectedOrganization] =
+    useState<PFEAuthContextType["selectedOrganization"]>(null);
+
+  const [preSubmitOrganization, setPreSubmitOrganization] =
+    useState<PFEAuthContextType["preSubmitOrganization"]>(null);
+
+  const [registrationUserData, setRegistrationUserData] =
+    useState<PFEAuthContextType["registrationUserData"]>(null);
+
   const [currentStep, setCurrentStep] = useState<number>(1);
+
   const [typeOfProfile, setTypeOfProfile] = useState<
     "PROMOTER" | "STUDENT" | "PROMOTER_ETS" | null
   >(null);

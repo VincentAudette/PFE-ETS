@@ -76,14 +76,16 @@ export default function SelectOrCreateOrganization({
               </div>
             ) : (
               <>
-                <SelectWithImage
-                  name="orgChoice"
-                  options={organizations}
-                  {...{
-                    selected: preSubmitOrganization,
-                    setSelected: setPreSubmitOrganization,
-                  }}
-                />
+                {preSubmitOrganization && setPreSubmitOrganization && (
+                  <SelectWithImage
+                    name="orgChoice"
+                    options={organizations}
+                    {...{
+                      selected: preSubmitOrganization,
+                      setSelected: setPreSubmitOrganization,
+                    }}
+                  />
+                )}
                 <button
                   onClick={(e) => {
                     e.preventDefault();

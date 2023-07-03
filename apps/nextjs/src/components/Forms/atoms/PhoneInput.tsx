@@ -10,7 +10,7 @@ export default function PhoneInput({
   withLabel = true,
 }: {
   name: string;
-  value: string;
+  value?: string;
   label?: string;
   withLabel?: boolean;
   onChange: (

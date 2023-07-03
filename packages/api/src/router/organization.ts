@@ -35,10 +35,6 @@ export const organizationRouter = router({
     .input(z.array(z.number()).optional())
     .query(async ({ ctx, input }) => {
       const organizationIds = input;
-      if (organizationIds === undefined) {
-        console.error("organizationIds is undefined");
-        return null;
-      }
       const organizations = await ctx.prisma.organization.findMany({
         where: { id: { in: organizationIds } },
         include: {
