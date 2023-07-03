@@ -1,4 +1,4 @@
-import {PrismaClient, ProjectStatus, StudentOnProject, Trimester} from "@prisma/client";
+import {PrismaClient, ProjectStatus, StudentOnProject, Trimester,Group} from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -6,16 +6,15 @@ export class Helper {
     private static currentTrimester :Trimester = Trimester.SUMMER;
     private static state :ProjectStatus = 'GROUP_CREATION';
 
-    static createStudentProject(studentEmail :string, projectId : string){
+
+    static createStudentProject(studentStudent :any[], projectId : string){
         //this doesnt like trimester despite the addition to class? Need debug/research
         //db generate + db push successful 
-        const studentProject : StudentOnProject = {
-            studentEmail: studentEmail,
+        const studentProject : Group = {
+            students: studentStudent,
             projectId: projectId ,
-            hasBeenNotified : false,
-            trimester: this.currentTrimester
         }
-        prisma.studentOnProject.create({
+        prisma.Group.create({
             data: studentProject
         })
     }
@@ -56,11 +55,13 @@ export class Helper {
     static  studentIsGrouped(studentEmail :string){
         let isGrouped = false;
         //same here about trimester (same class)
-        const results =  prisma.studentOnProject.findFirst({
+        const results =  prisma.student.findFirst({
             where:
                 {
-                    trimester: this.currentTrimester,
-                    studentEmail : studentEmail
+                    NOT: [{
+                        groupId : undefined;
+                    }],
+                    email : studentEmail
                 }
         })
 
