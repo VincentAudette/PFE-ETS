@@ -22,7 +22,7 @@ export default function TopNav({
   const { authProfile, userData, setUserData } = usePFEAuth();
 
   useEffect(() => {
-    if (getUserData !== undefined && authProfile === null) {
+    if (getUserData !== undefined && authProfile === null && setUserData) {
       setUserData(getUserData);
     }
   });

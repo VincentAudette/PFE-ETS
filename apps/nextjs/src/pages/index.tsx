@@ -6,9 +6,12 @@ import WelcomeSection from "../components/WelcomeSection";
 import { usePFEAuth } from "../context/PFEAuthContext";
 import LoadingPFE from "../components/LoadingPFE";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { Role } from "@acme/db";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
+  const { authProfile } = usePFEAuth();
   const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
     clerkId as string,
     {
@@ -23,21 +26,29 @@ export default function Home() {
     },
   );
 
-  const { userData, authProfile } = usePFEAuth();
-  const activeRole = authProfile !== null ? authProfile : getUserData?.role;
+  let activeRole: Role | null = authProfile;
+  if (!activeRole && getUserData?.role) {
+    activeRole = getUserData?.role;
+  }
   const router = useRouter();
 
-  if (activeRole === "UNREGISTERED") {
-    router.push("/register");
-  } else if (activeRole == "STUDENT") {
-    router.push("/student");
-  } else if (activeRole == "PROMOTER") {
-    router.push("/promoter");
-  } else if (activeRole == "ADMIN") {
-    router.push("/admin");
-  } else if (activeRole == "DEVELOPER") {
-    router.push("/developer");
-  }
+  useEffect(() => {
+    console.log("activeRole", activeRole);
+    console.log("authProfile", authProfile);
+    console.log("getUserData", getUserData);
+
+    if (activeRole === "UNREGISTERED") {
+      router.push("/register");
+    } else if (activeRole == "STUDENT") {
+      router.push("/student");
+    } else if (activeRole == "PROMOTER") {
+      router.push("/promoter");
+    } else if (activeRole == "ADMIN") {
+      router.push("/admin");
+    } else if (activeRole == "DEVELOPER") {
+      router.push("/developer");
+    }
+  }, [activeRole, router]);
 
   return (
     <>
