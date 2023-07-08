@@ -99,8 +99,6 @@ export default function NavForPromoters() {
         setShow={setShowSlideOver}
       >
         <SelectOrCreateOrganization
-          selected={unassocitatedOrganization}
-          setSelected={setUnassociatedOrganization}
           handleSelectionSubmit={handleOrganizationAssociation}
           buttonText="Associer l'organisation à votre compte"
         />

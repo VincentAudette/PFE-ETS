@@ -12,7 +12,7 @@ export default function DeveloperView() {
           Selectionner un profil pour commencer à créer votre fonctionnalité.
         </p>
       </div>
-      <div className="flex gap-5">
+      <div className="flex w-[85vw]  gap-5">
         {[
           {
             key: "STUDENT",
@@ -26,11 +26,15 @@ export default function DeveloperView() {
             key: "ADMIN",
             name: "Administrateur",
           },
+          {
+            key: "UNREGISTERED",
+            name: "Non enregistré",
+          },
         ].map((role: { key: string; name: string }) => (
           <button
             key={role.key}
             onClick={() => setAuthProfile(role.key as Role)}
-            className="rounded-2xl bg-neutral-200 px-32 py-12 text-xl font-semibold text-neutral-900 hover:bg-neutral-300"
+            className="grow rounded-2xl bg-neutral-200 py-12 text-xl font-semibold text-neutral-900 hover:bg-neutral-300"
           >
             {role.name}
           </button>

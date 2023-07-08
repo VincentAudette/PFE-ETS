@@ -7,6 +7,7 @@ import { groupRouter } from "./group";
 import { projectRouter } from "./project";
 import { promoterRouter } from "./promoter";
 import { thematicRouter } from "./thematic";
+import { studentRouter } from "./student";
 
 export const appRouter = router({
   auth: authRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   project: projectRouter,
   promoter: promoterRouter,
   thematic: thematicRouter,
+  student: studentRouter,
 });
 
 // export type definition of API

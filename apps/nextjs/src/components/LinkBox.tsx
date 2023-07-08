@@ -115,11 +115,11 @@ export const ItemSquare = ({
       className={
         className
           ? className
-          : "flex h-[3.5rem] w-[3.5rem] flex-col items-center justify-center bg-neutral-700/25 hover:bg-neutral-100/50 hover:text-red-600 "
+          : "flex h-[4.5rem] w-[4.5rem] flex-col items-center justify-center bg-neutral-700/25 hover:bg-neutral-100/50 hover:text-red-600 "
       }
     >
       <IconSvg className="h-8 w-8" />
-      <p className=" text-[0.5rem]">{text}</p>
+      <p className=" text-[0.5rem] font-bold">{text}</p>
     </Link>
   );
 };
@@ -127,7 +127,7 @@ export const ItemSquare = ({
 export default function LinkBox({ className }: { className?: string }) {
   return (
     <div className={className}>
-      <div className="grid h-[3.5rem] grid-cols-2">
+      <div className="grid h-[4.5rem] grid-cols-2">
         {linkItems.map((item) => (
           <ItemSquare
             href={item.href}
