@@ -40,7 +40,19 @@ export const authRouter = router({
                   include: {
                     projectRelations: {
                       include: {
-                        project: true
+                        project: {
+                          include: {
+                            organization: true,
+                            files: true,
+                            thematics: true,
+                            states: true,
+                            departments: {
+                              include: {
+                                department: true,
+                              },
+                            },
+                          },
+                        }
                       }
                     }
                   }
