@@ -89,7 +89,7 @@ export default function PromoterView({
       userData?.promoter?.projects &&
       userData?.promoter?.projects?.length > 0
     ) {
-      const newFilteredProjects = userData.promoter.projects.filter(
+      const newFilteredProjects = userData?.promoter.projects.filter(
         (project_x: any) => {
           const filterStatus =
             filterSelections.status.length === 0 ||
