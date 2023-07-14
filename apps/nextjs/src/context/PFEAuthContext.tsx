@@ -53,6 +53,8 @@ export type PFEAuthContextType = {
   setSelectedPromoterEtsOption?: Dispatch<
     SetStateAction<RadioCardsWithImageOption | null>
   >;
+  showMobileNav?: boolean;
+  setShowMobileNav?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const PFEAuthContext = React.createContext<
@@ -82,6 +84,8 @@ function PFEAuthProvider({ children }: { children: React.ReactNode }) {
 
   const [selectedPromoterEtsOption, setSelectedPromoterEtsOption] =
     useState<RadioCardsWithImageOption | null>(null);
+
+  const [showMobileNav, setShowMobileNav] = useState<boolean>(false);
 
   const handleOnChangePhoneNumber = (
     value: string,
@@ -113,6 +117,8 @@ function PFEAuthProvider({ children }: { children: React.ReactNode }) {
     setSelectedPromoterEtsOption,
     preSubmitOrganization,
     setPreSubmitOrganization,
+    showMobileNav,
+    setShowMobileNav,
   };
 
   return (

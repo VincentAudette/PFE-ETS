@@ -1,10 +1,6 @@
 import { render } from "@testing-library/react";
 import React from "react";
-import {
-  PFEAuthContext,
-  PFEAuthContextType,
-  PFEAuthProvider,
-} from "../context/PFEAuthContext";
+import { PFEAuthContext, PFEAuthContextType } from "../context/PFEAuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ClerkProvider } from "@clerk/nextjs";
 import { frFR } from "@clerk/localizations";

@@ -55,6 +55,7 @@ export default function SelectOrCreateOrganization({
 }) {
   const { data: organizations, isLoading: isLoadingOrgs } =
     trpc.organization.all.useQuery();
+
   const { preSubmitOrganization, setPreSubmitOrganization } = usePFEAuth();
   const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
 
@@ -76,16 +77,14 @@ export default function SelectOrCreateOrganization({
               </div>
             ) : (
               <>
-                {preSubmitOrganization && setPreSubmitOrganization && (
-                  <SelectWithImage
-                    name="orgChoice"
-                    options={organizations}
-                    {...{
-                      selected: preSubmitOrganization,
-                      setSelected: setPreSubmitOrganization,
-                    }}
-                  />
-                )}
+                <SelectWithImage
+                  name="orgChoice"
+                  options={organizations}
+                  {...{
+                    selected: preSubmitOrganization,
+                    setSelected: setPreSubmitOrganization,
+                  }}
+                />
                 <button
                   onClick={(e) => {
                     e.preventDefault();

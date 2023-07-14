@@ -194,7 +194,9 @@ const mockRadioCardsWithImageOption: RadioCardsWithImageOption = {
   src: "mock-src",
 };
 
-export const pfeAuthMockValues = (profile: Role): PFEAuthContextType => ({
+export const pfeAuthMockValues = (
+  profile: Role | null,
+): PFEAuthContextType => ({
   authProfile: profile, // or another mock Role
   setAuthProfile: jest.fn(),
   userData: mockUserData,

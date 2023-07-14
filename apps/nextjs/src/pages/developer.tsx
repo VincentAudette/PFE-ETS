@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import UnregisteredView from "../components/RoleViews/UnregisteredView";
 import LoadingPFE from "../components/LoadingPFE";
 import DeveloperView from "../components/RoleViews/DeveloperView";
+import Unauthorized from "../components/Unauthorized";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
@@ -28,7 +29,9 @@ export default function Home() {
   const activeRole = authProfile !== null ? authProfile : userData?.role;
 
   if (!isSignedIn || activeRole !== "DEVELOPER") {
-    return <UnregisteredView />;
+    return (
+      <Unauthorized isLoading={isLoading} isSignedIn={isSignedIn ?? false} />
+    );
   }
 
   return (

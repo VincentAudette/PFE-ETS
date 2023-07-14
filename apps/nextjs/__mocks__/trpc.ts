@@ -85,3 +85,12 @@ export type RouterOutputs = {
     };
   };
 };
+
+// jest.mock("trpc", () => ({
+//   auth: {
+//     getUser: {
+//       useQuery: () => ({ data: { role: roles[i] }, isLoading: false }),
+//     },
+//   },
+//   ssr: false,
+// }));

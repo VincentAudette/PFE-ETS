@@ -11,7 +11,7 @@ import { Role } from "@acme/db";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
-  const { authProfile } = usePFEAuth();
+  const { authProfile, setAuthProfile } = usePFEAuth();
   const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
     clerkId as string,
     {
@@ -33,10 +33,6 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("activeRole", activeRole);
-    console.log("authProfile", authProfile);
-    console.log("getUserData", getUserData);
-
     if (activeRole === "UNREGISTERED") {
       router.push("/register");
     } else if (activeRole == "STUDENT") {
@@ -48,7 +44,7 @@ export default function Home() {
     } else if (activeRole == "DEVELOPER") {
       router.push("/developer");
     }
-  }, [activeRole, router]);
+  }, [activeRole, router, setAuthProfile]);
 
   return (
     <>
