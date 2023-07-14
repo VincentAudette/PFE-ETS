@@ -60,11 +60,9 @@ describe("Home", () => {
 
       render(<Home />, {}, mockValues);
 
-      await waitFor(async () => {
-        // expect(useRouter).toHaveBeenCalledTimes(2);
-        expect(mockPush).toHaveBeenCalledTimes(1);
-        expect(mockPush).toHaveBeenCalledWith(redirectPages[i]);
-      });
+      // expect(useRouter).toHaveBeenCalledTimes(2);
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      expect(mockPush).toHaveBeenCalledWith(redirectPages[i]);
 
       // Clear all mocks after each iteration
       jest.resetAllMocks();
@@ -81,8 +79,12 @@ describe("Home", () => {
       orgId: null,
       orgRole: null,
       orgSlug: null,
-      signOut: async () => {},
-      getToken: async () => "mock-token",
+      signOut: async () => {
+        return new Promise((resolve) => resolve("mock-sign-out"));
+      },
+      getToken: async () => {
+        return new Promise((resolve) => resolve("mock-token"));
+      },
     });
     const mockValues: PFEAuthContextType = pfeAuthMockValues(null);
     render(<Home />, {}, mockValues);
@@ -101,7 +103,9 @@ describe("Home", () => {
       orgId: null,
       orgRole: null,
       orgSlug: null,
-      signOut: async () => {},
+      signOut: async () => {
+        return new Promise((resolve) => resolve("mock-sign-out"));
+      },
       getToken: async () => "mock-token",
     });
 

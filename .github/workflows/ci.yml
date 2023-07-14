@@ -6,8 +6,6 @@ on:
   push:
     branches: ["main"]
 
-# You can leverage Vercel Remote Caching with Turbo to speed up your builds
-# @link https://turborepo.org/docs/core-concepts/remote-caching#remote-caching-on-vercel-builds
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -56,6 +54,9 @@ jobs:
 
       - name: Build, lint and type-check
         run: pnpm turbo build lint type-check
+
+      - name: Run Front-End Tests
+        run: pnpm test-fe
 
       - name: Check workspaces
         run: pnpm manypkg check

@@ -199,7 +199,7 @@ export default function PFEForm() {
               2. Participants au projet
             </h2>
             <p className="pt-2 pl-5 text-sm text-neutral-600">
-              Les titre d'entêtes suivis d&apos;un astérisque{" "}
+              Les titre d&apos;entêtes suivis d&apos;un astérisque{" "}
               <strong>« * »</strong> indiquent un champ obligatoire.
             </p>
           </div>

@@ -47,7 +47,6 @@ const customRender = (
   return render(
     <QueryClientProvider client={mockQueryClient}>
       <TRPCWrappedMockApp
-        // @ts-ignore
         Component={() => ui}
         pageProps={{}}
         authValues={authValues}

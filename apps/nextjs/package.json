@@ -30,6 +30,7 @@
     "@trpc/server": "^10.1.0",
     "@uploadthing/react": "^3.0.5",
     "@vercel/analytics": "^1.0.1",
+    "eslint-plugin-testing-library": "^5.11.0",
     "micro": "^10.0.1",
     "moment": "^2.29.4",
     "next": "^13.1.6",
