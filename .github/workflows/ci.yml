@@ -59,6 +59,8 @@ jobs:
         run: pnpm manypkg check
 
   test:
+    env:
+      DATABASE_URL: file:./db.sqlite
     needs: build-lint
     runs-on: ubuntu-latest
 
