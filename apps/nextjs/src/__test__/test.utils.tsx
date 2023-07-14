@@ -9,19 +9,15 @@ import { trpc } from "../utils/trpc";
 import { ToastContainer } from "react-toastify";
 
 type MockAppProps = {
-  Component: React.ComponentType;
+  Component: any;
   pageProps: any;
   authValues: PFEAuthContextType;
 };
 
 const MockApp: React.FC<MockAppProps> = ({
   Component,
-  pageProps: { ...pageProps },
+  pageProps,
   authValues,
-}: {
-  Component: React.ComponentType;
-  pageProps: any;
-  authValues: PFEAuthContextType;
 }) => {
   return (
     <ClerkProvider localization={frFR} {...pageProps}>
@@ -47,6 +43,7 @@ const customRender = (
   return render(
     <QueryClientProvider client={mockQueryClient}>
       <TRPCWrappedMockApp
+        // @ts-ignore
         Component={() => ui}
         pageProps={{}}
         authValues={authValues}
