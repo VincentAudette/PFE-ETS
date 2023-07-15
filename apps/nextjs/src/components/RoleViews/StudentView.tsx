@@ -38,7 +38,8 @@ export default function StudentView() {
     projectsQuery.data?.map((project) => ({
       id: project.id,
       name: project.title,
-      pdfLink: "",
+      pdfLink:
+        "https://www.etsmtl.ca/docs/etudes/examens-finaux/Documents/horaire-examens-finaux", //test
     })) || [];
 
   // utlise useState hook de react pour instacier la variable selectedPfes
