@@ -25,7 +25,7 @@ export const projectRouter = router({
       },
     });
   }),
-  getProjectInEnrollment: protectedProcedure.query(async ({ ctx }) => {
+  getProjectsInEnrollment: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.project.findMany({
       where: {
         states: {

@@ -3,29 +3,9 @@ import Button from "../Forms/atoms/button";
 import CheckBoxInput from "../Forms/atoms/CheckBoxInput";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 import InputWithIcon from "../Forms/atoms/InputWithIcon";
-import SimpleSelect from "../Forms/atoms/SimpleSelect";
 import ComboBox, { Option } from "../Forms/atoms/ComboBox";
 import { useState } from "react";
-import Modal from "../Forms/atoms/Modal";
-
-const options: Option[] = [
-  {
-    id: "0",
-    name: "Sélectionnez une option",
-  },
-  {
-    id: "1",
-    name: "Option 1",
-  },
-  {
-    id: "2",
-    name: "Option 2",
-  },
-  {
-    id: "3",
-    name: "Option 3",
-  },
-];
+import { trpc } from "../../utils/trpc";
 
 export interface IFormValues {
   groupePreference: string;
@@ -50,29 +30,34 @@ interface StudentChoicesFormElement extends HTMLFormElement {
 }
 
 export default function StudentView() {
-  const [selectedPfe1, setSelectedPfe1] = useState<Option | undefined>(
-    undefined,
+  // Utilise le query hook pour obtenir les projets
+  const projectsQuery = trpc.project.getProjectsInEnrollment.useQuery();
+
+  // Les options à selectionner, on a besoin que du id et titre
+  const options =
+    projectsQuery.data?.map((project) => ({
+      id: project.id,
+      name: project.title,
+      pdfLink: "",
+    })) || [];
+
+  // utlise useState hook de react pour instacier la variable selectedPfes
+  // avec 4 valeur null.
+  // À chaque fois que setSelectedPfes est appelé, le composent
+  // est re-render
+  const [selectedPfes, setSelectedPfes] = useState<(Option | undefined)[]>(
+    Array(4).fill(undefined),
   );
-  const [selectedPfe2, setSelectedPfe2] = useState<Option | undefined>(
-    undefined,
-  );
-  const [selectedPfe3, setSelectedPfe3] = useState<Option | undefined>(
-    undefined,
-  );
-  const [selectedPfe4, setSelectedPfe4] = useState<Option | undefined>(
-    undefined,
-  );
-  const [pdfView, setPdfViewed] = useState<string | null>(null);
 
   const handleSelectionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as StudentChoicesFormElement;
     const formValues: IFormValues = {
       groupePreference: target.groupePreference.value,
-      pfeChoice1: selectedPfe1?.id as string,
-      pfeChoice2: selectedPfe2?.id as string,
-      pfeChoice3: selectedPfe3?.id as string,
-      pfeChoice4: selectedPfe4?.id as string,
+      pfeChoice1: selectedPfes[0]?.id as string,
+      pfeChoice2: selectedPfes[1]?.id as string,
+      pfeChoice3: selectedPfes[2]?.id as string,
+      pfeChoice4: selectedPfes[3]?.id as string,
       isPreApprovedInPfe: target.isPreApprovedInPfe.checked,
       isHealthProfile: target.isHealthProfile.checked,
       isEnerngyProfile: target.isEnerngyProfile.checked,
@@ -80,39 +65,31 @@ export default function StudentView() {
 
     console.log(formValues);
   };
+
+  //pendant que les projets sont en cours de chargments
+  if (projectsQuery.status === "loading") {
+    return <div>Chargement des projets en cours...</div>; // Replace with your own loading component
+  }
+
+  //si il y a une erreur dans la requete pour obtenir les projets
+  if (projectsQuery.status === "error") {
+    return (
+      <InfoAlert
+        dimmed
+        text="Erreur: les projets ne peuvent etre chargés, svp contacter l'équipe de support."
+      />
+    );
+  }
+
   return (
     <>
-      <Modal
-        title="Aperçu du PDF"
-        open={pdfView !== null}
-        setOpen={() => setPdfViewed(null)}
-      >
-        {pdfView && <iframe src={pdfView} className="h-full w-full" />}
-      </Modal>
       <div>
         <h1 className="text-2xl font-bold">Formulaire de choix de PFE</h1>
         <div className="h-3" />
         <InfoAlert text="Si votre PFE vous a déjà été attribué, alors choisissez le meme PFE pour vos 3 premiers choix et ajouter un autre PFE pour votre 4eme choix. Si votre groupe contient au moins 3 personnes, alors choisissez le meme PFE pour vos 4 choix." />
         <div className="h-3" />
         <form className=" flex flex-col gap-4" onSubmit={handleSelectionSubmit}>
-          {[
-            {
-              selectedPfe: selectedPfe1,
-              setSelectedPfe: setSelectedPfe1,
-            },
-            {
-              selectedPfe: selectedPfe2,
-              setSelectedPfe: setSelectedPfe2,
-            },
-            {
-              selectedPfe: selectedPfe3,
-              setSelectedPfe: setSelectedPfe3,
-            },
-            {
-              selectedPfe: selectedPfe4,
-              setSelectedPfe: setSelectedPfe4,
-            },
-          ].map((pfe, i) => (
+          {selectedPfes.map((selectedPfe, i) => (
             <ComboBox
               key={"pfe_choice_" + (i + 1)}
               name={"pfeChoice" + (i + 1)}
@@ -120,8 +97,13 @@ export default function StudentView() {
               label={`${i + 1}. Quel est votre ${
                 ["PREMIER", "DEUXIÈME", "TROISIÈME", "QUATRIÈME"][i]
               } choix de projet?`}
-              selectedOption={pfe.selectedPfe}
-              setSelectedOption={pfe.setSelectedPfe}
+              selectedOption={selectedPfe}
+              //fonction pour mettre a jours la liste des pfes choisis
+              setSelectedOption={(option) => {
+                const newSelectedPfes = [...selectedPfes];
+                newSelectedPfes[i] = option;
+                setSelectedPfes(newSelectedPfes);
+              }}
             />
           ))}
           <InputWithIcon
