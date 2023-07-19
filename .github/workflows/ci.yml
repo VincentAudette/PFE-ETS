@@ -92,5 +92,8 @@ jobs:
       - name: Install deps (with cache)
         run: pnpm install
 
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
       - name: Run front-end tests
         run: pnpm test-fe
