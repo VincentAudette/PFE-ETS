@@ -1,3 +1,4 @@
+import { usePFEAuth } from "../context/PFEAuthContext";
 import SlideOver from "./SlideOver";
 import VerticalNav from "./VerticalNav";
 
@@ -29,8 +30,6 @@ export default function SideBarLayout({
   showRightSide = false,
   showAfterNav = false,
   afterNav,
-  showMobileNav = false,
-  setShowMobileNav,
 }: {
   navigation: NavigationItem[];
   secondaryNavigation?: SecondaryNavigationItem[];
@@ -39,16 +38,15 @@ export default function SideBarLayout({
   showRightSide?: boolean;
   showAfterNav?: boolean;
   afterNav?: React.ReactNode;
-  showMobileNav?: boolean;
-  setShowMobileNav?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const { showMobileNav, setShowMobileNav } = usePFEAuth();
   return (
     <div className="mx-auto flex h-[88vh] w-full max-w-[1800px] justify-between border-b bg-white px-4 sm:gap-10 sm:px-12 ">
       <div className="sm:hidden">
         {setShowMobileNav && (
           <SlideOver
             title="Menu"
-            show={showMobileNav}
+            show={showMobileNav || false}
             setShow={setShowMobileNav}
           >
             <VerticalNav
@@ -58,7 +56,11 @@ export default function SideBarLayout({
           </SlideOver>
         )}
       </div>
-      <div className={`mt-5 hidden ${showRightSide ? "w-1/6" : ""} lg:block`}>
+      <div
+        className={`mt-5 hidden min-w-[16rem] max-w-[20rem] ${
+          showRightSide ? "w-1/6" : ""
+        } lg:block`}
+      >
         <VerticalNav
           navigation={navigation}
           secondaryNavigation={secondaryNavigation}

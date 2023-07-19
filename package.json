@@ -14,7 +14,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo lint",
     "FIXME:lint": "turbo lint && manypkg check",
-    "type-check": "turbo type-check"
+    "type-check": "turbo type-check",
+    "test-fe": "turbo test-fe"
   },
   "dependencies": {
     "@clerk/localizations": "^1.22.0",

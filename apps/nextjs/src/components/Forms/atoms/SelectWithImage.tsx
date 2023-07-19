@@ -23,12 +23,16 @@ export default function SelectWithImage({
   label?: string;
   options: (Organization & { logo: File | null })[] | undefined;
   selected: (Organization & { logo: File | null }) | null;
-  setSelected: Dispatch<
-    SetStateAction<(Organization & { logo: File | null }) | null>
-  >;
+  setSelected: Dispatch<SetStateAction<
+    (Organization & { logo: File | null }) | null
+  > | null> | null;
 }) {
   return (
-    <Listbox value={selected} name={name} onChange={setSelected}>
+    <Listbox
+      value={selected}
+      name={name}
+      onChange={setSelected !== null ? setSelected : undefined}
+    >
       {({ open }) => (
         <div className="w-full">
           {label && (

@@ -36,8 +36,8 @@ export default function PromoterRegistrationForm({
     ) {
       setRegistrationUserData({
         ...registrationUserData,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
+        firstName: userData.firstName as string,
+        lastName: userData.lastName as string,
         email: userData.email,
       });
     }

@@ -38,6 +38,9 @@
     "type-check": {
       "dependsOn": ["^db-generate"],
       "cache": false
+    },
+    "test-fe":{
+      "cache": false
     }
   },
   "globalEnv": [
