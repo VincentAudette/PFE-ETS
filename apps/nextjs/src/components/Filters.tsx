@@ -290,7 +290,7 @@ export default function Filters({
                   >
                     <Popover.Panel className="absolute right-0 z-10 mt-2 max-h-[60vh] origin-top-right overflow-y-scroll rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <form className="space-y-4">
-                        {section.options.map(
+                        {section?.options?.map(
                           (option, optionIdx) =>
                             !option.name?.includes("Choisir") && (
                               <div
