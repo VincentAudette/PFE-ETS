@@ -55,6 +55,7 @@ export default function SelectOrCreateOrganization({
 }) {
   const { data: organizations, isLoading: isLoadingOrgs } =
     trpc.organization.all.useQuery();
+
   const { preSubmitOrganization, setPreSubmitOrganization } = usePFEAuth();
   const [organisationModalOpen, setOrganisationModalOpen] = useState(false);
 

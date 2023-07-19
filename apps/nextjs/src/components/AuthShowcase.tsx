@@ -10,7 +10,7 @@ export default function AuthShowcase({ isSignedIn }: any) {
   const activeRole = authProfile !== null ? authProfile : userData?.role;
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex min-w-max flex-col items-center gap-4">
       {isSignedIn && (
         <>
           <div className="flex items-center justify-center gap-3">

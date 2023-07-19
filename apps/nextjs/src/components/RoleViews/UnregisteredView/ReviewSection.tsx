@@ -41,6 +41,10 @@ export default function ReviewSection() {
       }
 
       try {
+        const organization =
+          typeOfProfile == "PROMOTER"
+            ? preSubmitOrganization
+            : selectedPromoterEtsOption;
         const res = await createPromoter(
           clerkId,
           {
@@ -50,9 +54,7 @@ export default function ReviewSection() {
             phone: registrationUserData?.phone as string,
           },
           updateToPromoterWithOrg,
-          typeOfProfile == "PROMOTER"
-            ? preSubmitOrganization
-            : selectedPromoterEtsOption,
+          organization,
         );
         if (res.success) {
           toast.success(res.message);

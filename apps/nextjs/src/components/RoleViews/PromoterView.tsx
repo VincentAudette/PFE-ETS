@@ -27,19 +27,21 @@ const promoterNavigation: NavigationItem[] = [
     count: "5",
     current: true,
   },
-  { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
+  // { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
   {
     name: "Nouveau PFE",
     href: "/promoter/project/new",
     icon: PlusCircleIcon,
     current: false,
   },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
+  // { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
 ];
-const secondaryNavigation: SecondaryNavigationItem[] = [
-  { name: "Website redesign", href: "#", initial: "W", current: false },
-  { name: "GraphQL API", href: "#", initial: "G", current: false },
-];
+// const secondaryNavigation: SecondaryNavigationItem[] = [
+//   { name: "Website redesign", href: "#", initial: "W", current: false },
+//   { name: "GraphQL API", href: "#", initial: "G", current: false },
+// ];
+
+const secondaryNavigation: SecondaryNavigationItem[] | undefined = undefined;
 
 export default function PromoterView({
   children,
@@ -79,12 +81,15 @@ export default function PromoterView({
   };
 
   // Initialize state
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState<any[]>([]);
 
   // In your map function
   useEffect(() => {
-    if (userData?.promoter?.projects?.length > 0) {
-      const newFilteredProjects = userData.promoter.projects.filter(
+    if (
+      userData?.promoter?.projects &&
+      userData?.promoter?.projects?.length > 0
+    ) {
+      const newFilteredProjects = userData?.promoter.projects.filter(
         (project_x: any) => {
           const filterStatus =
             filterSelections.status.length === 0 ||
@@ -118,7 +123,7 @@ export default function PromoterView({
       secondaryNavigation={secondaryNavigation}
       showAfterNav={router.asPath === "/promoter/project/new"}
       afterNav={
-        <div className="hyphenate max-w-[18rem]">
+        <div className="hyphenate ">
           <InfoAlert
             textXs={true}
             dimmed={true}
@@ -137,7 +142,8 @@ export default function PromoterView({
     >
       <div className="flex w-full grow">
         {router.pathname === "/promoter" &&
-          (userData?.promoter?.projects.length >= 1 ? (
+          (userData?.promoter?.projects &&
+          userData?.promoter?.projects.length >= 1 ? (
             <div className=" flex  w-full flex-col ">
               <div className="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-4">
                 <h1 className="text-sm font-bold">Projets</h1>

@@ -12,6 +12,8 @@ export interface InputWithLabelProps {
   withLabel?: boolean;
   validationError?: string;
   autoComplete?: string;
+  min?: number;
+  max?: number;
 }
 export default function SimpleInput({
   type = "text",
@@ -24,6 +26,8 @@ export default function SimpleInput({
   onChange,
   withLabel = true,
   validationError,
+  min,
+  max,
 }: InputWithLabelProps) {
   return (
     <div>
@@ -42,6 +46,8 @@ export default function SimpleInput({
           value={value}
           type={type}
           name={name}
+          min={min}
+          max={max}
           id={id}
           className={
             validationError

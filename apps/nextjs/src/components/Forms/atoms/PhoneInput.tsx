@@ -10,7 +10,7 @@ export default function PhoneInput({
   withLabel = true,
 }: {
   name: string;
-  value: string;
+  value?: string;
   label?: string;
   withLabel?: boolean;
   onChange: (
@@ -25,7 +25,7 @@ export default function PhoneInput({
       {withLabel && (
         <label
           htmlFor={name}
-          className="mb-2 block text-sm font-medium leading-6 text-neutral-900"
+          className=" block text-sm font-medium leading-6 text-neutral-900"
         >
           {label}
         </label>
