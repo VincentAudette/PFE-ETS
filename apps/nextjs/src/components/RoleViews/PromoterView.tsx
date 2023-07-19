@@ -151,7 +151,9 @@ export default function PromoterView({
               </div>
               <ul className="flex w-full grow flex-col divide-y">
                 {filteredProjects.length > 0 ? (
+                  // Si on a des projet filtrer
                   filteredProjects.map((project_x: any) => (
+                    // OSTP: contient TOUTE la page des projets
                     <ProjectCard
                       expandedView={project === null}
                       selectedProjectId={
@@ -163,6 +165,7 @@ export default function PromoterView({
                     />
                   ))
                 ) : (
+                  // Si on a aucun projet filtrer
                   <div className="flex max-h-32 w-full grow items-center justify-between gap-5 bg-stone-50 px-5 py-10 ">
                     <p>Aucun projet avec ces filtres</p>
                     <Button
@@ -174,6 +177,7 @@ export default function PromoterView({
               </ul>
             </div>
           ) : (
+            // Si on a aucun PFE
             <div className=" mx-auto">
               <div className=" mx-auto flex h-full flex-col items-center justify-center gap-1 sm:gap-5 lg:flex-row">
                 <p>Vous n&apos;avez pas de PFE en cours.</p>

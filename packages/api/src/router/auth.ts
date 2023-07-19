@@ -51,6 +51,11 @@ export const authRouter = router({
                                 department: true,
                               },
                             },
+                            group: {
+                              include: {
+                                students: true
+                              }
+                            }
                           },
                         }
                       }

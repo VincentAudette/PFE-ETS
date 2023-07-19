@@ -13,8 +13,11 @@ import {
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import ProjectView from "../ProjectView";
+import ProjectCard from "../ProjectCard";
 
-const navigation: NavigationItem[] = [
+export const navigation: NavigationItem[] = [
   {
     name: "Tableau de bord",
     href: "/",
@@ -22,10 +25,15 @@ const navigation: NavigationItem[] = [
     count: "5",
     current: true,
   },
-  { name: "Équipes", href: "/groups/list", icon: UsersIcon, current: false },
+  {
+    name: "Équipes",
+    href: "/admin/group/list",
+    icon: UsersIcon,
+    current: false,
+  },
   {
     name: "Projets",
-    href: "/projets/list",
+    href: "/admin/project/list",
     icon: FolderIcon,
     count: "12",
     current: false,
@@ -40,7 +48,7 @@ const navigation: NavigationItem[] = [
   { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
   { name: "Rapports", href: "#", icon: ChartPieIcon, current: false },
 ];
-const secondaryNavigation: SecondaryNavigationItem[] = [
+export const secondaryNavigation: SecondaryNavigationItem[] = [
   { name: "Website redesign", href: "#", initial: "W", current: false },
   { name: "GraphQL API", href: "#", initial: "G", current: false },
   {
@@ -64,6 +72,8 @@ export default function AdminView({
     navItem.current = navItem.href === router.asPath;
   });
 
+  // const [project, setProject] = useState<any>(null);
+
   return (
     <SideBarLayout
       navigation={navigation}
@@ -72,7 +82,6 @@ export default function AdminView({
       <div>
         {router.pathname === "/" && (
           <div>
-            {/* TODO Could be in his own element */}
             {postQuery.data ? (
               <div className="flex w-full flex-col gap-4">
                 {postQuery.data?.map((p: Post) => {

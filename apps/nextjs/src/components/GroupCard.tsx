@@ -1,7 +1,8 @@
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@acme/api";
-import Link from "next/link";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import Clickable from "./Clickable";
+import classNames from "../utils/classNames";
 
 const statuses = {
   offline: "text-gray-500 bg-gray-100/10",
@@ -24,14 +25,94 @@ const trimesters = {
   },
 };
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+const GroupCard: React.FC<{
+  project: inferProcedureOutput<AppRouter["project"]["get"]>;
+  buttonHandler?: () => void;
+  selectedProjectId?: string;
+  expandedView?: boolean;
+}> = ({ project, buttonHandler, selectedProjectId, expandedView = false }) => {
+  if (!project) return null;
+  console.log("===RETURN===");
+  console.log(project);
+  return (
+    <button
+      className={`w-full ${
+        project.id === selectedProjectId ? "bg-neutral-50" : "bg-white"
+      } max-h-48 grow p-4 text-left shadow-sm transition-all hover:scale-[101%]`}
+    >
+      <li
+        key={project.id}
+        className="relative flex items-center space-x-4 py-4"
+      >
+        <div className="min-w-0 flex-auto">
+          <div className="flex items-center gap-x-3">
+            <div
+              className={classNames(
+                // getStatusPhase(project.states[0]?.state as ProjectStatusUnion),
+                "flex-none rounded-full p-1",
+              )}
+            >
+              <div className="h-2 w-2 rounded-full bg-current" />
+            </div>
+            <h2 className="min-w-0 text-sm font-semibold leading-6 text-black">
+              <Clickable
+                href={`projets/${project.id}`}
+                className="flex gap-x-2"
+                onClick={buttonHandler}
+                isButton={!!buttonHandler}
+              >
+                {project.id}---{project.students[0]?.firstName}---
+                {JSON.stringify(project)}
+                {/* <span className="tuncate">{project.organization.name}</span>
+                <span className="text-neutral-400">/</span>
+                <span className="min-w-max">{project.pfeId}</span>
+                <span className="text-neutral-400">-</span>
+                <span
+                  className={`max-w-xs ${
+                    expandedView ? " lg:max-w-2xl" : ""
+                  } truncate whitespace-nowrap`}
+                >
+                  {project.title}
+                </span> */}
+                <span className="absolute inset-0" />
+              </Clickable>
+            </h2>
+          </div>
+          <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-neutral-600">
+            {/* <p className="truncate">{departments[project.mainDepartmentId]}</p>
+            <span className="text-neutral-300">&middot;</span>
+            <p className="whitespace-nowrap uppercase">
+              {projectStatusMap.get(project.states[0]?.state as ProjectStatus)}
+            </p> */}
+            <span className="text-neutral-300">&middot;</span>
+            <p className="whitespace-nowrap uppercase">
+              {" "}
+              {
+                // trimesters[project.trimester as keyof typeof trimesters]
+                //   .displayName
+              }{" "}
+              {project.year}
+            </p>
+          </div>
+        </div>
+        {/* <div className="flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset ring-neutral-400/30"></div> */}
+        <ChevronRightIcon
+          className="h-5 w-5 flex-none text-neutral-400"
+          aria-hidden="true"
+        />
+      </li>
+    </button>
+  );
+};
 
-const ProjectCard: React.FC<{
+/*
+const GroupCard: React.FC<{
   group: inferProcedureOutput<AppRouter["group"]["all"]>[number];
 }> = ({ group }) => {
+  console.log("===RETURN===");
+  console.log(group);
   return (
+    // <div>Hello</div>
     <button className="w-full rounded-lg border bg-white p-4 text-left shadow-sm transition-all hover:scale-[101%]">
       <li key={group.id} className="relative flex items-center space-x-4 py-4">
         <div className="min-w-0 flex-auto">
@@ -46,7 +127,8 @@ const ProjectCard: React.FC<{
             </div>
             <h2 className="min-w-0 text-sm font-semibold leading-6 text-black">
               <Link
-                href={`projects/${group.projectId}`}
+                href={`#`}
+                // href={`projects/${group.projectId}`}
                 className="flex gap-x-2"
               >
                 <span className="truncate">{group.students.toString()}</span>
@@ -85,5 +167,5 @@ const ProjectCard: React.FC<{
     </button>
   );
 };
-
-export default ProjectCard;
+*/
+export default GroupCard;

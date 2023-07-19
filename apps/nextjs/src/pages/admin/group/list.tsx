@@ -1,7 +1,7 @@
 import Head from "next/head";
-import PromoterView from "../../components/RoleViews/PromoterView";
-import TopNav from "../../components/TopNav";
-import ProjectListView from "../../components/ProjectListView";
+import TopNav from "../../../components/TopNav";
+import GroupListView from "../../../components/GroupListView";
+import AdminView from "../../../components/RoleViews/AdminView";
 
 export default function NewProject() {
   return (
@@ -20,12 +20,16 @@ export default function NewProject() {
       <main>
         <TopNav
           pages={[
-            { name: "Nouveau projet", href: "/projets/new", current: true },
+            {
+              name: "Nouveau projet",
+              href: "/admin/group/list",
+              current: true,
+            },
           ]}
         />
-        <PromoterView>
-          <ProjectListView />
-        </PromoterView>
+        <AdminView>
+          <GroupListView />
+        </AdminView>
       </main>
     </>
   );
