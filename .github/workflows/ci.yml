@@ -93,7 +93,7 @@ jobs:
         run: pnpm install
 
       - name: Generate Prisma Client
-        run: pnpm prisma generate
+        run: pnpm db-generate
 
       - name: Run front-end tests
         run: pnpm test-fe
