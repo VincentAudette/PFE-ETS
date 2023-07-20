@@ -30,9 +30,9 @@ export default function ProjectListView({
   project: any;
   setProject: any;
 }) {
-  const router: NextRouter = useRouter();
+  // const router: NextRouter = useRouter();
 
-  console.log("router.asPath", router.asPath);
+  // console.log("router.asPath", router.asPath);
 
   const { userData } = usePFEAuth();
 
