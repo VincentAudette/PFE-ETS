@@ -10,7 +10,6 @@ import {
 } from "@heroicons/react/24/solid";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { NextRouter, useRouter } from "next/router";
 import { usePFEAuth } from "../context/PFEAuthContext";
 import InfoAlert from "./Forms/atoms/InfoAlert";
 import ProjectCard from "./ProjectCard";
@@ -30,10 +29,6 @@ export default function ProjectListView({
   project: any;
   setProject: any;
 }) {
-  // const router: NextRouter = useRouter();
-
-  // console.log("router.asPath", router.asPath);
-
   const { userData } = usePFEAuth();
 
   const [filterSelections, setFilterSelections] = useState<

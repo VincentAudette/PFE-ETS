@@ -29,7 +29,7 @@ import LoadingPFE from "../../LoadingPFE";
 import ProjectView from "../../ProjectView";
 import { usePFEAuth } from "../../../context/PFEAuthContext";
 
-export default function PFEForm() {
+export default function PFEForm(currentProjectId: any) {
   const { data: allThematics, isLoading: isThematicsLoading } =
     trpc.thematic.all.useQuery();
 
@@ -111,7 +111,7 @@ export default function PFEForm() {
           />
 
           <SimpleSelect
-            name="department"
+            name=""
             options={department}
             selectedState={selectedDepartment}
             setSelectedState={setSelectedDepartment}

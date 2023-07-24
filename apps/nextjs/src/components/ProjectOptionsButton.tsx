@@ -47,7 +47,7 @@ export default function ProjectOptionsButton({
             <Menu.Item>
               {({ active }) => (
                 <Link
-                  href="#"
+                  href={`/projets/edit/${projectId}`}
                   className={classNames(
                     active
                       ? "bg-neutral-100 text-neutral-900"

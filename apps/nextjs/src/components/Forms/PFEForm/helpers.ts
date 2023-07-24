@@ -219,6 +219,17 @@ export interface PFEFormElement extends HTMLFormElement {
   numberOfTeams: { value: string };
 }
 
+export interface PFEStateFormElement extends HTMLFormElement {
+  state: {value: string}
+  // acceptsConfidentiality: HTMLInputElement;
+  // authorizesCloudComputing: HTMLInputElement;
+  // authorizesCloudOutsideQuebec: HTMLInputElement;
+  // mustRespectRegulations: HTMLInputElement;
+  // projectTitle: { value: string };
+  // numberOfStudents: { value: string };
+  // numberOfTeams: { value: string };
+}
+
 export interface Field {
   value: string;
   error?: string;

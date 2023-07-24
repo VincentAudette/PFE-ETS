@@ -8,6 +8,7 @@ import { projectRouter } from "./project";
 import { promoterRouter } from "./promoter";
 import { thematicRouter } from "./thematic";
 import { studentRouter } from "./student";
+import { projectStateRouter } from "./projectState";
 
 export const appRouter = router({
   auth: authRouter,
@@ -16,6 +17,7 @@ export const appRouter = router({
   file: fileRouter,
   group: groupRouter,
   project: projectRouter,
+  projectState: projectStateRouter,
   promoter: promoterRouter,
   thematic: thematicRouter,
   student: studentRouter,

@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProjectProvider } from "../context/ProjectContext";
 import { Analytics } from "@vercel/analytics/react";
+import { ProjectStateProvider } from "../context/ProjectStateContext";
 
 const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
   return (
@@ -16,10 +17,12 @@ const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
       <ToastContainer />
       <PFEAuthProvider>
         <ProjectProvider>
-          <div className="">
-            <Component {...pageProps} />
-            <Analytics />
-          </div>
+          <ProjectStateProvider>
+            <div className="">
+              <Component {...pageProps} />
+              <Analytics />
+            </div>
+          </ProjectStateProvider>
         </ProjectProvider>
       </PFEAuthProvider>
     </ClerkProvider>
