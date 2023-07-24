@@ -18,35 +18,6 @@ interface ProjectStateContext {
   ) => Promise<void>;
   selectedState: SelectOption;
   setSelectedState: Dispatch<SetStateAction<SelectOption>>;
-  // selectedFile: UploadFile[] | undefined;
-  // setSelectedFile: Dispatch<SetStateAction<UploadFile[] | undefined>>;
-  // isFileLoading: boolean;
-  // inputFields: PfeFormInputFields;
-  // setInputFields: Dispatch<SetStateAction<PfeFormInputFields>>;
-  // selectFieldValidationErrors: { [key in SelectKeys]?: boolean };
-  // teachers: any[];
-  // setTeachers: Dispatch<SetStateAction<any[]>>;
-  // representatives: any[];
-  // setRepresentatives: Dispatch<SetStateAction<any[]>>;
-  // students: any[];
-  // setStudents: Dispatch<SetStateAction<any[]>>;
-  // selectedTrimester: SelectOption;
-  // setSelectedTrimester: Dispatch<SetStateAction<SelectOption>>;
-  // selectedYear: SelectOption;
-  // setSelectedYear: Dispatch<SetStateAction<SelectOption>>;
-  // selectedEncouragementType: SelectOption;
-  // setSelectedEncouragementType: Dispatch<SetStateAction<SelectOption>>;
-  // selectedDepartment: SelectOption;
-  // setSelectedDepartment: Dispatch<SetStateAction<SelectOption>>;
-  // isMultiDepartment: boolean;
-  // setIsMultiDepartment: Dispatch<SetStateAction<boolean>>;
-  // otherDepartments: string[];
-  // setOtherDepartments: Dispatch<SetStateAction<string[]>>;
-  // yearOptions: SelectOption[];
-  // selectedThematics: Set<number>;
-  // setSelectedThematics: Dispatch<SetStateAction<Set<number>>>;
-  // projectId: string | undefined;
-  // setProjectId: Dispatch<SetStateAction<string | undefined>>;
 }
 
 const ProjectStateContext = React.createContext<
@@ -80,28 +51,7 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
 
     const target = e.target as PFEStateFormElement;
 
-    let containsErrors = false;
-
-    // let projObjectCopy = { ...inputFields };
-
-    // const keys = Object.keys(projObjectCopy) as FieldKey[];
-    // keys.forEach((key) => {
-    //   if (
-    //     projObjectCopy[key].value == "" &&
-    //     projObjectCopy[key].hasOwnProperty("error")
-    //   ) {
-    //     toast.error(`Le champ ${projObjectCopy[key].label} est obligatoire`);
-    //     projObjectCopy = {
-    //       ...projObjectCopy,
-    //       [key]: {
-    //         value: inputFields[key].value,
-    //         error: "Ce champ est obligatoire",
-    //         label: inputFields[key].label,
-    //       },
-    //     };
-    //     containsErrors = true;
-    //   }
-    // });
+    const containsErrors = false;
 
     const projectId = "0";
 
@@ -133,36 +83,6 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
     handlePPEStateFormSubmit,
     selectedState,
     setSelectedState,
-    // uploadedFile,
-    // isFileLoading,
-    // selectFieldValidationErrors,
-    // teachers,
-    // setTeachers,
-    // representatives,
-    // setRepresentatives,
-    // students,
-    // setStudents,
-    // isMultiDepartment,
-    // setIsMultiDepartment,
-    // otherDepartments,
-    // setOtherDepartments,
-    // selectedEncouragementType,
-    // setSelectedEncouragementType,
-    // inputFields,
-    // setInputFields,
-    // selectedFile,
-    // setSelectedFile,
-    // selectedDepartment,
-    // setSelectedDepartment,
-    // yearOptions,
-    // selectedTrimester,
-    // setSelectedTrimester,
-    // selectedYear,
-    // setSelectedYear,
-    // selectedThematics,
-    // setSelectedThematics,
-    // projectId,
-    // setProjectId,
   };
   return (
     <ProjectStateContext.Provider value={value}>
