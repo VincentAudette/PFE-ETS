@@ -60,9 +60,6 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
     e.preventDefault();
     setProjectCreationState(ProjectCreationState.LOADING);
     setFormEvent(e);
-
-    console.log("===DEBUG22===");
-    console.log(e.target);
     const target = e.target as PFEStateFormElement;
     const projectId = e.target["projectId"].value as string;
 
