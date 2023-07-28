@@ -1,7 +1,4 @@
-import SideBarLayout, {
-  NavigationItem,
-  SecondaryNavigationItem,
-} from "../SideBarLayout";
+import SideBarLayout from "../SideBarLayout";
 import { trpc } from "../../utils/trpc";
 import { NextRouter, useRouter } from "next/router";
 
@@ -13,8 +10,6 @@ import {
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
-import ProjectView from "../ProjectView";
 import ProjectCard from "../ProjectCard";
 
 export function navigation(currentIndex = -1) {

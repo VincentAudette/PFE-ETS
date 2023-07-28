@@ -9,7 +9,6 @@ import {
   navigation,
   secondaryNavigation,
 } from "../../../../components/RoleViews/AdminView";
-import ProjectView from "../../../../components/ProjectView";
 
 export default function NewProject() {
   const router: NextRouter = useRouter();

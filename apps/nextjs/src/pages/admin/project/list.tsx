@@ -1,7 +1,6 @@
 import Head from "next/head";
 import TopNav from "../../../components/TopNav";
 import ProjectListView from "../../../components/ProjectListView";
-import AdminView from "../../../components/RoleViews/AdminView";
 import {
   navigation,
   secondaryNavigation,
