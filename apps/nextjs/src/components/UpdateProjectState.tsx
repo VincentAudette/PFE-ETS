@@ -13,13 +13,8 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
   } = useStateProject();
 
   if (!project) {
-    console.log("NULL");
-    console.log(project);
     return;
   }
-  console.log("NOT NULL");
-  console.log("===DEBUG (project)===");
-  console.log(project);
   const stateList = project.states as ProjectState[];
   const lastSate = stateList[stateList.length - 1];
   const lastSateStr = lastSate?.state as string;
@@ -29,14 +24,10 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
   const projectStatusSelectOptions: Array<SelectOption> = [];
   const allowedState = [lastSateStr].concat(getAllowedStates(lastSateStr));
   projectStatusMap.forEach((str, projectStatus) => {
-    console.log(`${projectStatus}===${allowedState}`);
     if (allowedState.includes(projectStatus)) {
       projectStatusSelectOptions.push({ id: projectStatus, name: str });
     }
   });
-  console.log("===DEBUG===");
-  console.log(allowedState);
-  console.log(projectStatusSelectOptions);
   return (
     <>
       {/* {projectCreationState === ProjectCreationState.LOADING && <LoadingPFE />} */}
