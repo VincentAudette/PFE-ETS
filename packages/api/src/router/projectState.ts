@@ -12,7 +12,6 @@ export const projectStateRouter = router({
         data: {
           state: input.state,
           timestamp: input.timestamp,
-          // projectId: input.projectId,
           project: {
             connect: {
               id: input.projectId,
