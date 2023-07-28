@@ -32,8 +32,6 @@ const GroupCard: React.FC<{
   expandedView?: boolean;
 }> = ({ project, buttonHandler, selectedProjectId, expandedView = false }) => {
   if (!project) return null;
-  console.log("===RETURN===");
-  console.log(project);
   return (
     <button
       className={`w-full ${
@@ -109,8 +107,6 @@ const GroupCard: React.FC<{
 const GroupCard: React.FC<{
   group: inferProcedureOutput<AppRouter["group"]["all"]>[number];
 }> = ({ group }) => {
-  console.log("===RETURN===");
-  console.log(group);
   return (
     // <div>Hello</div>
     <button className="w-full rounded-lg border bg-white p-4 text-left shadow-sm transition-all hover:scale-[101%]">

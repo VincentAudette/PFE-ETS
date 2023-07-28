@@ -29,8 +29,6 @@ export default function GroupListView({
 }) {
   const router: NextRouter = useRouter();
 
-  console.log("router.asPath", router.asPath);
-
   const { userData } = usePFEAuth();
 
   const [filterSelections, setFilterSelections] = useState<
@@ -48,8 +46,6 @@ export default function GroupListView({
     });
   };
 
-  console.log("filterSelections", filterSelections);
-
   // Initialize state
   const [filteredProjects, setFilteredProjects] = useState([]);
 
@@ -66,43 +62,9 @@ export default function GroupListView({
       );
     });
   }
-  console.log("===departmentOnProjectArray===");
-  console.log(departmentOnProjectArray);
-  console.log("===GroupsArray===");
-  console.log(groupArray);
 
   // In your map function
-  useEffect(() => {
-    // if (userData?.admin?.departments?.length > 0) {
-    //   const projectsArray = [];
-    //   userData.admin.departments.forEach((department) => {
-    //     console.log("foreach");
-    //     console.log(department);
-    //     department.department.projectRelations.forEach((projectRelations) => {
-    //       projectsArray.push(projectRelations.project);
-    //     });
-    //   });
-    //   console.log("==========projectsArray===============");
-    //   console.log(projectsArray);
-    //   const newFilteredProjects = projectsArray.filter((project_x: any) => {
-    //     const filterStatus =
-    //       filterSelections.status.length === 0 ||
-    //       filterSelections.status.includes(project_x.states[0]?.state);
-    //     const filterDepartment =
-    //       filterSelections.department.length === 0 ||
-    //       project_x.departments.some((dept: any) =>
-    //         filterSelections.department.includes(dept.departmentId),
-    //       );
-    //     const filterOrganization =
-    //       filterSelections.organization.length === 0 ||
-    //       filterSelections.organization.includes(project_x.organization.id);
-    //     return filterStatus && filterDepartment && filterOrganization;
-    //   });
-    //   console.log("==========FINISH===============");
-    //   setFilteredProjects(newFilteredProjects);
-    //   console.log("==========FINISH2===============");
-    // }
-  }, [userData, filterSelections]);
+  useEffect(() => {}, [userData, filterSelections]);
 
   const [project, setProject] = useState<any>(null);
 

@@ -45,9 +45,6 @@ export default function ProjectListView({
       organization: [],
     });
   };
-
-  console.log("filterSelections", filterSelections);
-
   // Initialize state
   const [filteredProjects, setFilteredProjects] = useState([]);
 
@@ -56,14 +53,10 @@ export default function ProjectListView({
     if (userData?.admin?.departments?.length > 0) {
       const projectsArray = [];
       userData.admin.departments.forEach((department) => {
-        console.log("foreach");
-        console.log(department);
         department.department.projectRelations.forEach((projectRelations) => {
           projectsArray.push(projectRelations.project);
         });
       });
-      console.log("==========projectsArray===============");
-      console.log(projectsArray);
 
       const newFilteredProjects = projectsArray.filter((project_x: any) => {
         const filterStatus =
@@ -80,10 +73,7 @@ export default function ProjectListView({
 
         return filterStatus && filterDepartment && filterOrganization;
       });
-      console.log("==========FINISH===============");
-
       setFilteredProjects(newFilteredProjects);
-      console.log("==========FINISH2===============");
     }
   }, [userData, filterSelections]);
 
