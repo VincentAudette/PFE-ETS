@@ -42,6 +42,18 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
   const [projectCreationState, setProjectCreationState] =
     useState<ProjectCreationState>(ProjectCreationState.IDLE);
 
+  const createProjectSate = trpc.projectState.create.useMutation({
+    onSuccess: (data) => {
+      toast.success("État mis à jour");
+
+      document.location.href = "/admin/project/list";
+
+      // setProjectCreationState(ProjectCreationState.SUCCESS);
+      // setProjectId(data.id);
+      // resetForm();
+    },
+  });
+
   const handlePPEStateFormSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
   ) => {
@@ -49,28 +61,19 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
     setProjectCreationState(ProjectCreationState.LOADING);
     setFormEvent(e);
 
+    console.log("===DEBUG22===");
+    console.log(e.target);
     const target = e.target as PFEStateFormElement;
+    const projectId = e.target["projectId"].value as string;
 
     const containsErrors = false;
 
-    const projectId = "0";
-
-    console.log("===DEBUG222===");
-    console.log(target.state);
     const formData = {
-      state: target.state.value,
+      state: target["state[id]"].value,
       projectId: projectId,
       timestamp: new Date(),
     };
 
-    const createProjectSate = trpc.projectState.create.useMutation({
-      onSuccess: (data) => {
-        toast.success("Succès");
-        // setProjectCreationState(ProjectCreationState.SUCCESS);
-        // setProjectId(data.id);
-        // resetForm();
-      },
-    });
     await createProjectSate.mutateAsync(formData);
     if (createProjectSate.isError) {
       toast.error("Erreur");

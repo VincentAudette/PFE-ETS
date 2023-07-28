@@ -37,8 +37,8 @@ export default function NewProject() {
           ]}
         />
         <SideBarLayout
-          navigation={navigation}
-          secondaryNavigation={secondaryNavigation}
+          navigation={navigation(2)}
+          secondaryNavigation={secondaryNavigation()}
           showRightSide={project !== null}
           rightSide={
             project && (

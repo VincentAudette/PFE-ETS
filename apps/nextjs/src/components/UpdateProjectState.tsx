@@ -1,26 +1,8 @@
-import { NavigationItem, SecondaryNavigationItem } from "./SideBarLayout";
 import SimpleSelect, { SelectOption } from "./Forms/atoms/SimpleSelect";
-import { navigation, secondaryNavigation } from "./RoleViews/AdminView";
-import { projectStatusMap, projectStatusSelectOptions } from "./ProjectView";
+import { projectStatusMap } from "./ProjectView";
 import { Project, ProjectState } from "@acme/db";
-import { useState } from "react";
-import {
-  ProjectCreationState,
-  useStateProject,
-} from "../context/ProjectStateContext";
-
-function getAllowedStates(currentState: string) {
-  switch (currentState) {
-    case "DRAFT":
-      return ["EVALUATION"];
-    case "EVALUTION":
-      return ["ACCEPTED", "REJECTED", "APPROBATION"];
-    case "INVALID":
-      return ["REJECTED", "ADJUSTMENT"];
-    default:
-      return [];
-  }
-}
+import { useStateProject } from "../context/ProjectStateContext";
+import getAllowedStates from "../utils/projectState";
 
 export default function UpdateProjectSate({ project }: { project: Project }) {
   const {
@@ -28,34 +10,6 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
     handlePPEStateFormSubmit,
     selectedState,
     setSelectedState,
-    // selectedFile,
-    // setSelectedFile,
-    // isFileLoading,
-    // selectFieldValidationErrors,
-    // teachers,
-    // setTeachers,
-    // representatives,
-    // setRepresentatives,
-    // students,
-    // setStudents,
-    // isMultiDepartment,
-    // setIsMultiDepartment,
-    // otherDepartments,
-    // setOtherDepartments,
-    // selectedEncouragementType,
-    // setSelectedEncouragementType,
-    // inputFields,
-    // setInputFields,
-    // selectedDepartment,
-    // setSelectedDepartment,
-    // yearOptions,
-    // selectedTrimester,
-    // setSelectedTrimester,
-    // selectedYear,
-    // setSelectedYear,
-    // selectedThematics,
-    // setSelectedThematics,
-    // projectId,
   } = useStateProject();
 
   if (!project) {
@@ -92,6 +46,7 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
           className="flex flex-col gap-12"
           onSubmit={handlePPEStateFormSubmit}
         >
+          <input type="hidden" hidden name="projectId" value={project.id} />
           <SimpleSelect
             name="state"
             options={projectStatusSelectOptions}

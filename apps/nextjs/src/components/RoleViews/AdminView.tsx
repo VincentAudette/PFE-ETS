@@ -17,48 +17,76 @@ import { useState } from "react";
 import ProjectView from "../ProjectView";
 import ProjectCard from "../ProjectCard";
 
-export const navigation: NavigationItem[] = [
-  {
-    name: "Tableau de bord",
-    href: "/",
-    icon: HomeIcon,
-    count: "5",
-    current: true,
-  },
-  {
-    name: "Équipes",
-    href: "/admin/group/list",
-    icon: UsersIcon,
-    current: false,
-  },
-  {
-    name: "Projets",
-    href: "/admin/project/list",
-    icon: FolderIcon,
-    count: "12",
-    current: false,
-  },
-  {
-    name: "Calendar",
-    href: "#",
-    icon: CalendarIcon,
-    count: "20+",
-    current: false,
-  },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Rapports", href: "#", icon: ChartPieIcon, current: false },
-];
-export const secondaryNavigation: SecondaryNavigationItem[] = [
-  { name: "Website redesign", href: "#", initial: "W", current: false },
-  { name: "GraphQL API", href: "#", initial: "G", current: false },
-  {
-    name: "Customer migration guides",
-    href: "#",
-    initial: "C",
-    current: false,
-  },
-  { name: "Profit sharing program", href: "#", initial: "P", current: false },
-];
+export function navigation(currentIndex = -1) {
+  const nav = [
+    {
+      name: "Tableau de bord",
+      href: "/",
+      icon: HomeIcon,
+      count: "5",
+      current: false,
+    },
+    {
+      name: "Équipes",
+      href: "/admin/group/list",
+      icon: UsersIcon,
+      current: false,
+    },
+    {
+      name: "Projets",
+      href: "/admin/project/list",
+      icon: FolderIcon,
+      count: "12",
+      current: false,
+    },
+    {
+      name: "Calendar",
+      href: "#",
+      icon: CalendarIcon,
+      count: "20+",
+      current: false,
+    },
+    {
+      name: "Documents",
+      href: "#",
+      icon: DocumentDuplicateIcon,
+      current: false,
+    },
+    { name: "Rapports", href: "#", icon: ChartPieIcon, current: false },
+  ];
+  if (currentIndex == -1) {
+    const router: NextRouter = useRouter();
+    nav.forEach((navItem) => {
+      navItem.current = navItem.href === router.asPath;
+    });
+  } else {
+    nav[currentIndex]!.current = true;
+  }
+  return nav;
+}
+
+export function secondaryNavigation(currentIndex = -1) {
+  const nav = [
+    { name: "Website redesign", href: "#", initial: "W", current: false },
+    { name: "GraphQL API", href: "#", initial: "G", current: false },
+    {
+      name: "Customer migration guides",
+      href: "#",
+      initial: "C",
+      current: false,
+    },
+    { name: "Profit sharing program", href: "#", initial: "P", current: false },
+  ];
+  if (currentIndex == -1) {
+    const router: NextRouter = useRouter();
+    nav.forEach((navItem) => {
+      navItem.current = navItem.href === router.asPath;
+    });
+  } else {
+    nav[currentIndex]!.current = true;
+  }
+  return nav;
+}
 
 export default function AdminView({
   children,
@@ -68,16 +96,11 @@ export default function AdminView({
   const postQuery = trpc.post.all.useQuery();
 
   const router: NextRouter = useRouter();
-  navigation.forEach((navItem) => {
-    navItem.current = navItem.href === router.asPath;
-  });
-
-  // const [project, setProject] = useState<any>(null);
 
   return (
     <SideBarLayout
-      navigation={navigation}
-      secondaryNavigation={secondaryNavigation}
+      navigation={navigation()}
+      secondaryNavigation={secondaryNavigation()}
     >
       <div>
         {router.pathname === "/" && (
