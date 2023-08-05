@@ -186,9 +186,7 @@ export default function ProjectView({
           </li>
         ))}
       </ul>
-
       <div className="h-10" />
-
       <section className="flex max-w-2xl flex-col gap-3 text-base">
         <hr className="my-5" />
         <h2 className=" text-xl font-bold">Encadrement</h2>
@@ -253,9 +251,7 @@ export default function ProjectView({
           ))}
         </div>
       </section>
-
       <hr className="my-10" />
-
       <section id="legal" className="flex flex-col gap-4">
         {[
           {

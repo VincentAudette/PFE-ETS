@@ -13,8 +13,6 @@ import {
 export default function NewProject() {
   const router: NextRouter = useRouter();
   const projectId = router.query.id as string;
-  // const { userData } = usePFEAuth();
-  // userData?.admin?.departments?.length;
   const { data: project, isLoading: isProjectLoading } =
     trpc.project.get.useQuery(projectId, {
       enabled: !!projectId,
@@ -47,16 +45,7 @@ export default function NewProject() {
         <SideBarLayout
           navigation={navigation(2)}
           secondaryNavigation={secondaryNavigation()}
-          // showRightSide={project !== null}
-          // rightSide={
-          //   project && (
-          //     <div className="flex h-full w-full grow flex-col gap-3 overflow-y-scroll">
-          //       <ProjectView projectId={project.id} />
-          //     </div>
-          //   )
-          // }
         >
-          {/* {router.query.id as string} */}
           {isProjectLoading ? (
             <div></div>
           ) : (
