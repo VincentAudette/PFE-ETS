@@ -3,6 +3,7 @@ import { trpc } from "../utils/trpc";
 import React, { useState, useContext, Dispatch, SetStateAction } from "react";
 import { PFEStateFormElement } from "../components/Forms/PFEForm/helpers";
 import { SelectOption } from "../components/Forms/atoms/SimpleSelect";
+import { useRouter } from "next/router";
 
 export enum ProjectCreationState {
   IDLE = "idle",
@@ -35,13 +36,6 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
   const [projectCreationState, setProjectCreationState] =
     useState<ProjectCreationState>(ProjectCreationState.IDLE);
 
-  const createProjectSate = trpc.projectState.create.useMutation({
-    onSuccess: (data) => {
-      toast.success("État mis à jour");
-      document.location.href = "/admin/project/list";
-    },
-  });
-
   const handlePPEStateFormSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
   ) => {
@@ -50,6 +44,15 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
     setFormEvent(e);
     const target = e.target as PFEStateFormElement;
     const projectId = e.target["projectId"].value as string;
+
+    const createProjectSate = trpc.projectState.create.useMutation({
+      onSuccess: (data) => {
+        toast.success("État mis à jour");
+        const router = useRouter();
+        router.push(`/admin/project/list?focus=${projectId}`);
+        // document.location.href = "/admin/project/list";
+      },
+    });
 
     const formData = {
       state: target["state[id]"].value,

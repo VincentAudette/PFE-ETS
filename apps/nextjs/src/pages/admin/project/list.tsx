@@ -8,9 +8,27 @@ import {
 import { useState } from "react";
 import SideBarLayout from "../../../components/SideBarLayout";
 import ProjectView from "../../../components/ProjectView";
-
+import { Project } from "@acme/db";
+import { useRouter } from "next/router";
 export default function NewProject() {
   const [project, setProject] = useState<any>(null);
+  const router = useRouter();
+
+  let projectId = "";
+  if (router.query.focus) {
+    projectId = router.query.focus as string;
+  }
+
+  function onSetProject(project: Project) {
+    router.query.focus = project.id;
+    router.replace({
+      query: {
+        focus: project.id,
+      },
+    });
+    setProject(project);
+    projectId = projectId;
+  }
 
   return (
     <>
@@ -38,16 +56,16 @@ export default function NewProject() {
         <SideBarLayout
           navigation={navigation(2)}
           secondaryNavigation={secondaryNavigation()}
-          showRightSide={project !== null}
+          showRightSide={projectId !== ""}
           rightSide={
-            project && (
+            projectId && (
               <div className="flex h-full w-full grow flex-col gap-3 overflow-y-scroll">
-                <ProjectView projectId={project.id} />
+                <ProjectView projectId={projectId} />
               </div>
             )
           }
         >
-          <ProjectListView project={project} setProject={setProject} />
+          <ProjectListView project={project} setProject={onSetProject} />
         </SideBarLayout>
       </main>
     </>
