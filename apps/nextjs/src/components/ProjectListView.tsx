@@ -98,9 +98,7 @@ export default function ProjectListView({
               <ProjectCard
                 expandedView={project === null}
                 selectedProjectId={project_x.id === project?.id && project.id}
-                buttonHandler={
-                  () => setProject(project_x) /*setProject(project_x)*/
-                }
+                buttonHandler={() => setProject(project_x)}
                 key={project_x.id}
                 project={project_x}
               />
