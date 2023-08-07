@@ -262,6 +262,12 @@ function ProjectProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    if (userData?.promoter?.id == undefined) {
+      toast.error("Vous n'êtes pas un promoteur");
+      setProjectCreationState(ProjectCreationState.ERROR);
+      return;
+    }
+
     const formData = {
       acceptsConfidentiality: target.acceptsConfidentiality.checked,
       authorizesCloudComputing: target.authorizesCloudComputing.checked,
@@ -284,7 +290,7 @@ function ProjectProvider({ children }: { children: React.ReactNode }) {
       objectives: target.objectives.value,
       signatureImg: selectedFile[0].fileKey,
       thematics: Array.from(selectedThematics),
-      promoterId: userData?.promoter.id,
+      promoterId: userData.promoter.id,
       organizationId: selectedOrganization?.id,
       departments: [selectedDepartment.id, ...otherDepartments],
       mainDepartment: selectedDepartment.id,

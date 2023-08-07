@@ -194,19 +194,25 @@ export default function PFEForm(currentProjectId: any) {
             validationError={selectFieldValidationErrors.encouragementType}
           />
 
-          <h2 className="pt-5 text-base font-bold">
-            2. Participants au projet
-          </h2>
+          <div>
+            <h2 className="pt-5 text-base font-bold">
+              2. Participants au projet
+            </h2>
+            <p className="pt-2 pl-5 text-sm text-neutral-600">
+              Les titre d&apos;entêtes suivis d&apos;un astérisque{" "}
+              <strong>« * »</strong> indiquent un champ obligatoire.
+            </p>
+          </div>
           <div className="flex flex-col gap-[6.2rem]">
             <TableWithAddButton
               title="Représentants de l'entreprise"
               description="Est-ce que d'autres personnes de l'entreprise doivent être ajoutées au projet?"
               buttonTitle="Nouveau représentant"
               obj={{
-                firstName: "Prénom",
-                lastName: "Nom",
+                firstName: "Prénom*",
+                lastName: "Nom*",
                 phone: "Téléphone",
-                email: "Courriel",
+                email: "Courriel*",
               }}
               placeholderObj={representativePlaceholderObj}
               objs={representatives}
@@ -218,10 +224,10 @@ export default function PFEForm(currentProjectId: any) {
               description="Est-ce que vous avez déjà sélectionné un professeur pour votre projet?"
               buttonTitle="Nouveau professeur"
               obj={{
-                firstName: "Prénom",
-                lastName: "Nom",
+                firstName: "Prénom*",
+                lastName: "Nom*",
                 phone: "Téléphone",
-                email: "Courriel",
+                email: "Courriel*",
               }}
               placeholderObj={teacherPlaceholderObj}
               objs={teachers}
@@ -232,13 +238,14 @@ export default function PFEForm(currentProjectId: any) {
               title={`Étudiants préalablement sélectionnés (Maximum ${
                 isMultiDepartment ? 8 : 5
               } étudiants)`}
+              maxFields={isMultiDepartment ? 8 : 5}
               description="Avez-vous choisi des étudiants pour votre projet ? Ceux inscrits ici sont engagés et ne peuvent pas choisir d'autres projets. Pour une équipe de plus de cinq personnes, demandez une autorisation au coordonnateur des PFE de votre département."
               buttonTitle="Nouvel étudiant"
               obj={{
-                firstName: "Prénom",
-                lastName: "Nom",
-                email: "Courriel",
-                department: "Departement",
+                firstName: "Prénom*",
+                lastName: "Nom*",
+                email: "Courriel*",
+                department: "Departement*",
               }}
               placeholderObj={etudiantPlaceholderObj}
               objs={students}
@@ -255,6 +262,8 @@ export default function PFEForm(currentProjectId: any) {
                   label={`Nombre d'étudiants par équipe (minimum 3 et maximum ${
                     isMultiDepartment ? 8 : 5
                   })`}
+                  min={3}
+                  max={isMultiDepartment ? 8 : 5}
                   placeholder={`Minimum 3 étudiants et maximum ${
                     isMultiDepartment ? 8 : 5
                   } étudiants`}
@@ -278,6 +287,8 @@ export default function PFEForm(currentProjectId: any) {
                   name="numberOfTeams"
                   label="Nombre d'équipes sur le projet"
                   placeholder="Minimum 1 équipe"
+                  min={1}
+                  max={3}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     e.preventDefault();
                     setInputFields({

@@ -63,12 +63,13 @@ export default function Filters({
     if (role === "ADMIN") {
       // filters[1].options = department;
     } else if (role === "PROMOTER" && !!filters[2]) {
-      filters[2].options = userData?.promoter?.organizations.map(
-        (org: { organization: Organization }) => ({
-          name: org.organization.name,
-          id: org.organization.id,
-        }),
-      );
+      filters[2].options =
+        userData?.promoter?.organizations?.map(
+          (org: { organization: Organization }) => ({
+            name: org.organization.name,
+            id: org.organization.id,
+          }),
+        ) || [];
     }
   }, [role, userData]);
 

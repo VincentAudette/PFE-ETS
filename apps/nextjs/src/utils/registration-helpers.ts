@@ -2,6 +2,9 @@
 // export const updateToPromoter =
 // trpc.user.updateToPromoterWithOrganisation.useMutation();
 
+import { Organization } from "@acme/db";
+import { RadioCardsWithImageOption } from "../components/Forms/atoms/RadioCardsWithImage";
+
 // When receiving the form data, we can use the following function to create the promoter.
 /*!SECTION
 Do the following in the component:
@@ -28,10 +31,14 @@ export const createPromoter = (
     phone: string;
   },
   trpc: any,
-  organization: {
-    id: number;
-    name: string;
-  },
+  organization:
+    | RadioCardsWithImageOption
+    | {
+        id: number;
+        name: string;
+      }
+    | (Organization & { logo: File | null })
+    | null,
 ): Promise<{ success: boolean; message: string }> => {
   if (!promoter.firstName || !promoter.lastName) {
     return Promise.reject(
@@ -43,7 +50,7 @@ export const createPromoter = (
     return trpc
       .mutateAsync({
         clerkId: userClerkId,
-        organizationId: organization.id,
+        organizationId: organization?.id,
         firstName: promoter.firstName,
         lastName: promoter.lastName,
         phone: promoter.phone,

@@ -13,10 +13,10 @@ export default function VerticalNav({
   secondaryNavigation?: SecondaryNavigationItem[];
 }) {
   return (
-    <nav className="flex min-w-[15rem] flex-1 flex-col" aria-label="Sidebar">
+    <nav className="flex  flex-1 flex-col" aria-label="Sidebar">
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
-          <ul role="list" className="-mx-2 space-y-1">
+          <ul role="list" className=" space-y-1">
             {navigation.map((item) => (
               <li key={item.name}>
                 <Link
@@ -51,38 +51,41 @@ export default function VerticalNav({
             ))}
           </ul>
         </li>
-        <li>
-          <div className="text-xs font-semibold leading-6 text-neutral-400">
-            Projets en cours
-          </div>
-          <ul role="list" className="-mx-2 mt-2 space-y-1">
-            {secondaryNavigation?.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "bg-neutral-50 text-black"
-                      : "text-neutral-700 hover:bg-neutral-100 hover:text-black",
-                    "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
-                  )}
-                >
-                  <span
+
+        {secondaryNavigation && (
+          <li>
+            <div className="text-xs font-semibold leading-6 text-neutral-400">
+              Projets en cours
+            </div>
+            <ul role="list" className="-mx-2 mt-2 space-y-1">
+              {secondaryNavigation?.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
                     className={classNames(
                       item.current
-                        ? "border-black text-black"
-                        : "border-neutral-200 text-neutral-400 group-hover:border-black group-hover:text-black",
-                      "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium",
+                        ? "bg-neutral-50 text-black"
+                        : "text-neutral-700 hover:bg-neutral-100 hover:text-black",
+                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
                     )}
                   >
-                    {item.initial}
-                  </span>
-                  <span className="truncate">{item.name}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </li>
+                    <span
+                      className={classNames(
+                        item.current
+                          ? "border-black text-black"
+                          : "border-neutral-200 text-neutral-400 group-hover:border-black group-hover:text-black",
+                        "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium",
+                      )}
+                    >
+                      {item.initial}
+                    </span>
+                    <span className="truncate">{item.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </li>
+        )}
       </ul>
     </nav>
   );
