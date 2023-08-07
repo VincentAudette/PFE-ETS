@@ -36,6 +36,18 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
   const [projectCreationState, setProjectCreationState] =
     useState<ProjectCreationState>(ProjectCreationState.IDLE);
 
+  const router = useRouter();
+
+  let projectId = "";
+
+  const createProjectSate = trpc.projectState.create.useMutation({
+    onSuccess: (data) => {
+      toast.success("État mis à jour");
+      router.push(`/admin/project/list?focus=${projectId}`);
+      // document.location.href = "/admin/project/list";
+    },
+  });
+
   const handlePPEStateFormSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
   ) => {
@@ -43,16 +55,7 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
     setProjectCreationState(ProjectCreationState.LOADING);
     setFormEvent(e);
     const target = e.target as PFEStateFormElement;
-    const projectId = e.target["projectId"].value as string;
-
-    const createProjectSate = trpc.projectState.create.useMutation({
-      onSuccess: (data) => {
-        toast.success("État mis à jour");
-        const router = useRouter();
-        router.push(`/admin/project/list?focus=${projectId}`);
-        // document.location.href = "/admin/project/list";
-      },
-    });
+    projectId = e.target["projectId"].value as string;
 
     const formData = {
       state: target["state[id]"].value,

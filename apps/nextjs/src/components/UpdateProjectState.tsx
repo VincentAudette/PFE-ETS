@@ -18,8 +18,6 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
   const stateList = project.states as ProjectState[];
   const lastSate = stateList[stateList.length - 1];
   const lastSateStr = lastSate?.state as string;
-  let newProjectStateStr = "";
-  //   const allowedState = projectStatusSelectOptions;
 
   const projectStatusSelectOptions: Array<SelectOption> = [];
   const allowedState = [lastSateStr].concat(getAllowedStates(lastSateStr));
@@ -28,9 +26,12 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
       projectStatusSelectOptions.push({ id: projectStatus, name: str });
     }
   });
+
+  const disabled =
+    Object.keys(selectedState).length === 0 ||
+    selectedState.id === projectStatusSelectOptions[0]?.id;
   return (
     <>
-      {/* {projectCreationState === ProjectCreationState.LOADING && <LoadingPFE />} */}
       <div>
         <form
           autoComplete="off"
@@ -42,13 +43,15 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
             name="state"
             options={projectStatusSelectOptions}
             label={`État du projet`}
-            selectedState={projectStatusSelectOptions[0]}
+            selectedState={selectedState}
             setSelectedState={setSelectedState}
-            // validationError={selectFieldValidationErrors.department}
           />
           <button
             type="submit"
-            className="mr-2 mb-2 rounded-full bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300"
+            disabled={disabled}
+            className={`${
+              disabled ? "bg-gray-500" : "bg-green-700"
+            } mr-2 mb-2 rounded-full px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-green-300`}
           >
             Changer l'état
           </button>

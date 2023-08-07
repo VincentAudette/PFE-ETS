@@ -17,8 +17,6 @@ export default function NewProject() {
     trpc.project.get.useQuery(projectId, {
       enabled: !!projectId,
     });
-
-  // const data = trpc.project.get.useQuery();
   return (
     <>
       <Head>

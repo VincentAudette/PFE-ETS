@@ -18,7 +18,6 @@ export function navigation(currentIndex = -1) {
       name: "Tableau de bord",
       href: "/",
       icon: HomeIcon,
-      count: "5",
       current: false,
     },
     {
@@ -31,23 +30,23 @@ export function navigation(currentIndex = -1) {
       name: "Projets",
       href: "/admin/project/list",
       icon: FolderIcon,
-      count: "12",
+      // count: "12",
       current: false,
     },
-    {
-      name: "Calendar",
-      href: "#",
-      icon: CalendarIcon,
-      count: "20+",
-      current: false,
-    },
-    {
-      name: "Documents",
-      href: "#",
-      icon: DocumentDuplicateIcon,
-      current: false,
-    },
-    { name: "Rapports", href: "#", icon: ChartPieIcon, current: false },
+    // {
+    //   name: "Calendar",
+    //   href: "#",
+    //   icon: CalendarIcon,
+    //   count: "20+",
+    //   current: false,
+    // },
+    // {
+    //   name: "Documents",
+    //   href: "#",
+    //   icon: DocumentDuplicateIcon,
+    //   current: false,
+    // },
+    // { name: "Rapports", href: "#", icon: ChartPieIcon, current: false },
   ];
   if (currentIndex == -1) {
     const router: NextRouter = useRouter();
