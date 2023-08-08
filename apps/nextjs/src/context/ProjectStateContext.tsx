@@ -55,7 +55,7 @@ function ProjectStateProvider({ children }: { children: React.ReactNode }) {
     setProjectCreationState(ProjectCreationState.LOADING);
     setFormEvent(e);
     const target = e.target as PFEStateFormElement;
-    projectId = e.target["projectId"].value as string;
+    projectId = target["projectId"].value as string;
 
     const formData = {
       state: target["state[id]"].value,

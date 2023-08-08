@@ -4,7 +4,7 @@ import { Project, ProjectState } from "@acme/db";
 import { useStateProject } from "../context/ProjectStateContext";
 import getAllowedStates from "../utils/projectState";
 
-export default function UpdateProjectSate({ project }: { project: Project }) {
+export default function UpdateProjectSate({ project }: { project: any }) {
   const {
     projectCreationState,
     handlePPEStateFormSubmit,

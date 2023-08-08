@@ -48,7 +48,7 @@ export default function NewProject() {
             <div></div>
           ) : (
             <UpdateProjectSate
-              project={project as Project}
+              project={project}
               // selectedState={selectedState}
               // setSelectedState={setSelectedState}
             ></UpdateProjectSate>

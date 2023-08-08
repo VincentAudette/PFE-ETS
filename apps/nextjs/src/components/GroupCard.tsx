@@ -59,7 +59,7 @@ const GroupCard: React.FC<{
                 onClick={buttonHandler}
                 isButton={!!buttonHandler}
               >
-                {project.id}---{project.students[0]?.firstName}---
+                {project.id}---{project.group?.students[0]?.firstName}---
                 {JSON.stringify(project)}
                 {/* <span className="tuncate">{project.organization.name}</span>
                 <span className="text-neutral-400">/</span>

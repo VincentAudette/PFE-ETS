@@ -51,8 +51,11 @@ export default function GroupListView({
 
   // TEMP PATCH, SHOULD BE IN USEREFFECT()
   const departmentOnProjectArray = [];
-  const groupArray = [];
-  if (userData?.admin?.departments?.length > 0) {
+  const groupArray: any[] = [];
+  if (
+    userData?.admin?.departments?.length &&
+    userData?.admin?.departments?.length > 0
+  ) {
     userData.admin.departments.forEach((adminDepartement) => {
       adminDepartement.department.projectRelations.forEach(
         (departmentOnProject) => {

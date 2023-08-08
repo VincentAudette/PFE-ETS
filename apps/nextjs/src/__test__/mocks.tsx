@@ -71,6 +71,7 @@ const mockUserData = {
   clerkId: "clerkId-1",
   phone: "1234567890",
   role: Role.STUDENT, // or whatever role you want to set
+  admin: null,
   promoter: {
     id: 1,
     userId: "3",

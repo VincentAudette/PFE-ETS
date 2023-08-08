@@ -89,8 +89,6 @@ export default function AdminView({
 }: {
   children?: React.ReactNode;
 }) {
-  const postQuery = trpc.post.all.useQuery();
-
   const router: NextRouter = useRouter();
 
   return (
@@ -98,22 +96,7 @@ export default function AdminView({
       navigation={Navigation()}
       secondaryNavigation={SecondaryNavigation()}
     >
-      <div>
-        {router.pathname === "/" && (
-          <div>
-            {postQuery.data ? (
-              <div className="flex w-full flex-col gap-4">
-                {postQuery.data?.map((p: Post) => {
-                  return <ProjectCard key={p.id} post={p} />;
-                })}
-              </div>
-            ) : (
-              <p>Loading..</p>
-            )}
-          </div>
-        )}
-        {children}
-      </div>
+      <div>{children}</div>
     </SideBarLayout>
   );
 }

@@ -46,12 +46,17 @@ export default function ProjectListView({
     });
   };
   // Initialize state
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState<any[]>([]);
 
   // In your map function
   useEffect(() => {
-    if (userData?.admin?.departments?.length > 0) {
-      const projectsArray = [];
+    if (!userData) return;
+
+    if (
+      userData?.admin?.departments?.length &&
+      userData?.admin?.departments?.length > 0
+    ) {
+      const projectsArray: any[] = [];
       userData.admin.departments.forEach((department) => {
         department.department.projectRelations.forEach((projectRelations) => {
           projectsArray.push(projectRelations.project);
