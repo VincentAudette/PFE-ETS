@@ -2,8 +2,8 @@ import Head from "next/head";
 import TopNav from "../../../components/TopNav";
 import ProjectListView from "../../../components/ProjectListView";
 import {
-  navigation,
-  secondaryNavigation,
+  Navigation,
+  SecondaryNavigation,
 } from "../../../components/RoleViews/AdminView";
 import { useState } from "react";
 import SideBarLayout from "../../../components/SideBarLayout";
@@ -54,8 +54,8 @@ export default function NewProject() {
           ]}
         />
         <SideBarLayout
-          navigation={navigation(2)}
-          secondaryNavigation={secondaryNavigation()}
+          navigation={Navigation(2)}
+          secondaryNavigation={SecondaryNavigation()}
           showRightSide={projectId !== ""}
           rightSide={
             projectId && (

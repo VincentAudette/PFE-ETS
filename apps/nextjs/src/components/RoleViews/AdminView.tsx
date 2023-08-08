@@ -12,7 +12,8 @@ import {
 } from "@heroicons/react/24/solid";
 import ProjectCard from "../ProjectCard";
 
-export function navigation(currentIndex = -1) {
+export function Navigation(currentIndex = -1) {
+  const router = useRouter();
   const nav = [
     {
       name: "Tableau de bord",
@@ -49,17 +50,18 @@ export function navigation(currentIndex = -1) {
     // { name: "Rapports", href: "#", icon: ChartPieIcon, current: false },
   ];
   if (currentIndex == -1) {
-    const router: NextRouter = useRouter();
     nav.forEach((navItem) => {
       navItem.current = navItem.href === router.asPath;
     });
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     nav[currentIndex]!.current = true;
   }
   return nav;
 }
 
-export function secondaryNavigation(currentIndex = -1) {
+export function SecondaryNavigation(currentIndex = -1) {
+  const router: NextRouter = useRouter();
   const nav = [
     { name: "Website redesign", href: "#", initial: "W", current: false },
     { name: "GraphQL API", href: "#", initial: "G", current: false },
@@ -72,11 +74,11 @@ export function secondaryNavigation(currentIndex = -1) {
     { name: "Profit sharing program", href: "#", initial: "P", current: false },
   ];
   if (currentIndex == -1) {
-    const router: NextRouter = useRouter();
     nav.forEach((navItem) => {
       navItem.current = navItem.href === router.asPath;
     });
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     nav[currentIndex]!.current = true;
   }
   return nav;
@@ -93,8 +95,8 @@ export default function AdminView({
 
   return (
     <SideBarLayout
-      navigation={navigation()}
-      secondaryNavigation={secondaryNavigation()}
+      navigation={Navigation()}
+      secondaryNavigation={SecondaryNavigation()}
     >
       <div>
         {router.pathname === "/" && (

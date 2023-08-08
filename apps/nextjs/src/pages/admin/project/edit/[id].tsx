@@ -6,8 +6,8 @@ import UpdateProjectSate from "../../../../components/UpdateProjectState";
 import { Project } from "@acme/db";
 import SideBarLayout from "../../../../components/SideBarLayout";
 import {
-  navigation,
-  secondaryNavigation,
+  Navigation,
+  SecondaryNavigation,
 } from "../../../../components/RoleViews/AdminView";
 
 export default function NewProject() {
@@ -41,8 +41,8 @@ export default function NewProject() {
           ]}
         />
         <SideBarLayout
-          navigation={navigation(2)}
-          secondaryNavigation={secondaryNavigation()}
+          navigation={Navigation(2)}
+          secondaryNavigation={SecondaryNavigation()}
         >
           {isProjectLoading ? (
             <div></div>
