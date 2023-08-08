@@ -53,7 +53,7 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
               disabled ? "bg-gray-500" : "bg-green-700"
             } mr-2 mb-2 rounded-full px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-green-300`}
           >
-            Changer l'état
+            Changer l&apos;état
           </button>
         </form>
       </div>
