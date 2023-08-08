@@ -13,7 +13,7 @@ export default function UpdateProjectSate({ project }: { project: Project }) {
   } = useStateProject();
 
   if (!project) {
-    return;
+    return <></>;
   }
   const stateList = project.states as ProjectState[];
   const lastSate = stateList[stateList.length - 1];
