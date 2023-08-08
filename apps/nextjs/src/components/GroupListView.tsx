@@ -83,7 +83,6 @@ export default function GroupListView({
         </div>
         <ul className="flex w-full grow flex-col divide-y">
           {groupArray.map((project_x: any) => (
-            // OSTP: contient TOUTE la page des projets
             <GroupCard
               expandedView={project === null}
               selectedProjectId={project_x.id === project?.id && project.id}
@@ -93,7 +92,6 @@ export default function GroupListView({
             />
           ))}
           {/* {filteredProjects.length > 0 ? (
-            // Si on a des projet filtrer
             filteredProjects.map((project_x: any) => (
               // OSTP: contient TOUTE la page des projets
               <GroupCard
@@ -105,7 +103,6 @@ export default function GroupListView({
               />
             ))
           ) : (
-            // Si on a aucun projet filtrer
             <div className="flex max-h-32 w-full grow items-center justify-between gap-5 bg-stone-50 px-5 py-10 ">
               <p>Aucun projet avec ces filtres</p>
               <Button
@@ -116,62 +113,6 @@ export default function GroupListView({
           )} */}
         </ul>
       </div>
-      {/* {router.pathname === "/" &&
-        // Si on a des projets
-        (projectsArray.length >= 1 ? (
-          <div className=" flex  w-full flex-col ">
-            <div className="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-4">
-              <h1 className="text-sm font-bold">Projets</h1>
-              <div className="grow">
-                <Filters
-                  filterSelections={filterSelections}
-                  setFilterSelections={setFilterSelections}
-                  role="PROMOTER"
-                />
-              </div>
-            </div>
-            <ul className="flex w-full grow flex-col divide-y">
-              {filteredProjects.length > 0 ? (
-                // Si on a des projet filtrer
-                filteredProjects.map((project_x: any) => (
-                  // OSTP: contient TOUTE la page des projets
-                  <ProjectCard
-                    expandedView={project === null}
-                    selectedProjectId={
-                      project_x.id === project?.id && project.id
-                    }
-                    buttonHandler={() => setProject(project_x)}
-                    key={project_x.id}
-                    project={project_x}
-                  />
-                ))
-              ) : (
-                // Si on a aucun projet filtrer
-                <div className="flex max-h-32 w-full grow items-center justify-between gap-5 bg-stone-50 px-5 py-10 ">
-                  <p>Aucun projet avec ces filtres</p>
-                  <Button
-                    text="Réinitialiser les filtres"
-                    onClick={() => resetFilters()}
-                  />
-                </div>
-              )}
-            </ul>
-          </div>
-        ) : (
-          <div className=" mx-auto">
-            <div className=" mx-auto flex h-full flex-col items-center justify-center gap-1 sm:gap-5 lg:flex-row">
-              <p>Vous n&apos;avez pas de PFE en cours.</p>
-              <span>
-                <Link
-                  className=" rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500"
-                  href="/projets/new"
-                >
-                  Débuter un nouveau PFE &rarr;
-                </Link>
-              </span>
-            </div>
-          </div>
-        ))} */}
       {children}
     </div>
   );

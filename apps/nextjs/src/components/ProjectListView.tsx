@@ -92,9 +92,7 @@ export default function ProjectListView({
         </div>
         <ul className="flex w-full grow flex-col divide-y">
           {filteredProjects.length > 0 ? (
-            // Si on a des projet filtrer
             filteredProjects.map((project_x: any) => (
-              // OSTP: contient TOUTE la page des projets
               <ProjectCard
                 expandedView={project === null}
                 selectedProjectId={project_x.id === project?.id && project.id}
@@ -104,7 +102,6 @@ export default function ProjectListView({
               />
             ))
           ) : (
-            // Si on a aucun projet filtrer
             <div className="flex max-h-32 w-full grow items-center justify-between gap-5 bg-stone-50 px-5 py-10 ">
               <p>Aucun projet avec ces filtres</p>
               <Button
