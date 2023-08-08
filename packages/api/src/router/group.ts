@@ -6,8 +6,7 @@ export const groupRouter = router({
     return await ctx.prisma.group.findMany({
       include: {
         project: true,
-        students: true,
-        teachers: true
+        students: true
       },
     });
   }),
@@ -16,8 +15,7 @@ export const groupRouter = router({
       where: { projectId: input },
       include: {
         project: true,
-        students: true,
-        teachers: true
+        students: true
       },
     });
   }),
