@@ -66,7 +66,9 @@ export default function ProjectListView({
       const newFilteredProjects = projectsArray.filter((project_x: any) => {
         const filterStatus =
           filterSelections.status.length === 0 ||
-          filterSelections.status.includes(project_x.states[0]?.state);
+          filterSelections.status.includes(
+            project_x.states[project_x.states.length - 1]?.state,
+          );
         const filterDepartment =
           filterSelections.department.length === 0 ||
           project_x.departments.some((dept: any) =>
@@ -83,7 +85,7 @@ export default function ProjectListView({
   }, [userData, filterSelections]);
 
   return (
-    <div className="flex h-auto w-full grow overflow-y-scroll">
+    <div className="flex h-auto w-full grow">
       <div className=" flex  w-full flex-col ">
         <div className="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-4">
           <h1 className="text-sm font-bold">Projets</h1>

@@ -84,6 +84,7 @@ export default function ProjectView({
   const signatureFile = project?.files?.find((file) => file.type === "IMAGE");
   const promoterFirstLastName = `${project?.promoter.user.firstName} ${project?.promoter.user.lastName}`;
   const firstState = project?.states?.[0];
+  const lastState = project?.states[project.states.length - 1];
   let departmentString = "";
   const departmentStrings = project?.departments.map((dept) =>
     dept.departmentId == project?.mainDepartmentId
@@ -135,7 +136,7 @@ export default function ProjectView({
           },
           {
             title: "Statut",
-            value: projectStatusMap.get(firstState?.state as ProjectStatus),
+            value: projectStatusMap.get(lastState?.state as ProjectStatus),
           },
         ].map(({ title, value }, i) => (
           <div key={title} className={`${i > 0 ? "pl-3" : ""} min-w-max`}>
