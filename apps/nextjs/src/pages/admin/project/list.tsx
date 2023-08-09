@@ -5,13 +5,40 @@ import {
   Navigation,
   SecondaryNavigation,
 } from "../../../components/RoleViews/AdminView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideBarLayout from "../../../components/SideBarLayout";
 import ProjectView from "../../../components/ProjectView";
 import { Project } from "@acme/db";
 import { useRouter } from "next/router";
+import LoadingPFE from "../../../components/LoadingPFE";
+import UnregisteredView from "../../../components/RoleViews/UnregisteredView";
+import { useAuth } from "@clerk/nextjs";
+import { usePFEAuth } from "../../../context/PFEAuthContext";
+import { trpc } from "../../../utils/trpc";
+
 export default function NewProject() {
   const [project, setProject] = useState<any>(null);
+  const { isSignedIn, userId: clerkId } = useAuth();
+  const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
+    clerkId as string,
+    {
+      enabled: !!isSignedIn,
+    },
+  );
+  const { userData, setUserData, authProfile } = usePFEAuth();
+  useEffect(() => {
+    if (getUserData !== undefined && authProfile === null) {
+      setUserData(getUserData);
+    }
+  });
+  const activeRole = authProfile !== null ? authProfile : userData?.role;
+  if (isLoading) {
+    return <LoadingPFE />;
+  }
+  if (!isSignedIn || activeRole !== "ADMIN") {
+    return <UnregisteredView />;
+  }
+
   const router = useRouter();
 
   let projectId = "";

@@ -9,8 +9,34 @@ import {
   Navigation,
   SecondaryNavigation,
 } from "../../../../components/RoleViews/AdminView";
+import { useAuth } from "@clerk/nextjs";
+import { useEffect } from "react";
+import LoadingPFE from "../../../../components/LoadingPFE";
+import UnregisteredView from "../../../../components/RoleViews/UnregisteredView";
+import { usePFEAuth } from "../../../../context/PFEAuthContext";
 
 export default function NewProject() {
+  const { isSignedIn, userId: clerkId } = useAuth();
+  const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
+    clerkId as string,
+    {
+      enabled: !!isSignedIn,
+    },
+  );
+  const { userData, setUserData, authProfile } = usePFEAuth();
+  useEffect(() => {
+    if (getUserData !== undefined && authProfile === null) {
+      setUserData(getUserData);
+    }
+  });
+  const activeRole = authProfile !== null ? authProfile : userData?.role;
+  if (isLoading) {
+    return <LoadingPFE />;
+  }
+  if (!isSignedIn || activeRole !== "ADMIN") {
+    return <UnregisteredView />;
+  }
+
   const router: NextRouter = useRouter();
   const projectId = router.query.id as string;
   const { data: project, isLoading: isProjectLoading } =
