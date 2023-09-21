@@ -25,6 +25,7 @@ export default function NewProject() {
       enabled: !!isSignedIn,
     },
   );
+  const router = useRouter();
   const { userData, setUserData, authProfile } = usePFEAuth();
   useEffect(() => {
     if (getUserData !== undefined && authProfile === null) {
@@ -38,8 +39,6 @@ export default function NewProject() {
   if (!isSignedIn || activeRole !== "ADMIN") {
     return <UnregisteredView />;
   }
-
-  const router = useRouter();
 
   let projectId = "";
   if (router.query.focus) {

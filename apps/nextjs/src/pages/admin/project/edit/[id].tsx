@@ -17,6 +17,7 @@ import { usePFEAuth } from "../../../../context/PFEAuthContext";
 
 export default function NewProject() {
   const { isSignedIn, userId: clerkId } = useAuth();
+  const router: NextRouter = useRouter();
   const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
     clerkId as string,
     {
@@ -37,7 +38,6 @@ export default function NewProject() {
     return <UnregisteredView />;
   }
 
-  const router: NextRouter = useRouter();
   const projectId = router.query.id as string;
   const { data: project, isLoading: isProjectLoading } =
     trpc.project.get.useQuery(projectId, {
