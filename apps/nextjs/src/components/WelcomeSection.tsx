@@ -10,7 +10,7 @@ export default function WelcomeSection() {
             <span className="bg-gradient-to-tr from-red-400 to-red-700 bg-clip-text text-transparent">
               Promoteurs de projets
             </span>{" "}
-            inscrits pour la session en cours ou à venir.
+            inscrits pour la session en cours ou à venir!
           </h1>
           <p className="text-center text-xl text-neutral-700">
             Pour accéder à l&apos;application, vous devez vous connecter avec
