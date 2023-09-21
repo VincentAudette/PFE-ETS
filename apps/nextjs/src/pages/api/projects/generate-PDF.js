@@ -1,15 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { generate } from "@pdfme/generator";
-import { Project, prisma, FileType } from "../../../../../../packages/db/index";
+import { prisma, FileType } from "@acme/db";
 import { template, generateInputs } from "./generate-PDF-Helper";
 import { BlobServiceClient } from "@azure/storage-blob";
-import fs from "fs";
-import * as path from "path";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export default async function handler(req, res) {
   const project = await prisma.project.findUnique({
     where: { id: req.body.id },
   });
@@ -62,6 +56,6 @@ export default async function handler(
   }
 }
 
-function generateBlobName(project: Project) {
+function generateBlobName(project) {
   return `${project.pfeId}-${Date.now()}-PDF.pdf`;
 }
