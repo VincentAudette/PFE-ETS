@@ -47,6 +47,25 @@ export default function ProjectOptionsButton({
             <Menu.Item>
               {({ active }) => (
                 <Link
+                  href={`/admin/project/edit/${projectId}`}
+                  className={classNames(
+                    active
+                      ? "bg-neutral-100 text-neutral-900"
+                      : "text-neutral-700",
+                    "group flex items-center px-4 py-2 text-sm",
+                  )}
+                >
+                  <PencilSquareIcon
+                    className="mr-3 h-5 w-5 text-neutral-400 group-hover:text-neutral-500"
+                    aria-hidden="true"
+                  />
+                  Modifier état
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
                   href="#"
                   className={classNames(
                     active

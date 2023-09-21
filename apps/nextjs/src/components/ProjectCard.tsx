@@ -203,7 +203,10 @@ const ProjectCard: React.FC<{
             <p className="truncate">{departments[project.mainDepartmentId]}</p>
             <span className="text-neutral-300">&middot;</span>
             <p className="whitespace-nowrap uppercase">
-              {projectStatusMap.get(project.states[0]?.state as ProjectStatus)}
+              {projectStatusMap.get(
+                project.states[project.states.length - 1]
+                  ?.state as ProjectStatus,
+              )}
             </p>
             <span className="text-neutral-300">&middot;</span>
             <p className="whitespace-nowrap uppercase">

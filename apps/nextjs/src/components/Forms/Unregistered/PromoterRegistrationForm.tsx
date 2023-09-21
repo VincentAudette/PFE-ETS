@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { usePFEAuth } from "../../../context/PFEAuthContext";
 import SelectOrCreateOrganization from "../../SelectOrCreateOrganization";
 import SimpleInput from "../atoms/SimpleInput";
