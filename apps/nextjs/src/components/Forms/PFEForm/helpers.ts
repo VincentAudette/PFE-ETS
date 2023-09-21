@@ -219,6 +219,10 @@ export interface PFEFormElement extends HTMLFormElement {
   numberOfTeams: { value: string };
 }
 
+export interface PFEStateFormElement extends HTMLFormElement {
+  state: {value: string}
+}
+
 export interface Field {
   value: string;
   error?: string;
