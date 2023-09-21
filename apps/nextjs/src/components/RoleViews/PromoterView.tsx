@@ -15,33 +15,33 @@ import { usePFEAuth } from "../../context/PFEAuthContext";
 import InfoAlert from "../Forms/atoms/InfoAlert";
 import ProjectCard from "../ProjectCard";
 import { useEffect, useState } from "react";
-import Filters, { FilterByRole } from "../Filters";
+import Filters from "../Filters";
 import ProjectView from "../ProjectView";
-import { Project } from "@acme/db";
-import { inferRouterOutputs } from "@trpc/server";
 import Button from "../Forms/atoms/button";
 
 const promoterNavigation: NavigationItem[] = [
   {
     name: "Tableau de bord",
-    href: "/",
+    href: "/promoter",
     icon: HomeIcon,
     count: "5",
     current: true,
   },
-  { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
+  // { name: "Équipes", href: "#", icon: UsersIcon, count: "2", current: false },
   {
     name: "Nouveau PFE",
-    href: "/projets/new",
+    href: "/promoter/project/new",
     icon: PlusCircleIcon,
     current: false,
   },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
+  // { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
 ];
-const secondaryNavigation: SecondaryNavigationItem[] = [
-  { name: "Website redesign", href: "#", initial: "W", current: false },
-  { name: "GraphQL API", href: "#", initial: "G", current: false },
-];
+// const secondaryNavigation: SecondaryNavigationItem[] = [
+//   { name: "Website redesign", href: "#", initial: "W", current: false },
+//   { name: "GraphQL API", href: "#", initial: "G", current: false },
+// ];
+
+const secondaryNavigation: SecondaryNavigationItem[] | undefined = undefined;
 
 export default function PromoterView({
   children,
@@ -49,9 +49,6 @@ export default function PromoterView({
   children?: React.ReactNode;
 }) {
   const router: NextRouter = useRouter();
-
-  console.log("router.asPath", router.asPath);
-
   const { userData } = usePFEAuth();
 
   promoterNavigation.forEach((navItem) => {
@@ -83,15 +80,16 @@ export default function PromoterView({
     });
   };
 
-  console.log("filterSelections", filterSelections);
-
   // Initialize state
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState<any[]>([]);
 
   // In your map function
   useEffect(() => {
-    if (userData?.promoter?.projects?.length > 0) {
-      const newFilteredProjects = userData.promoter.projects.filter(
+    if (
+      userData?.promoter?.projects &&
+      userData?.promoter?.projects?.length > 0
+    ) {
+      const newFilteredProjects = userData?.promoter.projects.filter(
         (project_x: any) => {
           const filterStatus =
             filterSelections.status.length === 0 ||
@@ -123,9 +121,9 @@ export default function PromoterView({
     <SideBarLayout
       navigation={promoterNavigation}
       secondaryNavigation={secondaryNavigation}
-      showAfterNav={router.asPath === "/projets/new"}
+      showAfterNav={router.asPath === "/promoter/project/new"}
       afterNav={
-        <div className="hyphenate max-w-[18rem]">
+        <div className="hyphenate ">
           <InfoAlert
             textXs={true}
             dimmed={true}
@@ -142,9 +140,10 @@ export default function PromoterView({
         )
       }
     >
-      <div className="flex h-auto w-full grow overflow-y-scroll">
-        {router.pathname === "/" &&
-          (userData?.promoter?.projects.length >= 1 ? (
+      <div className="flex w-full grow">
+        {router.pathname === "/promoter" &&
+          (userData?.promoter?.projects &&
+          userData?.promoter?.projects.length >= 1 ? (
             <div className=" flex  w-full flex-col ">
               <div className="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-4">
                 <h1 className="text-sm font-bold">Projets</h1>
@@ -187,7 +186,7 @@ export default function PromoterView({
                 <span>
                   <Link
                     className=" rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-500"
-                    href="/projets/new"
+                    href="/promoter/project/new"
                   >
                     Débuter un nouveau PFE &rarr;
                   </Link>

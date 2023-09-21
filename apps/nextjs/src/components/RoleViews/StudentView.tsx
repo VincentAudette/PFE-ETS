@@ -63,8 +63,6 @@ export default function StudentView() {
       isHealthProfile: target.isHealthProfile.checked,
       isEnerngyProfile: target.isEnerngyProfile.checked,
     };
-
-    console.log(formValues);
   };
 
   //pendant que les projets sont en cours de chargments

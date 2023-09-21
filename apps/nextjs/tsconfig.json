@@ -1,5 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "exclude": [],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "src/pages/api/projects/generate-PDF.js",
+    "src/pages/api/projects/generate-PDF-Helper.js"
+  ]
 }

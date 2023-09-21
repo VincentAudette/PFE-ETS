@@ -25,7 +25,7 @@ export default function RoleBadge({
     roleDisplayName = "Promoteur";
   } else if (role === "STUDENT") {
     color = darkMode
-      ? "bg-emerald-400/10 text-emerald-400 ring-emerald/20"
+      ? "bg-emerald-400/10 text-emerald-400 ring-emerald-400/20"
       : "bg-gradient-to-tr from-blue-50 to-emerald-50 text-emerald-700 ring-emerald-700/10";
     roleDisplayName = "Étudiant";
   } else if (role === "UNREGISTERED") {
@@ -37,7 +37,7 @@ export default function RoleBadge({
 
   return (
     <span
-      className={`inline-flex items-center rounded-md  px-2 py-1 text-xs font-medium ring-1 ring-inset ${color}`}
+      className={`inline-flex max-w-max items-center rounded-md  px-2 py-1 text-xs font-medium ring-1 ring-inset ${color}`}
     >
       {roleDisplayName}
     </span>

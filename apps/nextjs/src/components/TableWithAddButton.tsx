@@ -2,6 +2,8 @@ import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import SimpleInput from "./Forms/atoms/SimpleInput";
 import SimpleSelect, { SelectOption } from "./Forms/atoms/SimpleSelect";
+import { toast } from "react-toastify";
+import PhoneInput from "./Forms/atoms/PhoneInput";
 
 const generateUniqueId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -21,6 +23,7 @@ export default function TableWithAddButton({
   setObjs,
   selectFields,
   selectOptions,
+  maxFields,
 }: {
   title: string;
   description: string;
@@ -31,9 +34,10 @@ export default function TableWithAddButton({
   setObjs: (objs: any[]) => void;
   selectFields?: string[];
   selectOptions?: any;
+  maxFields?: number;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [tempValues, setTempValues] = useState<TempValues>({});
+  const [tempValues, setTempValues] = useState<TempValues | null>(null);
   const [isNewObj, setIsNewObj] = useState(false);
 
   const handleInputChange = (key: string, value: any) => {
@@ -42,10 +46,42 @@ export default function TableWithAddButton({
 
   const cancelEdit = () => {
     setEditingId(null);
-    setTempValues({});
+    setTempValues(null);
   };
 
   const saveEdit = (object: any) => {
+    // Iterate over the keys in the object to check if any of them are empty or null
+    console.log("tempValues", tempValues);
+
+    let constainsEmpty = false;
+
+    Object.keys(obj).forEach((key) => {
+      if (tempValues === null) {
+        constainsEmpty = true;
+        return;
+      }
+      const value = tempValues[key];
+      console.log("key", key);
+      console.log("value", value);
+
+      if (
+        (value === "" || value === null || value === undefined) &&
+        key !== "phone"
+      ) {
+        constainsEmpty = true;
+        return;
+      }
+      if (key === "departement" && (value as any).id === 0) {
+        constainsEmpty = true;
+        return;
+      }
+    });
+
+    if (constainsEmpty) {
+      toast.error("Remplissez tous les champs obligatoires.");
+      return;
+    }
+
     handleEdit({ ...object, ...tempValues });
     cancelEdit();
   };
@@ -100,6 +136,11 @@ export default function TableWithAddButton({
           ) : (
             <button
               onClick={() => {
+                //verify if there is a currently editing row
+                if (editingId) {
+                  // If there is, d'ont add a new row
+                  return;
+                }
                 setEditingId(null); // Cancel any current editing
                 setObjs([...objs, placeholderObj]); // Add the placeholder object to objs
                 setEditingId(placeholderObj.id); // Start editing the new row
@@ -111,7 +152,12 @@ export default function TableWithAddButton({
                 setIsNewObj(true);
               }}
               type="button"
-              className="block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              disabled={maxFields ? objs.length >= maxFields : false}
+              className={`block rounded-md px-3 py-2 text-center text-sm font-semibold shadow-sm ${
+                maxFields && objs.length >= maxFields
+                  ? "cursor-not-allowed bg-neutral-400 text-neutral-800"
+                  : "bg-blue-600 text-white hover:bg-blue-500"
+              } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
             >
               Ajouter un <span className="lowercase">{buttonTitle}</span>
             </button>
@@ -159,12 +205,26 @@ export default function TableWithAddButton({
                                 name={key}
                                 options={selectOptions[key]}
                                 selectedState={
-                                  tempValues[key] || selectOptions[key][0]
+                                  (tempValues && tempValues[key]) ||
+                                  selectOptions[key][0]
                                 }
                                 setSelectedState={(value) =>
                                   handleInputChange(key, value)
                                 }
                                 label={placeholderObj[key]}
+                              />
+                            ) : key === "phone" ? (
+                              <PhoneInput
+                                name={key + "-" + object.id}
+                                value={
+                                  editingId === object.id
+                                    ? (tempValues && tempValues[key]) || ""
+                                    : object[key]
+                                }
+                                onChange={(value, data, e, formattedValue) => {
+                                  e.preventDefault();
+                                  handleInputChange(key, formattedValue);
+                                }}
                               />
                             ) : (
                               <SimpleInput
@@ -173,7 +233,7 @@ export default function TableWithAddButton({
                                 withLabel={false}
                                 value={
                                   editingId === object.id
-                                    ? tempValues[key] || ""
+                                    ? (tempValues && tempValues[key]) || ""
                                     : object[key]
                                 }
                                 onChange={(e) =>

@@ -1,20 +1,22 @@
 import Head from "next/head";
-import { trpc } from "../utils/trpc";
-import TopNav from "../components/TopNav";
+import { trpc } from "../../utils/trpc";
+import TopNav from "../../components/TopNav";
 import { useAuth } from "@clerk/nextjs";
-import { usePFEAuth } from "../context/PFEAuthContext";
-import StudentView from "../components/RoleViews/StudentView";
-import PromoterView from "../components/RoleViews/PromoterView";
-import AdminView from "../components/RoleViews/AdminView";
+import { usePFEAuth } from "../../context/PFEAuthContext";
 import { useEffect } from "react";
-import DeveloperView from "../components/RoleViews/DeveloperView";
-import Link from "next/link";
+import UnregisteredView from "../../components/RoleViews/UnregisteredView";
+import LoadingPFE from "../../components/LoadingPFE";
+import DeveloperView from "../../components/RoleViews/DeveloperView";
+import AdminView from "../../components/RoleViews/AdminView";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
-  const { data: getUserData } = trpc.auth.getUser.useQuery(clerkId as string, {
-    enabled: !!isSignedIn,
-  });
+  const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
+    clerkId as string,
+    {
+      enabled: !!isSignedIn,
+    },
+  );
 
   const { userData, setUserData, authProfile } = usePFEAuth();
 
@@ -25,6 +27,14 @@ export default function Home() {
   });
 
   const activeRole = authProfile !== null ? authProfile : userData?.role;
+
+  if (isLoading) {
+    return <LoadingPFE />;
+  }
+
+  if (!isSignedIn || activeRole !== "ADMIN") {
+    return <UnregisteredView />;
+  }
 
   return (
     <>
@@ -40,16 +50,7 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center ">
         <TopNav />
-        {activeRole === "STUDENT" && <StudentView />}
-        {activeRole === "PROMOTER" && <PromoterView />}
-        {activeRole === "ADMIN" && <AdminView />}
-        {activeRole === "DEVELOPER" && <DeveloperView />}
-        {userData === null && (
-          <div>
-            NOT AUTHORIZED
-            <Link href="/login"></Link>
-          </div>
-        )}
+        <AdminView />
       </main>
     </>
   );

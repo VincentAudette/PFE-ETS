@@ -75,7 +75,11 @@ export default function NavForPromoters() {
   };
 
   useEffect(() => {
-    if (organizationData && selectedOrganization === null) {
+    if (
+      organizationData &&
+      selectedOrganization === null &&
+      organizationData[0]
+    ) {
       setSelectedOrganization(organizationData[0]);
     }
   });
@@ -99,8 +103,6 @@ export default function NavForPromoters() {
         setShow={setShowSlideOver}
       >
         <SelectOrCreateOrganization
-          selected={unassocitatedOrganization}
-          setSelected={setUnassociatedOrganization}
           handleSelectionSubmit={handleOrganizationAssociation}
           buttonText="Associer l'organisation à votre compte"
         />
@@ -116,13 +118,23 @@ export default function NavForPromoters() {
                 onMouseEnter={() => setShowMenu(!showMenu)}
                 className="group flex items-center gap-2  pr-4 transition-all duration-150 ease-out"
               >
-                <Image
-                  className="rounded-full"
-                  height={30}
-                  width={30}
-                  src={selectedOrganization?.logo.url}
-                  alt={selectedOrganization?.name + " logo"}
-                />
+                {selectedOrganization?.logo &&
+                selectedOrganization?.logo !== null ? (
+                  <Image
+                    className="rounded-full"
+                    height={30}
+                    width={30}
+                    src={selectedOrganization?.logo.url}
+                    alt={selectedOrganization?.name + " logo"}
+                  />
+                ) : (
+                  <div className="h-8 max-h-min w-8 rounded-full">
+                    <p className="h-7 w-7 text-2xl">
+                      {selectedOrganization?.name.length > 2 &&
+                        selectedOrganization?.name.slice(0, 1)}
+                    </p>
+                  </div>
+                )}
                 <div className="flex gap-1">
                   <p className="text-sm text-neutral-50">
                     {selectedOrganization?.name}

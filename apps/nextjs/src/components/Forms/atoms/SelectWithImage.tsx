@@ -20,23 +20,27 @@ export default function SelectWithImage({
   setSelected,
 }: {
   name: string;
-  label: string;
+  label?: string;
   options: (Organization & { logo: File | null })[] | undefined;
   selected: (Organization & { logo: File | null }) | null;
-  setSelected: Dispatch<
-    SetStateAction<(Organization & { logo: File | null }) | null>
-  >;
+  setSelected: Dispatch<SetStateAction<
+    (Organization & { logo: File | null }) | null
+  > | null> | null;
 }) {
-  console.log("options", options);
-
   return (
-    <Listbox value={selected} name={name} onChange={setSelected}>
+    <Listbox
+      value={selected}
+      name={name}
+      onChange={setSelected !== null ? setSelected : undefined}
+    >
       {({ open }) => (
         <div className="w-full">
-          <Listbox.Label className="block text-sm font-medium leading-6 text-neutral-900">
-            {label}
-          </Listbox.Label>
-          <div className="relative mt-2">
+          {label && (
+            <Listbox.Label className="block text-sm font-medium leading-6 text-neutral-900">
+              {label}
+            </Listbox.Label>
+          )}
+          <div className={`relative ${label && "mt-2"}`}>
             <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm sm:leading-6">
               {selected == null ? (
                 <span className="block truncate">
