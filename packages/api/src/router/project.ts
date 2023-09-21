@@ -25,6 +25,25 @@ export const projectRouter = router({
       },
     });
   }),
+  getProjectsInEnrollment: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.project.findMany({
+      where: {
+        states: {
+          some: {
+            state: "ENROLMENT",
+          },
+        },
+      },
+      include: {
+        promoter: {
+          include: { user: true },
+        },
+        organization: true,
+        files: true,
+        thematics: true,
+      },
+    });
+  }),
   get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     return await ctx.prisma.project.findUnique({
       where: { id: input },
