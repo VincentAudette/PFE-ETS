@@ -75,7 +75,11 @@ export default function NavForPromoters() {
   };
 
   useEffect(() => {
-    if (organizationData && selectedOrganization === null) {
+    if (
+      organizationData &&
+      selectedOrganization === null &&
+      organizationData[0]
+    ) {
       setSelectedOrganization(organizationData[0]);
     }
   });
@@ -99,38 +103,46 @@ export default function NavForPromoters() {
         setShow={setShowSlideOver}
       >
         <SelectOrCreateOrganization
-          selected={unassocitatedOrganization}
-          setSelected={setUnassociatedOrganization}
           handleSelectionSubmit={handleOrganizationAssociation}
           buttonText="Associer l'organisation à votre compte"
         />
       </SlideOver>
 
       <div className="w-screen border-b border-neutral-600 bg-neutral-700 py-1">
-        <div className="container relative mx-auto   px-4 sm:px-12  xl:max-w-[80rem] 2xl:max-w-[100rem]">
+        <div className="container relative mx-auto   max-w-[1800px] px-4  sm:px-12">
           {!selectedOrganization ? (
             <LoadingDots darkMode={true} />
           ) : (
             <>
               <button
                 onMouseEnter={() => setShowMenu(!showMenu)}
-                className="group flex items-center gap-2  pr-4"
+                className="group flex items-center gap-2  pr-4 transition-all duration-150 ease-out"
               >
-                <Image
-                  className="rounded-full"
-                  height={30}
-                  width={30}
-                  src={selectedOrganization?.logo.url}
-                  alt={selectedOrganization?.name + " logo"}
-                />
+                {selectedOrganization?.logo &&
+                selectedOrganization?.logo !== null ? (
+                  <Image
+                    className="rounded-full"
+                    height={30}
+                    width={30}
+                    src={selectedOrganization?.logo.url}
+                    alt={selectedOrganization?.name + " logo"}
+                  />
+                ) : (
+                  <div className="h-8 max-h-min w-8 rounded-full">
+                    <p className="h-7 w-7 text-2xl">
+                      {selectedOrganization?.name.length > 2 &&
+                        selectedOrganization?.name.slice(0, 1)}
+                    </p>
+                  </div>
+                )}
                 <div className="flex gap-1">
-                  <p className="text-sm font-semibold text-stone-300">
+                  <p className="text-sm text-neutral-50">
                     {selectedOrganization?.name}
                   </p>
                   <ChevronDownIcon
                     className={`${
                       showMenu && "opacity-100"
-                    } h-5 w-5 text-stone-300 opacity-0 transition-opacity duration-150 group-hover:opacity-100`}
+                    } h-5 w-5 text-neutral-300 opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
                   />
                 </div>
               </button>
@@ -138,7 +150,7 @@ export default function NavForPromoters() {
                 onMouseLeave={() => setShowMenu(false)}
                 className={`${
                   showMenu ? "absolute" : "hidden"
-                }  z-40 rounded-md bg-white shadow-md`}
+                }  z-50 rounded-md bg-white shadow-md`}
               >
                 {organizationData?.map((organization) => (
                   <button
@@ -164,10 +176,10 @@ export default function NavForPromoters() {
                     )}
                   </button>
                 ))}
-                <div className="border-t border-stone-300 ">
+                <div className="border-t border-neutral-300 ">
                   <button
                     onClick={() => setShowSlideOver(true)}
-                    className="py-4 text-stone-500 hover:text-black"
+                    className="py-4 text-neutral-500 hover:text-black"
                   >
                     <p className=" px-5 text-xs font-semibold  ">
                       Ajouter une organisation

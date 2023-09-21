@@ -40,9 +40,6 @@ export default function OrganisationForm({
       enabled: selectedFile != undefined && selectedFile[0] != undefined,
     });
 
-  console.log("selectedFile IN UPLOADTHING is =>", selectedFile);
-  console.log("uploadedFile IN PRISMA is =>", uploadedFile);
-
   const handleSelectionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const target = e.target as StudentChoicesFormElement;
@@ -69,7 +66,7 @@ export default function OrganisationForm({
       onSubmit={handleSelectionSubmit}
     >
       <div className="flex">
-        {selectedFile && selectedFile[0]?.fileUrl ? (
+        {selectedFile && selectedFile[0]?.fileUrl && !isFileLoading ? (
           <Image
             src={selectedFile[0].fileUrl}
             alt="logo"
@@ -77,13 +74,13 @@ export default function OrganisationForm({
             width={128}
             height={128}
           />
-        ) : selectedFile != undefined && isFileLoading ? (
+        ) : selectedFile && isFileLoading ? (
           <div className="flex h-32 w-32 items-center justify-center border">
-            <ArrowPathIcon className="h-12 w-12 animate-spin text-gray-400" />
+            <ArrowPathIcon className="h-12 w-12 animate-spin text-neutral-400" />
           </div>
         ) : (
           <div className="flex h-32 w-32 items-center justify-center border">
-            <PhotoIcon className="h-12 w-12 text-gray-400" />
+            <PhotoIcon className="h-12 w-12 text-neutral-400" />
           </div>
         )}
 
@@ -109,6 +106,7 @@ export default function OrganisationForm({
         name="orgDescription"
         id="orgDescription"
         placeholder=""
+        maxLength={500}
       />
 
       <div className="mt-3 sm:mt-4">

@@ -20,24 +20,28 @@ export default function SelectWithImage({
   setSelected,
 }: {
   name: string;
-  label: string;
+  label?: string;
   options: (Organization & { logo: File | null })[] | undefined;
   selected: (Organization & { logo: File | null }) | null;
-  setSelected: Dispatch<
-    SetStateAction<(Organization & { logo: File | null }) | null>
-  >;
+  setSelected: Dispatch<SetStateAction<
+    (Organization & { logo: File | null }) | null
+  > | null> | null;
 }) {
-  console.log("options", options);
-
   return (
-    <Listbox value={selected} name={name} onChange={setSelected}>
+    <Listbox
+      value={selected}
+      name={name}
+      onChange={setSelected !== null ? setSelected : undefined}
+    >
       {({ open }) => (
         <div className="w-full">
-          <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
-            {label}
-          </Listbox.Label>
-          <div className="relative mt-2">
-            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm sm:leading-6">
+          {label && (
+            <Listbox.Label className="block text-sm font-medium leading-6 text-neutral-900">
+              {label}
+            </Listbox.Label>
+          )}
+          <div className={`relative ${label && "mt-2"}`}>
+            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm sm:leading-6">
               {selected == null ? (
                 <span className="block truncate">
                   Selectionner un organisation
@@ -62,7 +66,7 @@ export default function SelectWithImage({
               )}
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                 <ChevronUpDownIcon
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5 w-5 text-neutral-400"
                   aria-hidden="true"
                 />
               </span>
@@ -82,7 +86,9 @@ export default function SelectWithImage({
                       key={organisation.id}
                       className={({ active }) =>
                         classNames(
-                          active ? "bg-blue-600 text-white" : "text-gray-900",
+                          active
+                            ? "bg-blue-600 text-white"
+                            : "text-neutral-900",
                           "relative cursor-default select-none py-2 pl-3 pr-9",
                         )
                       }

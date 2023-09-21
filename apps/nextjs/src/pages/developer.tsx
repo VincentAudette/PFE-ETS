@@ -3,18 +3,20 @@ import { trpc } from "../utils/trpc";
 import TopNav from "../components/TopNav";
 import { useAuth } from "@clerk/nextjs";
 import { usePFEAuth } from "../context/PFEAuthContext";
-import StudentView from "../components/RoleViews/StudentView";
-import PromoterView from "../components/RoleViews/PromoterView";
-import AdminView from "../components/RoleViews/AdminView";
 import { useEffect } from "react";
+import UnregisteredView from "../components/RoleViews/UnregisteredView";
+import LoadingPFE from "../components/LoadingPFE";
 import DeveloperView from "../components/RoleViews/DeveloperView";
-import Link from "next/link";
+import Unauthorized from "../components/Unauthorized";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
-  const { data: getUserData } = trpc.auth.getUser.useQuery(clerkId as string, {
-    enabled: !!isSignedIn,
-  });
+  const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
+    clerkId as string,
+    {
+      enabled: !!isSignedIn,
+    },
+  );
 
   const { userData, setUserData, authProfile } = usePFEAuth();
 
@@ -25,6 +27,12 @@ export default function Home() {
   });
 
   const activeRole = authProfile !== null ? authProfile : userData?.role;
+
+  if (!isSignedIn || activeRole !== "DEVELOPER") {
+    return (
+      <Unauthorized isLoading={isLoading} isSignedIn={isSignedIn ?? false} />
+    );
+  }
 
   return (
     <>
@@ -38,18 +46,10 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center bg-neutral-50">
+      <main className="flex min-h-screen flex-col items-center ">
         <TopNav />
-        {activeRole === "STUDENT" && <StudentView />}
-        {activeRole === "PROMOTER" && <PromoterView />}
-        {activeRole === "ADMIN" && <AdminView />}
-        {activeRole === "DEVELOPER" && <DeveloperView />}
-        {userData === null && (
-          <div>
-            NOT AUTHORIZED
-            <Link href="/login"></Link>
-          </div>
-        )}
+        {isLoading && <LoadingPFE />}
+        <DeveloperView />
       </main>
     </>
   );

@@ -14,5 +14,9 @@
 }
 
 .ut-text-xs {
-  @apply text-center text-xs leading-5 text-gray-600;
+  @apply text-center text-xs leading-5 text-neutral-600;
+}
+
+.react-tel-input .form-control {
+  width: auto !important;
 }

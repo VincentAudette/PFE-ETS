@@ -2,6 +2,8 @@ import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import SimpleInput from "./Forms/atoms/SimpleInput";
 import SimpleSelect, { SelectOption } from "./Forms/atoms/SimpleSelect";
+import { toast } from "react-toastify";
+import PhoneInput from "./Forms/atoms/PhoneInput";
 
 const generateUniqueId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -21,6 +23,7 @@ export default function TableWithAddButton({
   setObjs,
   selectFields,
   selectOptions,
+  maxFields,
 }: {
   title: string;
   description: string;
@@ -31,9 +34,10 @@ export default function TableWithAddButton({
   setObjs: (objs: any[]) => void;
   selectFields?: string[];
   selectOptions?: any;
+  maxFields?: number;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [tempValues, setTempValues] = useState<TempValues>({});
+  const [tempValues, setTempValues] = useState<TempValues | null>(null);
   const [isNewObj, setIsNewObj] = useState(false);
 
   const handleInputChange = (key: string, value: any) => {
@@ -42,10 +46,42 @@ export default function TableWithAddButton({
 
   const cancelEdit = () => {
     setEditingId(null);
-    setTempValues({});
+    setTempValues(null);
   };
 
   const saveEdit = (object: any) => {
+    // Iterate over the keys in the object to check if any of them are empty or null
+    console.log("tempValues", tempValues);
+
+    let constainsEmpty = false;
+
+    Object.keys(obj).forEach((key) => {
+      if (tempValues === null) {
+        constainsEmpty = true;
+        return;
+      }
+      const value = tempValues[key];
+      console.log("key", key);
+      console.log("value", value);
+
+      if (
+        (value === "" || value === null || value === undefined) &&
+        key !== "phone"
+      ) {
+        constainsEmpty = true;
+        return;
+      }
+      if (key === "departement" && (value as any).id === 0) {
+        constainsEmpty = true;
+        return;
+      }
+    });
+
+    if (constainsEmpty) {
+      toast.error("Remplissez tous les champs obligatoires.");
+      return;
+    }
+
     handleEdit({ ...object, ...tempValues });
     cancelEdit();
   };
@@ -63,13 +99,13 @@ export default function TableWithAddButton({
   };
 
   return (
-    <div className="w-full  px-4 sm:px-6 lg:px-8">
+    <div className="w-full  sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h2 className="text-base font-semibold leading-6 text-gray-900">
+          <h2 className="text-base font-semibold leading-6 text-neutral-900">
             {title}
           </h2>
-          <p className="mt-2  text-sm text-gray-700">{description}</p>
+          <p className="mt-2  text-sm text-neutral-700">{description}</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           {objs.length < 1 ? (
@@ -86,7 +122,7 @@ export default function TableWithAddButton({
                   setEditingId(newObj.id);
                   setIsNewObj(true);
                 }}
-                className=" rounded-l-md bg-gray-50 px-3 py-2 hover:bg-gray-200"
+                className=" rounded-l-md bg-white px-3 py-2 hover:bg-neutral-100"
               >
                 OUI
               </button>
@@ -100,6 +136,11 @@ export default function TableWithAddButton({
           ) : (
             <button
               onClick={() => {
+                //verify if there is a currently editing row
+                if (editingId) {
+                  // If there is, d'ont add a new row
+                  return;
+                }
                 setEditingId(null); // Cancel any current editing
                 setObjs([...objs, placeholderObj]); // Add the placeholder object to objs
                 setEditingId(placeholderObj.id); // Start editing the new row
@@ -111,7 +152,12 @@ export default function TableWithAddButton({
                 setIsNewObj(true);
               }}
               type="button"
-              className="block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              disabled={maxFields ? objs.length >= maxFields : false}
+              className={`block rounded-md px-3 py-2 text-center text-sm font-semibold shadow-sm ${
+                maxFields && objs.length >= maxFields
+                  ? "cursor-not-allowed bg-neutral-400 text-neutral-800"
+                  : "bg-blue-600 text-white hover:bg-blue-500"
+              } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
             >
               Ajouter un <span className="lowercase">{buttonTitle}</span>
             </button>
@@ -120,16 +166,16 @@ export default function TableWithAddButton({
       </div>
       {objs.length >= 1 && (
         <div className="mt-10 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-visible sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-              <table className="min-w-full table-auto divide-y divide-gray-300">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 lg:overflow-visible">
+            <div className="inline-block min-w-full border py-2 align-middle sm:rounded-lg">
+              <table className="min-w-full table-auto divide-y divide-neutral-300">
                 <thead>
                   <tr>
                     {Object.keys(obj).map((key: any) => (
                       <th
                         key={key}
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-neutral-900 sm:pl-6 lg:pl-8"
                       >
                         {obj[key]}
                       </th>
@@ -139,7 +185,7 @@ export default function TableWithAddButton({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y  divide-gray-200 bg-white">
+                <tbody className="divide-y  divide-neutral-200 bg-white">
                   {objs.map((object, i) => (
                     <tr key={object.id}>
                       {Object.keys(obj).map((key: string, i: number) => (
@@ -147,8 +193,8 @@ export default function TableWithAddButton({
                           key={key}
                           className={
                             i === 0 || i === 1
-                              ? "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8"
-                              : "whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                              ? "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-neutral-900 sm:pl-6 lg:pl-8"
+                              : "whitespace-nowrap px-3 py-4 text-sm text-neutral-500"
                           }
                         >
                           {editingId === object.id ? (
@@ -159,12 +205,26 @@ export default function TableWithAddButton({
                                 name={key}
                                 options={selectOptions[key]}
                                 selectedState={
-                                  tempValues[key] || selectOptions[key][0]
+                                  (tempValues && tempValues[key]) ||
+                                  selectOptions[key][0]
                                 }
                                 setSelectedState={(value) =>
                                   handleInputChange(key, value)
                                 }
                                 label={placeholderObj[key]}
+                              />
+                            ) : key === "phone" ? (
+                              <PhoneInput
+                                name={key + "-" + object.id}
+                                value={
+                                  editingId === object.id
+                                    ? (tempValues && tempValues[key]) || ""
+                                    : object[key]
+                                }
+                                onChange={(value, data, e, formattedValue) => {
+                                  e.preventDefault();
+                                  handleInputChange(key, formattedValue);
+                                }}
                               />
                             ) : (
                               <SimpleInput
@@ -173,7 +233,7 @@ export default function TableWithAddButton({
                                 withLabel={false}
                                 value={
                                   editingId === object.id
-                                    ? tempValues[key] || ""
+                                    ? (tempValues && tempValues[key]) || ""
                                     : object[key]
                                 }
                                 onChange={(e) =>
@@ -210,10 +270,10 @@ export default function TableWithAddButton({
                                 }
                                 cancelEdit();
                               }}
-                              className=" group ml-2 rounded-md p-1 text-stone-600 hover:bg-stone-200 hover:text-stone-900"
+                              className=" group ml-2 rounded-md p-1 text-neutral-600 hover:bg-neutral-200 hover:text-neutral-900"
                             >
                               <NoSymbolIcon className="h-4 w-4" />
-                              <div className="absolute z-50 m-1 hidden rounded-md border-t bg-stone-700 px-2 py-1 text-xs text-stone-50 shadow-md shadow-stone-400/20 group-hover:block">
+                              <div className="absolute z-50 m-1 hidden rounded-md border-t bg-neutral-700 px-2 py-1 text-xs text-neutral-50 shadow-md shadow-neutral-400/20 group-hover:block">
                                 Canceller
                               </div>
                             </button>
@@ -237,10 +297,10 @@ export default function TableWithAddButton({
                                 e.preventDefault();
                                 handleDelete(object.id);
                               }}
-                              className="group ml-2 rounded-md p-1 text-gray-500 hover:bg-red-200 hover:text-red-600"
+                              className="group ml-2 rounded-md p-1 text-neutral-500 hover:bg-red-200 hover:text-red-600"
                             >
                               <XMarkIcon className="h-4 w-4" />
-                              <div className="absolute m-1 hidden rounded-md border-t bg-red-700 px-2 py-1 text-xs text-stone-50 shadow-md shadow-stone-400/20 group-hover:block">
+                              <div className="absolute m-1 hidden rounded-md border-t bg-red-700 px-2 py-1 text-xs text-neutral-50 shadow-md shadow-neutral-400/20 group-hover:block">
                                 Supprimer
                               </div>
                             </button>

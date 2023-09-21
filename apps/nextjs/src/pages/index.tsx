@@ -4,24 +4,47 @@ import TopNav from "../components/TopNav";
 import { useAuth } from "@clerk/nextjs";
 import WelcomeSection from "../components/WelcomeSection";
 import { usePFEAuth } from "../context/PFEAuthContext";
-import StudentView from "../components/RoleViews/StudentView";
-import PromoterView from "../components/RoleViews/PromoterView";
-import AdminView from "../components/RoleViews/AdminView";
-import DeveloperView from "../components/RoleViews/DeveloperView";
-import UnregisteredView from "../components/RoleViews/UnregisteredView";
 import LoadingPFE from "../components/LoadingPFE";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { Role } from "@acme/db";
 
 export default function Home() {
   const { isSignedIn, userId: clerkId } = useAuth();
+  const { authProfile, setAuthProfile } = usePFEAuth();
   const { data: getUserData, isLoading } = trpc.auth.getUser.useQuery(
     clerkId as string,
     {
       enabled: !!isSignedIn,
+      retry: (failureCount, error: any) => {
+        // retry 3 times if data is null or undefined
+        return failureCount <= 3 && error?.response?.data == null;
+      },
+      // add this line if you want to add a delay between retries
+      // this is an example of an exponential backoff delay
+      retryDelay: (attemptIndex) => Math.min(attemptIndex * 1000, 3000),
     },
   );
 
-  const { userData, authProfile } = usePFEAuth();
-  const activeRole = authProfile !== null ? authProfile : getUserData?.role;
+  let activeRole: Role | null = authProfile;
+  if (!activeRole && getUserData?.role) {
+    activeRole = getUserData?.role;
+  }
+  const router = useRouter();
+
+  useEffect(() => {
+    if (activeRole === "UNREGISTERED") {
+      router.push("/register");
+    } else if (activeRole == "STUDENT") {
+      router.push("/student");
+    } else if (activeRole == "PROMOTER") {
+      router.push("/promoter");
+    } else if (activeRole == "ADMIN") {
+      router.push("/admin");
+    } else if (activeRole == "DEVELOPER") {
+      router.push("/developer");
+    }
+  }, [activeRole, router, setAuthProfile]);
 
   return (
     <>
@@ -35,19 +58,12 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center bg-neutral-50">
+      <main className="flex min-h-screen flex-col items-center">
         {isSignedIn && isLoading && <LoadingPFE />}
         <TopNav />
-        {activeRole === "STUDENT" && <StudentView />}
-        {activeRole === "PROMOTER" && <PromoterView />}
-        {activeRole === "ADMIN" && <AdminView />}
-        {activeRole === "DEVELOPER" && <DeveloperView />}
-        {activeRole === "UNREGISTERED" && <UnregisteredView />}
-        {userData === null && (
-          <div className="max-w-7xl">
-            <WelcomeSection />
-          </div>
-        )}
+        <div className="max-w-7xl">
+          <WelcomeSection />
+        </div>
       </main>
     </>
   );

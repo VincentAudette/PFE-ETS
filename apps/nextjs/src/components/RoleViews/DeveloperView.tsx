@@ -8,11 +8,11 @@ export default function DeveloperView() {
     <div>
       <div className="py-10">
         <h1 className="font-mono text-2xl font-bold">Vue Développeur</h1>
-        <p className="text-stone-500">
+        <p className="text-neutral-500">
           Selectionner un profil pour commencer à créer votre fonctionnalité.
         </p>
       </div>
-      <div className="flex gap-5">
+      <div className="flex w-[85vw]  gap-5">
         {[
           {
             key: "STUDENT",
@@ -26,11 +26,15 @@ export default function DeveloperView() {
             key: "ADMIN",
             name: "Administrateur",
           },
+          {
+            key: "UNREGISTERED",
+            name: "Non enregistré",
+          },
         ].map((role: { key: string; name: string }) => (
           <button
             key={role.key}
             onClick={() => setAuthProfile(role.key as Role)}
-            className="rounded-2xl bg-stone-200 px-32 py-12 text-xl font-semibold text-gray-900 hover:bg-stone-300"
+            className="grow rounded-2xl bg-neutral-200 py-12 text-xl font-semibold text-neutral-900 hover:bg-neutral-300"
           >
             {role.name}
           </button>
@@ -39,7 +43,7 @@ export default function DeveloperView() {
       <div className="flex gap-5 py-10">
         {linkItems.map((item) => (
           <ItemSquare
-            className="flex grow flex-col items-center justify-center rounded-md bg-stone-200 py-8 hover:bg-stone-300"
+            className="flex grow flex-col items-center justify-center rounded-md bg-neutral-200 py-8 hover:bg-neutral-300"
             href={item.href}
             key={item.href}
             IconSvg={

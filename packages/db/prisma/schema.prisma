@@ -9,12 +9,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Post {
-  id      String @id @default(cuid())
-  title   String
-  content String @db.Text
-}
-
 model User {
   clerkId   String     @id @unique
   firstName String?
@@ -25,7 +19,6 @@ model User {
   promoter  Promoter?
   admin     Admin?
   developer Developer?
-
   @@map("users")
 }
 
@@ -116,12 +109,14 @@ model File {
 }
 
 model Organization {
-  id          Int                    @id @default(autoincrement())
-  name        String
-  description String?
+  id          Int                  @id @default(autoincrement())
+  name        String               
+  description String?              @db.VarChar(500)
   projects    Project[]
   logo        File?
+  isETS       Boolean             @default(false)
   promoters   PromoterOrganization[]
+  @@index([isETS])
 }
 
 model Promoter {
@@ -173,14 +168,17 @@ model Thematic {
 
 model Student {
   email          String          @id @unique
+  clerkId        String?
   firstName      String
-  groupId        Int
+  groupId        Int?
   lastName       String
   studentChoices StudentChoice[]
   departmentId   String
   department     Department     @relation(fields: [departmentId], references: [id])
-  group          Group           @relation(fields: [groupId], references: [id])
+  group          Group?          @relation(fields: [groupId], references: [id])
+  @@index([clerkId])
 }
+
 
 model Admin {
   id          Int               @id @default(autoincrement())
