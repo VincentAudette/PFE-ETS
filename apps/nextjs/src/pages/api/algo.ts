@@ -18,14 +18,15 @@ const filePath = 'public/etudiants.csv';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    // Code de l'algorithme
     const data = await readCSVFile(filePath);
-    //console.log(data); // This will log the parsed data as an array of objects
-    data.forEach( (etudiant) => {
+    data.forEach( (etudiant:any) => {
       console.log(etudiant.Choix1)
     });
+    // Renvoi du JSON formatté
     res.status(200).json(data);
   } catch (error) {
-    console.error(error); // This will log any errors that occurred during the parsing process
+    console.error(error);
     res.status(400).json(error);
   }
 };
