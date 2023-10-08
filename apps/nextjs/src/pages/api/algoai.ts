@@ -2,17 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as fs from "fs";
 import csv from 'csv-parser';
 import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
 
-// https://sdk.vercel.ai/docs/getting-started
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
-//export const runtime = 'edge';
-export const config = {
-    runtime: "edge"
-};
+const { Configuration, OpenAIApi } = require('openai');
+const configuration = {
+    apiKey: process.env.OPENAI_API_KEY
+  };
+  
+  const openai = new OpenAI(configuration);
 
 async function readCSVFile(filePath: string): Promise<object[]> {
   const results: object[] = [];
@@ -33,23 +29,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // Code de l'algorithme
         const data = await readCSVFile(filePath);
         
-        // Create a chat completion using OpenAI
-        const response = await openai.completions.create({
-            model: 'text-davinci-003',
-            stream: true,
+        const result = await openai.completions.create({
+            model: "text-davinci-003",
+            prompt:"Hey! What's up?",
             temperature: 0.6,
-            max_tokens: 300,
-            prompt: `What's up?`,
+            max_tokens: 100,
         });
 
-        // Convert the response into a friendly text-stream
-        const stream = OpenAIStream(response);
-        // Respond with the stream
-        return new StreamingTextResponse(stream);
+        res.status(200).json({ result: res });
             
         // Renvoi du JSON formatté
-        res.status(200).pipe(res)
+        //res.status(200).pipe(res)
     } catch (error) {
+        console.log(openai.apiKey)
         console.error(error);
         res.status(400).json(error);
     }
