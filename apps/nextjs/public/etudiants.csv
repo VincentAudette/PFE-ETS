@@ -1,4 +1,4 @@
-ID,Prénom,Nom,Adresse Courriel,Choix1,Choix2,Choix3,Choix4
+ID,Prenom,Nom,Courriel,Choix1,Choix2,Choix3,Choix4
 1,John,Doe,john.doe.1@ens.etsmtl.ca,PFE004,PFE002,PFE006,PFE001
 2,Jane,Smith,jane.smith.2@ens.etsmtl.ca,PFE001,PFE003,PFE005,PFE002
 3,Michael,Johnson,michael.johnson.3@ens.etsmtl.ca,PFE005,PFE006,PFE003,PFE002
