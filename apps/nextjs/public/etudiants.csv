@@ -1,9 +1,9 @@
 ID,Prenom,Nom,Courriel,Choix1,Choix2,Choix3,Choix4
 1,John,Doe,john.doe.1@ens.etsmtl.ca,PFE004,PFE002,PFE006,PFE001
-2,Jane,Smith,jane.smith.2@ens.etsmtl.ca,PFE001,PFE003,PFE005,PFE002
+2,Jane,Smith,jane.smith.2@ens.etsmtl.ca,PFE001,PFE001,PFE001,PFE001
 3,Michael,Johnson,michael.johnson.3@ens.etsmtl.ca,PFE005,PFE006,PFE003,PFE002
-4,Emily,Clark,emily.clark.4@ens.etsmtl.ca,PFE003,PFE001,PFE004,PFE005
+4,Emily,Clark,emily.clark.4@ens.etsmtl.ca,PFE003,PFE003,PFE003,PFE003
 5,David,Brown,david.brown.5@ens.etsmtl.ca,PFE002,PFE004,PFE001,PFE006
-6,Sarah,Anderson,sarah.anderson.6@ens.etsmtl.ca,PFE006,PFE005,PFE003,PFE001
-7,Alex,Williams,alex.williams.7@ens.etsmtl.ca,PFE001,PFE004,PFE002,PFE003
+6,Sarah,Anderson,sarah.anderson.6@ens.etsmtl.ca,PFE003,PFE003,PFE003,PFE003
+7,Alex,Williams,alex.williams.7@ens.etsmtl.ca,PFE001,PFE001,PFE001,PFE001
 8,Olivia,Jackson,olivia.jackson.8@ens.etsmtl.ca,PFE005,PFE002,PFE004,PFE006

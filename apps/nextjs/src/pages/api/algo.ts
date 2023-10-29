@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as fs from "fs";
 import csv from "csv-parser";
 
+// Structure des différents objets
 interface Etudiant {
   Courriel: string;
   Choix1: string;
@@ -14,6 +15,13 @@ interface Projet {
   Nom: string;
   MinEtudiants: number;
   MaxEtudiants: number;
+}
+
+interface Equipe {
+  Projet: Projet;
+  Etudiants: Etudiant[];
+  EstFonctionnelle: boolean;
+  EstComplete: boolean;
 }
 
 async function readStudents(filePath: string): Promise<Etudiant[]> {
@@ -62,19 +70,58 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const filePathProjects = "public/projets.csv";
 
   try {
-    const ListeEtudiants = await readStudents(filePathStudents);
-    const ListeProjets = await readProjects(filePathProjects);
+    const listeEtudiants = await readStudents(filePathStudents);
+    const listeProjets = await readProjects(filePathProjects);
+    const listeEquipes: Equipe[] = [];
 
-    // Algorithme
-    ListeEtudiants.forEach((etudiant) => {
-      console.log(etudiant);
+    // Début de l'algorithme
+    listeEtudiants.forEach((etudiant, index) => {
+      const { Choix1, Choix2, Choix3, Choix4 } = etudiant;
+
+      // Vérifier si les 4 choix sont identiques
+      if (Choix1 === Choix2 && Choix2 === Choix3 && Choix3 === Choix4) {
+        console.log(
+          `Étudiant trouvé avec les 4 mêmes choix: ${etudiant.Courriel}`,
+        );
+        // Rechercher dans les équipes si une équipe avec ce projet existe
+        const equipeExistante = listeEquipes.find(
+          (equipe) => equipe.Projet.Nom === Choix1,
+        );
+
+        if (equipeExistante) {
+          equipeExistante.Etudiants.push(etudiant);
+          // Retirer l'étudiant de la liste des étudiants
+          listeEtudiants.splice(index, 1);
+        } else {
+          const projet = listeProjets.find((projet) => projet.Nom === Choix1);
+          if (projet) {
+            const nouvelleEquipe: Equipe = {
+              Etudiants: [etudiant],
+              Projet: projet,
+              EstFonctionnelle: false,
+              EstComplete: false,
+            };
+            listeEquipes.push(nouvelleEquipe);
+            // Retirer l'étudiant de la liste des étudiants
+            listeEtudiants.splice(index, 1);
+          }
+        }
+      }
     });
 
-    ListeProjets.forEach((projet) => {
-      console.log(projet);
+    // Console logs pour vérifier les équipes et les étudiants restants
+    listeEquipes.forEach((equipe) => {
+      console.log("Équipe associée au projet " + equipe.Projet.Nom + " : ");
+      console.log(equipe);
     });
 
-    res.status(200).json({ etudiants: ListeEtudiants, projets: ListeProjets });
+    console.log("Étudiants restants : ");
+    console.log(listeEtudiants);
+
+    res.status(200).json({
+      etudiantsRestants: listeEtudiants,
+      equipesFormees: listeEquipes,
+    });
   } catch (error) {
     console.error(error);
     res.status(400).json(error);
