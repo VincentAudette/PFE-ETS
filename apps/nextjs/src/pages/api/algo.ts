@@ -302,6 +302,9 @@ function trouverMeilleurScenario(etudiants: Etudiant[], projets: Projet[], itera
         scenario.splice(scenario.indexOf(projet), 1);
       }
 
+      // Mélange de l'ordre des étudiants des équipes incomplètes
+      etudiantsEquipeIncomplete = randomizeArrayOrder(etudiantsEquipeIncomplete);
+
       // Calcul de l'appréciation des étudiants des équipes incomplètes
       let projetsApprecies = calculerScoreAppreciationProjets(etudiantsEquipeIncomplete, projetsEquipeIncomplete);
       projetsApprecies.pop(); // Retrait du projet le moins apprécié
