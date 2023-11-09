@@ -5,7 +5,7 @@
 </p>
 
 ## Qu'est-ce que ce projet?
-C'est une plateforme unifiée de gestion des projets de fin d'études (PFE) fait à l'École de Technologie Supérieure (ÉTS). Cette dernière permet de coordonner les acteurs qui intéragissent dans le cadre d'un PFE ainsi que de . 
+C'est une plateforme unifiée de gestion des projets de fin d'études (PFE) fait à l'École de Technologie Supérieure (ÉTS). Cette dernière permet de coordonner les acteurs qui intéragissent dans le cadre d'un PFE ainsi que d'automatiser ces intéractions. 
 
 Dans le cadre d'un PFE, différents acteurs doivent intéragir entre eux :
 - **Promoteur** : Entitée qui souhaite proposer un projet qui sera effectué par un groupe d'étudiants.
