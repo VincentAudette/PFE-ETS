@@ -30,13 +30,20 @@ const GroupCard: React.FC<{
   buttonHandler?: () => void;
   selectedProjectId?: string;
   expandedView?: boolean;
-}> = ({ project, buttonHandler, selectedProjectId, expandedView = false }) => {
+  }> = ({ project, buttonHandler, selectedProjectId, expandedView = false }) => {
   if (!project) return null;
+  
+  //the project returned in line 29 only exposed some attributes, so i had to come up with this idea to access them. 
+  let ProjectAsJson = JSON.stringify(project)
+  let ProjectAsObj = JSON.parse(ProjectAsJson);
+  let subs = ProjectAsObj.students.length;
+
   return (
     <button
       className={`w-full ${
         project.id === selectedProjectId ? "bg-neutral-50" : "bg-white"
       } max-h-48 grow p-4 text-left shadow-sm transition-all hover:scale-[101%]`}
+      onClick={() => buttonHandler && buttonHandler()}
     >
       <li
         key={project.id}
@@ -44,14 +51,7 @@ const GroupCard: React.FC<{
       >
         <div className="min-w-0 flex-auto">
           <div className="flex items-center gap-x-3">
-            <div
-              className={classNames(
-                // getStatusPhase(project.states[0]?.state as ProjectStatusUnion),
-                "flex-none rounded-full p-1",
-              )}
-            >
-              <div className="h-2 w-2 rounded-full bg-current" />
-            </div>
+            
             <h2 className="min-w-0 text-sm font-semibold leading-6 text-black">
               <Clickable
                 href={`projets/${project.id}`}
@@ -59,39 +59,26 @@ const GroupCard: React.FC<{
                 onClick={buttonHandler}
                 isButton={!!buttonHandler}
               >
-                {project.id}---{project.group?.students[0]?.firstName}---
-                {JSON.stringify(project)}
-                {/* <span className="tuncate">{project.organization.name}</span>
-                <span className="text-neutral-400">/</span>
-                <span className="min-w-max">{project.pfeId}</span>
+                <span className="text-neutral-400">Groupe ID:</span>
+                <span className="tuncate">{project.id}</span>
                 <span className="text-neutral-400">-</span>
-                <span
-                  className={`max-w-xs ${
-                    expandedView ? " lg:max-w-2xl" : ""
-                  } truncate whitespace-nowrap`}
-                >
-                  {project.title}
-                </span> */}
-                <span className="absolute inset-0" />
+                <span className="tuncate">Étudiant Inscrits:</span>
+                <span className="tuncate">{subs}</span>
+
+                
+                
               </Clickable>
             </h2>
           </div>
           <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-neutral-600">
-            {/* <p className="truncate">{departments[project.mainDepartmentId]}</p>
-            <span className="text-neutral-300">&middot;</span>
-            <p className="whitespace-nowrap uppercase">
-              {projectStatusMap.get(project.states[0]?.state as ProjectStatus)}
-            </p> */}
-            <span className="text-neutral-300">&middot;</span>
-            <p className="whitespace-nowrap uppercase">
-              {" "}
-              {
-                // trimesters[project.trimester as keyof typeof trimesters]
-                //   .displayName
-              }{" "}
-              {project.year}
-            </p>
+            <p className="whitespace-nowrap uppercase">Email:</p>
+            {ProjectAsObj.students.map((student:any) => (
+              <li key={student.email}>
+                {student.email}
+              </li>
+            ))}
           </div>
+          
         </div>
         {/* <div className="flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset ring-neutral-400/30"></div> */}
         <ChevronRightIcon
@@ -101,6 +88,7 @@ const GroupCard: React.FC<{
       </li>
     </button>
   );
+  
 };
 
 /*

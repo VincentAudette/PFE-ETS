@@ -84,7 +84,7 @@ export default function GroupListView({
             /> */}
           </div>
         </div>
-        <ul className="flex w-full grow flex-col divide-y">
+        <ul className="w-full grow flex-col divide-y">
           {groupArray.map((project_x: any) => (
             <GroupCard
               expandedView={project === null}
