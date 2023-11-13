@@ -10,13 +10,13 @@
 
 ## Description
 
-C'est une plateforme unifiée de gestion des projets de fin d'études (PFE) fait à l'École de Technologie Supérieure (ÉTS). Cette dernière permet de coordonner les acteurs qui intéragissent dans le cadre d'un PFE ainsi que d'automatiser ces intéractions.
+C'est une plateforme unifiée de gestion des projets de fin d'études (PFE) faits à l'École de Technologie Supérieure (ÉTS). Cette dernière permet de coordonner les acteurs qui interagissent dans le cadre d'un PFE ainsi que d'automatiser ces interactions.
 
-Dans le cadre d'un PFE, différents acteurs doivent intéragir entre eux :
+Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 
-- **Promoteur** : Entitée qui souhaite proposer un projet qui sera effectué par un groupe d'étudiants.
-- **Étudiant** : Choisie et effectue un des projets proposé par un promoteur.
-- **Professeur** : Surveille et évalue le travail effectué par le groupe d'étudiants.
-- **Coordonnateur** : Rend disponible aux étudiants les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
+- **Promoteur** : Entitée, souvent une compagnie ou un professeur, qui souhaite proposer un projet qui sera effectué par un groupe d'étudiants.
+- **Étudiant** : Choisit et effectue un des projets proposés par un promoteur sous la supervision d'un professeur.
+- **Professeur** : Surveille et évalue le travail effectué par le groupe d'étudiants sous sa charge.
+- **Coordonnateur** : Rend disponible aux étudiants dans les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
 
 ## Fonctionnalités
