@@ -1,8 +1,12 @@
+<div align="center">
+
+<a href="https://pfeetsmtl.systems/"><img src="https://pfeetsmtl.systems/pfe-etsmtl-marque/fond-rouge-avec-description/logo-pfe-fond-rouge-avec-description.svg" width="192" height="192" alt="Logo"/></a>
+
 # Plateforme de gestion des projets de fin d'études (PFE)
 
-<p align="center">
-  <img src="https://pfeetsmtl.systems/pfe-etsmtl-marque/fond-rouge-avec-description/logo-pfe-fond-rouge-avec-description.svg" width="192" height="192">
-</p>
+![Static Badge](https://img.shields.io/badge/Statut_du_projet-D%C3%A9veloppement-blue)
+
+</div>
 
 ## Description
 
