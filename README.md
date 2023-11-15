@@ -52,8 +52,8 @@ pnpm run db-push
 pnpm run dev
 ```
 
-## Liens
-DB: [planetscale.com](https://planetscale.com)
-Auth: [clerk.com](https://clerk.com)
-Email: [sendgrid.com](https://sendgrid.com/)
-Uploading: [uploadthing.com](https://uploadthing.com/)
+## Services externes
+Base de données : [PlanetScale](https://planetscale.com)  
+Authentification : [Clerk](https://clerk.com)  
+Envoi de courriels: [SendGrid](https://sendgrid.com/)  
+Hébergement de fichiers : [uploadthing](https://uploadthing.com/)  
