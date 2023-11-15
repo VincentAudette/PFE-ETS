@@ -19,7 +19,7 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 - **Promoteur** : Entitée, souvent une compagnie ou un professeur, qui souhaite proposer un projet qui sera effectué par un groupe d'étudiants.
 - **Étudiant** : Choisit et effectue un des projets proposés par un promoteur sous la supervision d'un professeur.
 - **Professeur** : Surveille et évalue le travail effectué par le groupe d'étudiants sous sa charge.
-- **Coordonnateur** : Rend disponible aux étudiants dans les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
+- **Administrateur** : Rend disponible aux étudiants dans les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
 
 ## Fonctionnalités
 
@@ -28,11 +28,12 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 - Soumission de projet par un **promoteur**.
 - Création automatique des descriptifs de projets. 
 - Soumission de choix de projets par les **étudiants**.
-- Gestion centralisée des soumissions de projets.[^1]
+- Gestion centralisée des soumissions de projets par un **administrateur**.[^*]
 
 **Équipes**
 
-- Création des équipes basée par algorithme
+- Création des équipes automatiquement via un algorithme.
+- Gestion centralisée des équipes par un **administrateur**.
 
 
-[^1]: Note de bas de page 1
+[^*]: Fonction qui reste à être complétée.
