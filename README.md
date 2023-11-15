@@ -51,3 +51,9 @@ pnpm run db-generate
 pnpm run db-push
 pnpm run dev
 ```
+
+## Liens
+DB: [planetscale.com](https://planetscale.com)
+Auth: [clerk.com](https://clerk.com)
+Email: [sendgrid.com](https://sendgrid.com/)
+Uploading: [uploadthing.com](https://uploadthing.com/)
