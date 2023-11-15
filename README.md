@@ -30,6 +30,7 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 - Soumission de choix de projets par les **étudiants**.
 - Gestion centralisée des soumissions de projets par un **coordonnateur**.*
 
+
 **Équipes**
 
 - Création des équipes automatiquement via un algorithme.
@@ -42,3 +43,11 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 
 <sub>* Fonctionnalité à compléter.</sub>
 
+## Utilisation
+
+```shell
+pnpm install
+pnpm run db-generate
+pnpm run db-push
+pnpm run dev
+```
