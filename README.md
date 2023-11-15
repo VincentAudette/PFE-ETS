@@ -20,3 +20,9 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 - **Coordonnateur** : Rend disponible aux étudiants dans les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
 
 ## Fonctionnalités
+**Implémentées :**
+ * [x] pick subclasses
+ * [ ] checkbox
+ * [ ] text
+ * [ ] images
+ * [ ] file picker
