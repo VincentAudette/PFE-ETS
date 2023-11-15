@@ -34,13 +34,12 @@ export function Navigation(currentIndex = -1) {
       // count: "12",
       current: false,
     },
-    // {
-    //   name: "Calendar",
-    //   href: "#",
-    //   icon: CalendarIcon,
-    //   count: "20+",
-    //   current: false,
-    // },
+     {
+       name: "AlgoÉquipe",
+       href: "/admin/algo/fileDeposit",
+       icon: ChartPieIcon,
+       current: false,
+     },
     // {
     //   name: "Documents",
     //   href: "#",
