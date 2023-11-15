@@ -45,7 +45,7 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 
 ## Utilisation
 
-```shell
+```bash
 pnpm install
 pnpm run db-generate
 pnpm run db-push
