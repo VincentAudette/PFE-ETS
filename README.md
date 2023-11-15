@@ -6,7 +6,7 @@
 
 ![Static Badge](https://img.shields.io/badge/Statut_du_projet-D%C3%A9veloppement-blue)
 
-[Description](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#description) | [Fonctionnalités](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#fonctionnalit%C3%A9s) | [Utilisation](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#utilisation) | [Services externes]https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#services-externes)
+[Description](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#description) | [Fonctionnalités](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#fonctionnalit%C3%A9s) | [Utilisation](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#utilisation) | [Services externes](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#services-externes)
 
 </div>
 
