@@ -6,6 +6,8 @@
 
 ![Static Badge](https://img.shields.io/badge/Statut_du_projet-D%C3%A9veloppement-blue)
 
+[Description](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#description) | [Fonctionnalités](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#fonctionnalit%C3%A9s) | [Utilisation](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#utilisation) | [Liens](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#liens)
+
 </div>
 
 ## Description
@@ -20,9 +22,17 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 - **Coordonnateur** : Rend disponible aux étudiants dans les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
 
 ## Fonctionnalités
-**Implémentées :**
- * [x] pick subclasses
- * [ ] checkbox
- * [ ] text
- * [ ] images
- * [ ] file picker
+
+**Projets**
+
+- Soumission de projet par un **promoteur**.
+- Création automatique des descriptifs de projets. 
+- Soumission de choix de projets par les **étudiants**.
+- Gestion centralisée des soumissions de projets.[^1]
+
+**Équipes**
+
+- Création des équipes basée par algorithme
+
+
+[^1]: Note de bas de page 1
