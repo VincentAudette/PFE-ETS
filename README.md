@@ -28,7 +28,7 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 - Soumission de projet par un **promoteur**.
 - Création automatique des descriptifs de projets. 
 - Soumission de choix de projets par les **étudiants**.
-- Gestion centralisée des soumissions de projets par un **coordonnateur**.*
+- Gestion centralisée des soumissions de projets par un **coordonnateur**.<sub>*</sub>
 
 **Équipes**
 
@@ -37,8 +37,8 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 
 **Gestion**
 
-- Envoi de notifications par courriel à différentes étapes lorsqu'une attention est requise.*
+- Envoi de notifications par courriel à différentes étapes lorsqu'une attention est requise.<sub>*</sub>
 
 
-<h6>* Fonctionnalité à compléter.</h6>
+<sub>* Fonctionnalité à compléter.</sub>
 
