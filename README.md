@@ -6,7 +6,7 @@
 
 ![Static Badge](https://img.shields.io/badge/Statut_du_projet-D%C3%A9veloppement-blue)
 
-[Description](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#description) | [Fonctionnalités](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#fonctionnalit%C3%A9s) | [Utilisation](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#utilisation) | [Services externes](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#services-externes)
+[Description](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#description) | [Fonctionnalités](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#fonctionnalit%C3%A9s) | [Utilisation](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#utilisation) | [Technologies utilisées](https://github.com/VincentAudette/PFE-ETS/blob/documentation/README.md#technologies-utilis%C3%A9es)
 
 </div>
 
@@ -44,16 +44,23 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 <sub>* Fonctionnalité à compléter.</sub>
 
 ## Utilisation
-
 ```shell
+# Installation des paquets nécessaires via pnmp
 pnpm install
+
+# Création des fichiers nécessaire à la BD
 pnpm run db-generate
-pnpm run db-push
+
+# Démarre l'exécution du projet
 pnpm run dev
 ```
 
-## Services externes
-Base de données : [PlanetScale](https://planetscale.com)  
+## Technologies utilisées
+pnpm
+Prisma
 Authentification : [Clerk](https://clerk.com)  
+Turbo
+tRPC
+Base de données : [PlanetScale](https://planetscale.com)  
 Envoi de courriels: [SendGrid](https://sendgrid.com/)  
-Hébergement de fichiers : [uploadthing](https://uploadthing.com/)  
+Hébergement de fichiers : [uploadthing](https://uploadthing.com/) 
