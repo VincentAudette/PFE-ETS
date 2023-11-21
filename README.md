@@ -61,15 +61,16 @@ pnpm run dev
 [pnpm](https://pnpm.io/) est le gestionnaire de paquets utilisé pour ce projet. Il est plus rapide et plus efficient au niveau de l'espace disque que [npm](https://www.npmjs.com/). Il permet de pouvoir gérer les différents paquets à installation pour le projets via la commande `pnpm`. Les différents paquets nécessaires au projet sont disponibles dans le fichier [package.json](package.json) du projet. 
 
 ### Prisma  
-[Prisma](https://www.prisma.io/) est la technologie utilisée afin de géré la base de données ainsi que les différentes tables du projet. Le schéma de la base de donnée est disponible dans le fichier [prisma.schema](packages/db/prisma/schema.prisma). Une fois le projet lancé, on peut visualiser les informations de la base de données avec Prisma via le [port 5556](http://localhost:5556).![Alt text](apps/nextjs/public/readme/prisma.png)
+[Prisma](https://www.prisma.io/) est la technologie utilisée afin de géré la création et l'écriture dans la base de données MySQL ainsi que les différentes tables du projet. Le schéma de la base de donnée est disponible dans le fichier [prisma.schema](packages/db/prisma/schema.prisma). Une fois le projet lancé, on peut visualiser les informations de la base de données avec Prisma via le [port 5556](http://localhost:5556).
 
 ### Clerk 
 [Clerk](https://clerk.com) est la technologie utilisée afin de gérer les différents rôles des utilisateur ainsi que l'authentification des comptes sur la plateforme (ex: MFA). 
 
-Turbo  
-y 
+### PlanetScale
+[PlanetScale](https://planetscale.com) est la technologie utilisée pour le stockage et la gestion base de données. Elle est compatible avec MySQL. L'utilisation de cette technologie permet de gérer la charge ainsi que l'augmentation du trafic qui sera nécessaire pour le projet. 
 
-tRPC  
-Base de données : [PlanetScale](https://planetscale.com)  
-Envoi de courriels: [SendGrid](https://sendgrid.com/)  
-Hébergement de fichiers : [uploadthing](https://uploadthing.com/) 
+### SendGrid
+[SendGrid](https://sendgrid.com/) est la plateforme qui permet au projet d'envoyer des courriels aux divers intervenants lorsque différentes actions le requiert.
+
+### uploadthing
+[uploadthing](https://uploadthing.com/) permet de stocker des fichiers qui sont téléchargés par les utilisateurs et d'en gérer sécuritairement l'accès. 
