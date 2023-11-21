@@ -57,10 +57,10 @@ pnpm run dev
 
 ## Technologies utilisées
 ### pnpm  
-[pnpm](https://pnpm.io/) est le gestionnaire de paquets utilisé pour ce projet. Il est plus rapide et plus efficient au niveau de l'espace disque que [npm](https://www.npmjs.com/). Il permet de pouvoir gérer les différents paquets à installation pour le projets via la commande `pnpm`. Les différents paquets nécessaires au projet sont disponibles dans le fichier [package.json](https://github.com/VincentAudette/PFE-ETS/blob/documentation/package.json) du projet. 
+[pnpm](https://pnpm.io/) est le gestionnaire de paquets utilisé pour ce projet. Il est plus rapide et plus efficient au niveau de l'espace disque que [npm](https://www.npmjs.com/). Il permet de pouvoir gérer les différents paquets à installation pour le projets via la commande `pnpm`. Les différents paquets nécessaires au projet sont disponibles dans le fichier [package.json](package.json) du projet. 
 
 ### Prisma  
-[Prisma](https://www.prisma.io/) est utilisé afin de géré la base de données avec les différentes tables du projet. Voir [prisma.schema](packages/db/prisma/schema.prisma).
+[Prisma](https://www.prisma.io/) est la technologie utilisée afin de géré la base de données ainsi que les différentes tables du projet. Le schéma de la base de donnée est disponible dans le fichier [prisma.schema](packages/db/prisma/schema.prisma). Une fois le projet lancé, on peut visualiser les informations de la base de données avec Prisma via le port [5556](http://localhost:5556).
 
 Authentification : [Clerk](https://clerk.com)  
 Turbo  
