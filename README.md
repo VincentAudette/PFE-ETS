@@ -56,11 +56,11 @@ pnpm run dev
 ```
 
 ## Technologies utilisées
-pnpm
-Prisma
+pnpm  
+Prisma  
 Authentification : [Clerk](https://clerk.com)  
-Turbo
-tRPC
+Turbo  
+tRPC  
 Base de données : [PlanetScale](https://planetscale.com)  
 Envoi de courriels: [SendGrid](https://sendgrid.com/)  
 Hébergement de fichiers : [uploadthing](https://uploadthing.com/) 
