@@ -56,7 +56,9 @@ pnpm run dev
 ```
 
 ## Technologies utilisées
-pnpm  
+### pnpm  
+[pnpm](https://pnpm.io/) est le gestionnaire de paquets utilisé pour ce projet. Il est plus rapide et plus efficient au niveau de l'espace disque que [npm](https://www.npmjs.com/). Il permet de pouvoir gérer les différents paquets à installation pour le projets via la commande `pnpm`. Les différents paquets nécessaires au projet sont disponibles dans le fichier [package.json](https://github.com/VincentAudette/PFE-ETS/blob/documentation/package.json) du projet. 
+
 Prisma  
 Authentification : [Clerk](https://clerk.com)  
 Turbo  
