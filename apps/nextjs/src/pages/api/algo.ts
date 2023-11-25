@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as fs from "fs";
 import csv from "csv-parser";
+import * as xlsx from 'xlsx';
 import { randomInt } from 'crypto';
 
 // Structure des différents objets
@@ -17,30 +18,66 @@ interface Projet {
   etudiants: Etudiant[];
   satisfaction: number;
   appreciation: number;
+  obligatoire: boolean;
 }
+
+// async function readStudents(filePath: string): Promise<Etudiant[]> {
+//   return new Promise((resolve, reject) => {
+//     const resultsStudents: Etudiant[] = [];
+
+//     fs.createReadStream(filePath, { encoding: 'utf-8' })
+//       .pipe(csv({ separator: ';' }))
+//       .on("data", (data) => {
+//         console.log(data);
+//         const etudiant: Etudiant = {
+//           courriel: data.email,
+//           choix: [
+//             data.Choix1 ? data.Choix1.trim() : '',
+//             data.Choix2 ? data.Choix2.trim() : '',
+//             data.Choix3 ? data.Choix3.trim() : '',
+//             data.Choix4 ? data.Choix4.trim() : '',
+//             data.Choix5 ? data.Choix5.trim() : ''
+//           ].filter(choice => choice !== ''), // Remove empty strings from the array
+//           satisfaction: 0
+//         };
+//         resultsStudents.push(etudiant);
+//       })
+//       .on("end", () => resolve(resultsStudents))
+//       .on("error", (error) => reject(error));
+//   });
+// }
 
 async function readStudents(filePath: string): Promise<Etudiant[]> {
   return new Promise((resolve, reject) => {
     const resultsStudents: Etudiant[] = [];
 
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on("data", (data) => {
-        const etudiant: Etudiant = {
-          courriel: data.Courriel,
-          choix: [
-            data.Choix1,
-            data.Choix2,
-            data.Choix3,
-            data.Choix4,
-            data.Choix5
-          ],
-          satisfaction: 0
-        };
-        resultsStudents.push(etudiant);
-      })
-      .on("end", () => resolve(resultsStudents))
-      .on("error", (error) => reject(error));
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    const data = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+
+    // Assuming the first row contains headers
+    const headers = data[0];
+
+    for (let i = 1; i < data.length; i++) {
+      const rowData = data[i];
+      const etudiant: Etudiant = {
+        courriel: rowData[headers.indexOf('Courriel')],
+        choix: [
+          rowData[headers.indexOf('Choix1')] || '',
+          rowData[headers.indexOf('Choix2')] || '',
+          rowData[headers.indexOf('Choix3')] || '',
+          rowData[headers.indexOf('Choix4')] || '',
+          rowData[headers.indexOf('Choix5')] || '',
+        ].filter(choice => choice !== ''),
+        satisfaction: 0,
+      };
+      resultsStudents.push(etudiant);
+      console.log(etudiant);
+    }
+
+    resolve(resultsStudents);
   });
 }
 
@@ -76,10 +113,11 @@ async function extractUniqueProjects(etudiants: Etudiant[]): Promise<Projet[]> {
       const projet: Projet = {
         nom: projectName,
         minEtudiants: 3,  // À définir
-        maxEtudiants: 5,  // À définir
+        maxEtudiants: 6,  // À définir
         etudiants: [],
         satisfaction: 0,
-        appreciation: 0
+        appreciation: 0,
+        obligatoire: false,
       };
       return projet;
     });
@@ -90,7 +128,11 @@ async function extractUniqueProjects(etudiants: Etudiant[]): Promise<Projet[]> {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Chemins des différents fichiers
-  const filePathStudents = "public/etudiants2.csv";
+  //const filePathStudents = "public/ELE_H2020.csv";
+  //const filePathStudents = "public/ELE_H2020.xlsx";
+  const filePathStudents = "public/ELE_H2019.xlsx";
+  //const filePathStudents = "public/ELE_E2021.xlsx";
+  //const filePathStudents = "public/etudiants2.csv";
   //const filePathProjects = "public/projets.csv";
 
   try {
@@ -107,6 +149,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Filtrer les étudiants qui ont déjà une équipe formée
     filtrerEtudiantDejaEnEquipe(listeEtudiants, listeProjets);
+    console.log(listeProjets);
 
     let listeFinaleProjets = trouverMeilleurScenario(listeEtudiants, listeProjets, 10000);
 
@@ -147,6 +190,11 @@ function calculerScoreAppreciationProjets(etudiants: Etudiant[], projets: Projet
       if (projet) {
         // Augmenter le score d'appréciation en fonction de l'indice du choix
         projet.appreciation += etudiants.length - index;
+
+        // Si le projet est obligatoire, ajouter un score supplémentaire
+        if (projet.obligatoire) {
+          projet.appreciation += 1000;
+        }
       }
     });
   });
@@ -212,7 +260,7 @@ function filtrerEtudiantDejaEnEquipe(etudiants: Etudiant[], projets: Projet[]): 
     // Parcourir les choix de l'étudiant
     etudiant.choix.forEach(choix => {
       // Ignorer les choix vides
-      if (choix) {
+      if (choix && choix != '') {
         choixUniques.add(choix);
       }
     });
@@ -229,6 +277,8 @@ function filtrerEtudiantDejaEnEquipe(etudiants: Etudiant[], projets: Projet[]): 
         etudiant.satisfaction = 100;
         projet.etudiants.push(etudiant);
         etudiants.splice(etudiants.indexOf(etudiant), 1);
+        projet.obligatoire = true;
+        console.log(etudiant);
       }
     }
   });
