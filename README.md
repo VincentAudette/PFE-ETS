@@ -32,7 +32,7 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 
 **Équipes**
 
-- Création des équipes automatiquement via un algorithme.
+- Création des équipes automatiquement par un [algorithme](https://github.com/VincentAudette/PFE-ETS/wiki/Algorithme-de-cr%C3%A9ation-des-groupes).
 - Gestion centralisée des équipes par un **coordonnateur**.
 
 **Gestion**
@@ -44,10 +44,10 @@ Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 
 ## Utilisation
 ```shell
-# Installation des paquets nécessaires via pnmp
+# Installation des paquets nécessaires via pnpm
 pnpm install
 
-# Création des fichiers nécessaire à la BD
+# Initialisation des fichiers nécessaires à la BD
 pnpm run db-generate
 
 # Démarre l'exécution du projet
