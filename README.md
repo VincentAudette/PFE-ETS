@@ -17,9 +17,9 @@ C'est une plateforme unifiée de gestion des projets de fin d'études (PFE) fait
 Dans le cadre d'un PFE, différents acteurs doivent interagir entre eux :
 
 - **Promoteur** : Entitée, souvent une compagnie ou un professeur, qui souhaite proposer un projet qui sera effectué par un groupe d'étudiants.
-- **Étudiant** : Choisit et effectue un des projets proposés par un promoteur sous la supervision d'un professeur.
+- **Étudiant** : Choisis et effectue un des projets proposés par un promoteur sous la supervision d'un professeur.
 - **Professeur** : Surveille et évalue le travail effectué par le groupe d'étudiants sous sa charge.
-- **Coordonnateur** : Rend disponible aux étudiants dans les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
+- **Coordonnateur** : Rends disponible aux étudiants dans les différents projets de promoteurs et crée les équipes basées sur les choix des étudiants.
 
 ## Fonctionnalités
 
@@ -57,19 +57,19 @@ pnpm run dev
 ## Technologies utilisées
 ### pnpm
 
-[pnpm](https://pnpm.io/) est le gestionnaire de paquets utilisé pour ce projet. Il est plus rapide et plus efficient au niveau de l'espace disque que [npm](https://www.npmjs.com/). Il permet de pouvoir gérer les différents paquets à installation pour le projets via la commande `pnpm`. Les différents paquets nécessaires au projet sont disponibles dans le fichier [package.json](package.json) du projet. 
+[pnpm](https://pnpm.io/) est le gestionnaire de paquets utilisé pour ce projet. Il est plus rapide et plus efficient au niveau de l'espace disque que [npm](https://www.npmjs.com/). Il permet de gérer les différents paquets nécessaires pou le bon fonctionnement de projet avec la commande `pnpm`. Ces différents paquets sont disponibles via le fichier [package.json](package.json) du projet. 
 
 ### Prisma  
-[Prisma](https://www.prisma.io/) est la technologie utilisée afin de géré la création et l'écriture dans la base de données MySQL ainsi que les différentes tables du projet. Le schéma de la base de donnée est disponible dans le fichier [prisma.schema](packages/db/prisma/schema.prisma). Une fois le projet lancé, on peut visualiser les informations de la base de données avec Prisma via le [port 5556](http://localhost:5556).
+[Prisma](https://www.prisma.io/) est la technologie utilisée afin de gérer la création et l'écriture dans la base de données MySQL ainsi que les différentes tables du projet. Le schéma de la base de données est disponible dans le fichier [prisma.schema](packages/db/prisma/schema.prisma). Une fois le projet lancé, on peut visualiser les informations de la base de données avec Prisma via le [port 5556](http://localhost:5556).
 
 ### Clerk 
-[Clerk](https://clerk.com) est la technologie utilisée afin de gérer les différents rôles des utilisateur ainsi que l'authentification des comptes sur la plateforme (ex: MFA). 
+[Clerk](https://clerk.com) est la technologie utilisée afin de gérer les différents rôles des utilisateurs ainsi que l'authentification des comptes sur la plateforme (ex.: MFA). 
 
 ### PlanetScale
-[PlanetScale](https://planetscale.com) est la technologie utilisée pour le stockage et la gestion base de données. Elle est compatible avec MySQL. L'utilisation de cette technologie permet de gérer la charge ainsi que l'augmentation du trafic qui sera nécessaire pour le projet. 
+[PlanetScale](https://planetscale.com) est la technologie utilisée pour le stockage et la gestion de base de données. Elle est compatible avec MySQL. L'utilisation de cette technologie permet de gérer la charge ainsi que l'augmentation du trafic qui sera nécessaire pour le projet.
 
 ### SendGrid
-[SendGrid](https://sendgrid.com/) est la plateforme qui permet au projet d'envoyer des courriels aux divers intervenants lorsque différentes actions le requiert.
+[SendGrid](https://sendgrid.com/) est la plateforme qui permet au projet d'envoyer des courriels aux divers intervenants lorsque différentes actions le requièrent.
 
 ### uploadthing
 [uploadthing](https://uploadthing.com/) permet de stocker des fichiers qui sont téléchargés par les utilisateurs et d'en gérer sécuritairement l'accès. 
