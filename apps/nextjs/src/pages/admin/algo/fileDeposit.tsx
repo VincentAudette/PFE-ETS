@@ -1,17 +1,17 @@
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
 import Head from "next/head";
 import TopNav from "../../../components/TopNav";
 import AdminView from "../../../components/RoleViews/AdminView";
 import FileDrop from '../../../components/FileDrop';
-import fs from 'fs';
-import path from 'path';
-
-
-
+import LoadingPFE from "../../../components/LoadingPFE";
 
 const fileDeposit: React.FC = () => {
+
+  const [loading, setLoading] = useState(false);
+
   const handleFileDrop = async (files: FileList) => {
       // Traitez les fichiers ici
+      setLoading(true);
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         console.log('Nom du fichier:', file?.name);
@@ -25,18 +25,23 @@ const fileDeposit: React.FC = () => {
         };
         
         if(file){
-          
-
-          console.log("file", file)
-
+          try{
           const formData = new FormData();
           formData.set('file', file);
           const res = await fetch("/api/admin/algo/fileDropHandler", {
             method: "POST",
             body: formData,
           });
-          let rp = await res.json();
-          console.log(rp);
+
+          if(res.ok){
+            let rp = await res.json();
+            console.log(rp);
+          }}catch(error){
+            console.log(error);
+          }finally{
+            setLoading(false);
+          }
+          
         }
       }
     };
@@ -66,6 +71,7 @@ const fileDeposit: React.FC = () => {
         />
         <AdminView>
         <FileDrop onFileDrop={handleFileDrop}></FileDrop>
+        {loading && <LoadingPFE></LoadingPFE>}
           
         </AdminView>
         
