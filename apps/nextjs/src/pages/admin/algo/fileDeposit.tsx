@@ -4,10 +4,17 @@ import TopNav from "../../../components/TopNav";
 import AdminView from "../../../components/RoleViews/AdminView";
 import FileDrop from '../../../components/FileDrop';
 import LoadingPFE from "../../../components/LoadingPFE";
+import PfeTeamView from '../../../components/PfeTeamView';
+import { json } from 'stream/consumers';
 
 const fileDeposit: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
+  const [dataReady, setDataReady] = useState(false);
+  const [data, setData] = useState(null);
+
+
+
 
   const handleFileDrop = async (files: FileList) => {
       // Traitez les fichiers ici
@@ -34,8 +41,10 @@ const fileDeposit: React.FC = () => {
           });
 
           if(res.ok){
-            let rp = await res.json();
-            console.log(rp);
+             let rp = await res.json();
+             setData(rp);
+            setDataReady(true);
+            console.log(rp.equipe);
           }}catch(error){
             console.log(error);
           }finally{
@@ -72,6 +81,7 @@ const fileDeposit: React.FC = () => {
         <AdminView>
         <FileDrop onFileDrop={handleFileDrop}></FileDrop>
         {loading && <LoadingPFE></LoadingPFE>}
+        {dataReady && <PfeTeamView equipe ={data}></PfeTeamView>}
           
         </AdminView>
         
