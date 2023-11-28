@@ -1,17 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as xlsx from 'xlsx';
-import { randomInt } from 'crypto';
+import * as xlsx from "xlsx";
+import { randomInt } from "crypto";
 import { Formidable } from "formidable";
-
-
-
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
 
 interface Etudiant {
   courriel: string;
@@ -29,17 +25,24 @@ interface Projet {
   obligatoire: boolean;
 }
 
-
 async function readStudents(filePath: string): Promise<Etudiant[]> {
   return new Promise((resolve, reject) => {
     const resultsStudents: Etudiant[] = [];
 
     const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    
-    const sheet = workbook.Sheets[sheetName];
 
-    const data = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+    let sheetName: string | null | undefined = null;
+    let sheet: xlsx.WorkSheet | undefined;
+    let data: any[] = [];
+
+    if (workbook.SheetNames.length > 0) {
+      sheetName = workbook.SheetNames[0];
+      if (sheetName) sheet = workbook.Sheets[sheetName];
+      if (sheet) data = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+    } else {
+      // Handle the case when there are no sheets in the workbook
+      console.error("No sheets found in the workbook.");
+    }
 
     // Assuming the first row contains headers
     const headers = data[0];
@@ -47,20 +50,20 @@ async function readStudents(filePath: string): Promise<Etudiant[]> {
     for (let i = 1; i < data.length; i++) {
       const rowData = data[i];
       const etudiant: Etudiant = {
-        courriel: rowData[headers.indexOf('Courriel')],
+        courriel: rowData[headers.indexOf("Courriel")],
         choix: [
-          rowData[headers.indexOf('Choix1')] || '',
-          rowData[headers.indexOf('Choix2')] || '',
-          rowData[headers.indexOf('Choix3')] || '',
-          rowData[headers.indexOf('Choix4')] || '',
-          rowData[headers.indexOf('Choix5')] || '',
-        ].filter(choice => choice !== ''),
+          rowData[headers.indexOf("Choix1")] || "",
+          rowData[headers.indexOf("Choix2")] || "",
+          rowData[headers.indexOf("Choix3")] || "",
+          rowData[headers.indexOf("Choix4")] || "",
+          rowData[headers.indexOf("Choix5")] || "",
+        ].filter((choice) => choice !== ""),
         satisfaction: 0,
       };
       resultsStudents.push(etudiant);
       console.log(etudiant);
     }
-  
+
     resolve(resultsStudents);
   });
 }
@@ -74,18 +77,20 @@ async function extractUniqueProjects(etudiants: Etudiant[]): Promise<Projet[]> {
       });
     });
 
-    const uniqueProjects: Projet[] = Array.from(uniqueProjectNames).map((projectName) => {
-      const projet: Projet = {
-        nom: projectName,
-        minEtudiants: 3,  // À définir
-        maxEtudiants: 6,  // À définir
-        etudiants: [],
-        satisfaction: 0,
-        appreciation: 0,
-        obligatoire: false,
-      };
-      return projet;
-    });
+    const uniqueProjects: Projet[] = Array.from(uniqueProjectNames).map(
+      (projectName) => {
+        const projet: Projet = {
+          nom: projectName,
+          minEtudiants: 3, // À définir
+          maxEtudiants: 6, // À définir
+          etudiants: [],
+          satisfaction: 0,
+          appreciation: 0,
+          obligatoire: false,
+        };
+        return projet;
+      },
+    );
 
     resolve(uniqueProjects);
   });
@@ -96,24 +101,34 @@ interface FormData {
   files: any;
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function Handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const data = await new Promise<FormData>((resolve, reject) => {
     const form = new Formidable();
 
-    form.parse(req, (err:any, fields:any, files:any) => {
-      if (err) reject({ err })
-      resolve({ err, fields, files })
-    }) 
-  })
+    form.parse(req, (err: any, fields: any, files: any) => {
+      if (err) reject({ err });
+      resolve({ err, fields, files });
+    });
+  });
 
   //return the data back or just do whatever you want with it
-  let listeEtudiants = await readStudents(data.files.file[0].filepath);
-  let listeProjets = await extractUniqueProjects(listeEtudiants);
+  const listeEtudiants = await readStudents(data.files.file[0].filepath);
+  const listeProjets = await extractUniqueProjects(listeEtudiants);
   filtrerEtudiantDejaEnEquipe(listeEtudiants, listeProjets);
 
-  let listeFinaleProjets = trouverMeilleurScenario(listeEtudiants, listeProjets, 10000);
+  const listeFinaleProjets = trouverMeilleurScenario(
+    listeEtudiants,
+    listeProjets,
+    10000,
+  );
 
-  const totalEtudiants = listeFinaleProjets.reduce((total, projet) => total + projet.etudiants.length, 0);
+  const totalEtudiants = listeFinaleProjets.reduce(
+    (total, projet) => total + projet.etudiants.length,
+    0,
+  );
 
   const reponseFormatee = {
     totalEtudiants: totalEtudiants,
@@ -123,7 +138,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         courriel: etudiant.courriel,
         satisfaction: etudiant.satisfaction,
       }));
-  
+
       return {
         projet: projet.nom,
         etudiants: etudiantsAvecSatisfaction,
@@ -132,18 +147,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }),
   };
 
-  
   res.status(200).json({
-    reponseFormatee
-  })
+    reponseFormatee,
+  });
 }
 
-function calculerScoreAppreciationProjets(etudiants: Etudiant[], projets: Projet[]): Projet[] {
+function calculerScoreAppreciationProjets(
+  etudiants: Etudiant[],
+  projets: Projet[],
+): Projet[] {
   // Parcourir chaque étudiant
-  etudiants.forEach(etudiant => {
+  etudiants.forEach((etudiant) => {
     etudiant.choix.forEach((choix, index) => {
       // Rechercher le projet correspondant au choix de l'étudiant
-      const projet = projets.find(p => p.nom === choix);
+      const projet = projets.find((p) => p.nom === choix);
       if (projet) {
         // Augmenter le score d'appréciation en fonction de l'indice du choix
         projet.appreciation += etudiants.length - index;
@@ -174,7 +191,7 @@ const estEquipeComplete = (projet: Projet) => {
   } else {
     return false;
   }
-}
+};
 
 /**
  * Analyse si une équipe est fonctionnelle en fonction du nombre minimum d'étudiants requis pour le projet.
@@ -188,18 +205,23 @@ const estEquipeFonctionnelle = (projet: Projet) => {
   } else {
     return false;
   }
-}
+};
 
-function selectionnerProjet(etudiants: Etudiant[], projets: Projet[]): Projet[] {
+function selectionnerProjet(
+  etudiants: Etudiant[],
+  projets: Projet[],
+): Projet[] {
   const nombreTotalEtudiants = etudiants.length;
   let nombreEtudiants = 0;
   let nombreProjets = 0;
   let index = 0;
 
-  
-  while (nombreEtudiants < nombreTotalEtudiants) {
-    nombreEtudiants += projets[index].minEtudiants;
-    nombreProjets++;
+  while (nombreEtudiants < nombreTotalEtudiants && index < projets.length) {
+    const projet = projets[index];
+    if (projet) {
+      nombreEtudiants += projet.minEtudiants;
+      nombreProjets++;
+    }
     index++;
   }
 
@@ -209,16 +231,19 @@ function selectionnerProjet(etudiants: Etudiant[], projets: Projet[]): Projet[] 
   return projetsSelectionnes;
 }
 
-function filtrerEtudiantDejaEnEquipe(etudiants: Etudiant[], projets: Projet[]): void {
+function filtrerEtudiantDejaEnEquipe(
+  etudiants: Etudiant[],
+  projets: Projet[],
+): void {
   // Parcourir chaque étudiant
-  etudiants.forEach(etudiant => {
+  etudiants.forEach((etudiant) => {
     // Créer un ensemble (Set) pour stocker les choix uniques de l'étudiant (en ignorant les choix vides)
     const choixUniques = new Set<string>();
 
     // Parcourir les choix de l'étudiant
-    etudiant.choix.forEach(choix => {
+    etudiant.choix.forEach((choix) => {
       // Ignorer les choix vides
-      if (choix && choix != '') {
+      if (choix && choix != "") {
         choixUniques.add(choix);
       }
     });
@@ -229,7 +254,7 @@ function filtrerEtudiantDejaEnEquipe(etudiants: Etudiant[], projets: Projet[]): 
       const choixUnique = Array.from(choixUniques)[0];
 
       // Parcourir les projets pour trouver le projet correspondant
-      const projet = projets.find(p => p.nom === choixUnique);
+      const projet = projets.find((p) => p.nom === choixUnique);
 
       if (projet) {
         etudiant.satisfaction = 100;
@@ -242,7 +267,11 @@ function filtrerEtudiantDejaEnEquipe(etudiants: Etudiant[], projets: Projet[]): 
   });
 }
 
-function trouverMeilleurScenario(etudiants: Etudiant[], projets: Projet[], iterationMax: number): Projet[] {
+function trouverMeilleurScenario(
+  etudiants: Etudiant[],
+  projets: Projet[],
+  iterationMax: number,
+): Projet[] {
   let iteration = 0;
   let meilleurScenario: Projet[] = [];
   let meilleurScenarioSatisfaction = 0;
@@ -255,11 +284,11 @@ function trouverMeilleurScenario(etudiants: Etudiant[], projets: Projet[], itera
     copieProjets = JSON.parse(JSON.stringify(projets));
     copieEtudiants = JSON.parse(JSON.stringify(etudiants));
     copieEtudiants = randomizeArrayOrder(copieEtudiants);
-    let scenario: Projet[] = [];
+    const scenario: Projet[] = [];
 
     boucleEtudiant: for (const etudiant of copieEtudiants) {
       for (const choix of etudiant.choix) {
-        let projet = copieProjets.find(p => p.nom === choix);
+        const projet = copieProjets.find((p) => p.nom === choix);
         if (projet) {
           if (!estEquipeComplete(projet)) {
             projet.etudiants.push(etudiant);
@@ -273,9 +302,9 @@ function trouverMeilleurScenario(etudiants: Etudiant[], projets: Projet[], itera
       }
       let index = 0;
       if (copieProjets.length > 1) {
-        index = randomInt(0, copieProjets.length - 1)
+        index = randomInt(0, copieProjets.length - 1);
       }
-      let projet = copieProjets[index]; // Choisir un projet aléatoire
+      const projet = copieProjets[index]; // Choisir un projet aléatoire
       if (projet) {
         projet.etudiants.push(etudiant);
         if (estEquipeComplete(projet)) {
@@ -311,15 +340,20 @@ function trouverMeilleurScenario(etudiants: Etudiant[], projets: Projet[], itera
       }
 
       // Mélange de l'ordre des étudiants des équipes incomplètes
-      etudiantsEquipeIncomplete = randomizeArrayOrder(etudiantsEquipeIncomplete);
+      etudiantsEquipeIncomplete = randomizeArrayOrder(
+        etudiantsEquipeIncomplete,
+      );
 
       // Calcul de l'appréciation des étudiants des équipes incomplètes
-      let projetsApprecies = calculerScoreAppreciationProjets(etudiantsEquipeIncomplete, projetsEquipeIncomplete);
+      const projetsApprecies = calculerScoreAppreciationProjets(
+        etudiantsEquipeIncomplete,
+        projetsEquipeIncomplete,
+      );
       projetsApprecies.pop(); // Retrait du projet le moins apprécié
 
       boucleEtudiant2: for (const etudiant of etudiantsEquipeIncomplete) {
         for (const choix of etudiant.choix) {
-          let projet = projetsApprecies.find(p => p.nom === choix);
+          const projet = projetsApprecies.find((p) => p.nom === choix);
           if (projet) {
             if (!estEquipeComplete(projet)) {
               projet.etudiants.push(etudiant);
@@ -333,9 +367,9 @@ function trouverMeilleurScenario(etudiants: Etudiant[], projets: Projet[], itera
         }
         let index = 0;
         if (projetsApprecies.length > 1) {
-          index = randomInt(0, projetsApprecies.length - 1)
+          index = randomInt(0, projetsApprecies.length - 1);
         }
-        let projet = projetsApprecies[index]; // Choisir un projet aléatoire
+        const projet = projetsApprecies[index]; // Choisir un projet aléatoire
         if (projet) {
           projet.etudiants.push(etudiant);
           if (estEquipeComplete(projet)) {
@@ -350,8 +384,7 @@ function trouverMeilleurScenario(etudiants: Etudiant[], projets: Projet[], itera
       }
     }
 
-
-    let satisfaction = calculerSatisfactionScenario(scenario);
+    const satisfaction = calculerSatisfactionScenario(scenario);
     if (satisfaction > meilleurScenarioSatisfaction) {
       meilleurScenario = JSON.parse(JSON.stringify(scenario));
       meilleurScenarioSatisfaction = satisfaction;
@@ -396,20 +429,15 @@ function calculerSatisfactionEtudiant(etudiant: Etudiant, projet: Projet) {
   let satisfaction = 0;
   if (etudiant.choix[0] == projet.nom) {
     satisfaction = 100;
-  }
-  else if (etudiant.choix[1] == projet.nom) {
+  } else if (etudiant.choix[1] == projet.nom) {
     satisfaction = 90;
-  }
-  else if (etudiant.choix[2] == projet.nom) {
+  } else if (etudiant.choix[2] == projet.nom) {
     satisfaction = 80;
-  }
-  else if (etudiant.choix[3] == projet.nom) {
+  } else if (etudiant.choix[3] == projet.nom) {
     satisfaction = 70;
-  }
-  else if (etudiant.choix[4] == projet.nom) {
+  } else if (etudiant.choix[4] == projet.nom) {
     satisfaction = 60;
-  }
-  else {
+  } else {
     satisfaction = 0;
   }
   etudiant.satisfaction = satisfaction;
