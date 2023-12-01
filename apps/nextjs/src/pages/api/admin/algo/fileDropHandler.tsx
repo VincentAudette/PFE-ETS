@@ -82,7 +82,7 @@ async function extractUniqueProjects(etudiants: Etudiant[]): Promise<Projet[]> {
         const projet: Projet = {
           nom: projectName,
           minEtudiants: 3, // À définir
-          maxEtudiants: 6, // À définir
+          maxEtudiants: 4, // À définir
           etudiants: [],
           satisfaction: 0,
           appreciation: 0,
@@ -260,6 +260,11 @@ function filtrerEtudiantDejaEnEquipe(
         etudiant.satisfaction = 100;
         projet.etudiants.push(etudiant);
         etudiants.splice(etudiants.indexOf(etudiant), 1);
+
+        // Une équipe déjà formée peut avoir 5 étudiants
+        if (projet.etudiants.length == 5) {
+          projet.maxEtudiants = 5;
+        }
         projet.obligatoire = true;
         console.log(etudiant);
       }
@@ -349,7 +354,12 @@ function trouverMeilleurScenario(
         etudiantsEquipeIncomplete,
         projetsEquipeIncomplete,
       );
-      projetsApprecies.pop(); // Retrait du projet le moins apprécié
+
+      // Retrait du projet le moins apprécié à chaque 1000 itérations
+      if (iteration%1000 == 0 && iteration != 0) {
+        projetsApprecies.pop();
+      }
+      
 
       boucleEtudiant2: for (const etudiant of etudiantsEquipeIncomplete) {
         for (const choix of etudiant.choix) {
@@ -412,6 +422,8 @@ function calculerSatisfactionScenario(scenario: Projet[]) {
     calculerSatisfactionProjet(projet);
     satisfaction += projet.satisfaction;
   }
+  let bonificationPourGrandNombreDeProjets = 0.1 * scenario.length;
+  satisfaction += satisfaction * bonificationPourGrandNombreDeProjets;
   return satisfaction;
 }
 
