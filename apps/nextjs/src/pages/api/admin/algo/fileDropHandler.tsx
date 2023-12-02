@@ -122,7 +122,7 @@ export default async function Handler(
   const listeFinaleProjets = trouverMeilleurScenario(
     listeEtudiants,
     listeProjets,
-    10000,
+    100000,
   );
 
   const totalEtudiants = listeFinaleProjets.reduce(
@@ -206,30 +206,6 @@ const estEquipeFonctionnelle = (projet: Projet) => {
     return false;
   }
 };
-
-function selectionnerProjet(
-  etudiants: Etudiant[],
-  projets: Projet[],
-): Projet[] {
-  const nombreTotalEtudiants = etudiants.length;
-  let nombreEtudiants = 0;
-  let nombreProjets = 0;
-  let index = 0;
-
-  while (nombreEtudiants < nombreTotalEtudiants && index < projets.length) {
-    const projet = projets[index];
-    if (projet) {
-      nombreEtudiants += projet.minEtudiants;
-      nombreProjets++;
-    }
-    index++;
-  }
-
-  // Sélectionnez les premiers projets en fonction du nombre maximal
-  const projetsSelectionnes = projets.slice(0, nombreProjets);
-
-  return projetsSelectionnes;
-}
 
 function filtrerEtudiantDejaEnEquipe(
   etudiants: Etudiant[],
@@ -355,11 +331,30 @@ function trouverMeilleurScenario(
         projetsEquipeIncomplete,
       );
 
-      // Retrait du projet le moins apprécié à chaque 1000 itérations
-      if (iteration%1000 == 0 && iteration != 0) {
-        projetsApprecies.pop();
+      // Calculate weights based on project indices
+      const weights = projetsApprecies.map((_, index) => index + 1);
+
+      // Calculate the total weight
+      const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+
+      // Generate a random number between 0 and the total weight
+      const randomValue = Math.random() * totalWeight;
+
+      // Choose the project based on the weighted random value
+      let cumulativeWeight = 0;
+      let chosenIndex = 0;
+
+      for (const [index, weight] of weights.entries()) {
+        cumulativeWeight += weight;
+
+        if (randomValue <= cumulativeWeight) {
+          chosenIndex = index;
+          break;
+        }
       }
-      
+
+      // Pop the chosen project
+      projetsApprecies.splice(chosenIndex, 1)[0];
 
       boucleEtudiant2: for (const etudiant of etudiantsEquipeIncomplete) {
         for (const choix of etudiant.choix) {
@@ -422,8 +417,6 @@ function calculerSatisfactionScenario(scenario: Projet[]) {
     calculerSatisfactionProjet(projet);
     satisfaction += projet.satisfaction;
   }
-  let bonificationPourGrandNombreDeProjets = 0.1 * scenario.length;
-  satisfaction += satisfaction * bonificationPourGrandNombreDeProjets;
   return satisfaction;
 }
 
